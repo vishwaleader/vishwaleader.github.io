@@ -456,13 +456,13 @@
                 </p>
             </div>
 
-            <!-- Gallery Filter Buttons -->
-            <div class="flex flex-wrap gap-2 mb-10 text-xs font-bold uppercase tracking-wider">
-                <button onclick="filterGallery('all')" id="filter-all" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-brandBlue text-white shadow-sm transition-all">All</button>
-                <button onclick="filterGallery('london')" id="filter-london" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all">London Summit</button>
-                <button onclick="filterGallery('dignitaries')" id="filter-dignitaries" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all">Dignitaries & Guests</button>
-                <button onclick="filterGallery('events')" id="filter-events" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all">Events & Drives</button>
-                <button onclick="filterGallery('covers')" id="filter-covers" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all">Magazine Covers</button>
+            <!-- Gallery Filter Toggle Switch -->
+            <div class="inline-flex flex-wrap bg-slate-100 p-1 rounded-full border border-slate-200/80 gap-1 mb-10 text-xs font-bold uppercase tracking-wider shadow-inner">
+                <button onclick="filterGallery('all')" id="filter-all" class="gallery-filter-btn px-5 py-2.5 rounded-full bg-brandBlue text-white shadow-sm transition-all duration-200">All</button>
+                <button onclick="filterGallery('london')" id="filter-london" class="gallery-filter-btn px-5 py-2.5 rounded-full text-slate-600 hover:text-slate-900 bg-transparent transition-all duration-200">London Summit</button>
+                <button onclick="filterGallery('dignitaries')" id="filter-dignitaries" class="gallery-filter-btn px-5 py-2.5 rounded-full text-slate-600 hover:text-slate-900 bg-transparent transition-all duration-200">Dignitaries & Guests</button>
+                <button onclick="filterGallery('events')" id="filter-events" class="gallery-filter-btn px-5 py-2.5 rounded-full text-slate-600 hover:text-slate-900 bg-transparent transition-all duration-200">Events & Drives</button>
+                <button onclick="filterGallery('covers')" id="filter-covers" class="gallery-filter-btn px-5 py-2.5 rounded-full text-slate-600 hover:text-slate-900 bg-transparent transition-all duration-200">Magazine Covers</button>
             </div>
 
             <!-- Gallery Grid -->
@@ -911,13 +911,13 @@
 
         // Photo Gallery Filtering
         function filterGallery(category) {
-            // Update Active Filter Button
+            // Update Active Filter Button in Segment Control
             const buttons = document.querySelectorAll('.gallery-filter-btn');
             buttons.forEach(btn => {
-                btn.className = 'gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all';
+                btn.className = 'gallery-filter-btn px-5 py-2.5 rounded-full text-slate-600 hover:text-slate-900 bg-transparent transition-all duration-200';
             });
             const activeBtn = document.getElementById('filter-' + category);
-            activeBtn.className = 'gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-250 bg-brandBlue text-white shadow-sm transition-all';
+            activeBtn.className = 'gallery-filter-btn px-5 py-2.5 rounded-full bg-brandBlue text-white shadow-sm transition-all duration-200';
 
             // Filter Gallery Items
             const items = document.querySelectorAll('.gallery-item');
