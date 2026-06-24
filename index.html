@@ -4,19 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Title & SEO Metadata -->
-    <title>Vishwa Leader Techmedia Pvt. Ltd. | Transnational Advocacy & Diaspora Mobilization</title>
-    <meta name="description"
-        content="An analysis of the Vishwa Leader London Program, the socio-political networks of Shirish Ramteke, and the corporate and media infrastructure of Vishwa Leader Techmedia.">
+    <title>Vishwa Leader | Transnational Advocacy & Diaspora Mobilization</title>
+    <meta name="description" content="Official portal of Vishwa Leader Techmedia Pvt. Ltd. and print magazine, promoting the LSE Academic Conference and Dr. B. R. Ambedkar International Awards.">
 
-    <!-- Google Fonts: Inter for clean sans-serif typography, JetBrains Mono for compliance logs -->
+    <!-- Google Fonts: Inter & Outfit for modern, premium typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;950&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <!-- FontAwesome for minimal, crisp iconography -->
+    <!-- FontAwesome for clean iconography -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Tailwind CSS Script CDN -->
@@ -26,25 +22,14 @@
             theme: {
                 extend: {
                     colors: {
-                        brandBlue: '#0038A8',     // Ambedkar Blue
-                        brandDark: '#0a1d47',     // Deep Navy
-                        accentGold: '#D4AF37',    // Refined Gold
-                        zinc: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827',
-                            950: '#030712'
-                        }
+                        brandBlue: '#0056CA',     // Vibrant Ambedkar Blue
+                        brandDark: '#0A1E4B',     // Deep Navy
+                        accentGold: '#D4AF37',    // Premium Gold
+                        bgGray: '#F8FAFC'
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
                         mono: ['JetBrains Mono', 'monospace']
                     }
                 }
@@ -55,592 +40,403 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            color: #111827;
+            background-color: #F8FAFC;
         }
-
-        /* Custom subtle scrollbar */
+        .font-display {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
-
         ::-webkit-scrollbar-track {
-            background: #f3f4f6;
+            background: #F1F5F9;
         }
-
         ::-webkit-scrollbar-thumb {
-            background: #d1d5db;
+            background: #CBD5E1;
             border-radius: 4px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
+            background: #94A3B8;
         }
     </style>
 </head>
 
 <body class="selection:bg-brandBlue/10 selection:text-brandBlue min-h-screen flex flex-col antialiased">
 
-    <!-- Top Summit Alert Banner (Sanity Style) -->
-    <div
-        class="bg-brandDark text-white py-3 px-4 text-center border-b border-zinc-800 text-xs tracking-wide font-medium">
-        <span class="inline-flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <strong>Summit Event:</strong> Celebrating the 135th Birth Anniversary of Bharat Ratna Dr. B. R. Ambedkar in
-            London.
+    <!-- Top Call for Articles Alert Banner -->
+    <div class="bg-brandDark text-white py-3 px-4 text-center border-b border-white/10 text-xs tracking-wide font-medium relative z-50">
+        <span class="inline-flex items-center gap-2 flex-wrap justify-center">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+            <strong>Call for Articles:</strong> International Seminar at LSE, London — Submit abstracts by Jan 31, 2025.
+            <a href="#conference" class="underline hover:text-amber-300 font-bold ml-2">Learn More &rarr;</a>
         </span>
     </div>
 
-    <!-- Navigation Header (Sanity style: simple, text-heavy, thin borders) -->
-    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-zinc-200">
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-4">
                 <a href="#home" class="group flex items-center gap-3">
-                    <img src="https://i0.wp.com/vishwaleader.com/wp-content/uploads/2025/02/Vishwa_Leader_Logo-removebg-preview-e1738584466936.png?fit=250%2C142&ssl=1" 
+                    <img src="wp-content/uploads/2025/02/Vishwa_Leader_Logo-removebg-preview-e1738584466936.png" 
                          alt="Vishwa Leader Logo" 
-                         class="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
-                    <span class="text-[10px] font-bold tracking-widest text-zinc-400 uppercase border border-zinc-200 px-2 py-0.5 rounded">
+                         class="h-12 w-auto object-contain transition-transform group-hover:scale-105" 
+                         onerror="this.src='https://i0.wp.com/vishwaleader.com/wp-content/uploads/2025/02/Vishwa_Leader_Logo-removebg-preview-e1738584466936.png?fit=250%2C142&ssl=1'" />
+                    <span class="text-[10px] font-black tracking-widest text-brandBlue uppercase border border-brandBlue/20 px-2 py-0.5 rounded bg-brandBlue/5">
                         Techmedia
                     </span>
                 </a>
             </div>
 
             <!-- Desktop Navigation -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-zinc-600">
-                <a href="#about" class="hover:text-brandBlue transition-colors">About & Media</a>
-                <a href="#london" class="hover:text-brandBlue transition-colors">London Summit 2026</a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                <a href="#about" class="hover:text-brandBlue transition-colors">Corporate & Media</a>
+                <a href="#conference" class="hover:text-brandBlue transition-colors">LSE Seminar 2025</a>
+                <a href="#gallery" class="hover:text-brandBlue transition-colors">Photo Gallery</a>
                 <a href="#networks" class="hover:text-brandBlue transition-colors">Global Networks</a>
-                <a href="#compliance" class="hover:text-brandBlue transition-colors">Compliance Desk</a>
-                <a href="#contact"
-                    class="bg-zinc-900 text-white px-4 py-2.5 rounded hover:bg-zinc-800 transition-colors text-xs font-bold tracking-wide uppercase">Contact
-                    Us</a>
+                <a href="#compliance" class="hover:text-brandBlue transition-colors">Compliance</a>
+                <a href="#contact" class="bg-brandBlue text-white px-4 py-2.5 rounded hover:bg-brandBlue/90 transition-colors text-xs font-bold tracking-wide uppercase shadow-sm">
+                    Contact Us
+                </a>
             </nav>
 
             <!-- Mobile Hamburger Menu Button -->
-            <button id="menuBtn" class="md:hidden text-zinc-800 hover:text-brandBlue text-xl focus:outline-none"
-                aria-label="Toggle Menu">
+            <button id="menuBtn" class="md:hidden text-slate-800 hover:text-brandBlue text-xl focus:outline-none" aria-label="Toggle Menu">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
 
         <!-- Mobile Navigation Menu -->
-        <div id="mobileMenu"
-            class="md:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out bg-white border-t border-zinc-200 px-6 space-y-3 shadow-inner">
-            <a href="#about" class="block py-2 text-sm font-semibold text-zinc-700 hover:text-brandBlue">About &
-                Media</a>
-            <a href="#london" class="block py-2 text-sm font-semibold text-zinc-700 hover:text-brandBlue">London Summit
-                2026</a>
-            <a href="#networks" class="block py-2 text-sm font-semibold text-zinc-700 hover:text-brandBlue">Global
-                Networks</a>
-            <a href="#compliance" class="block py-2 text-sm font-semibold text-zinc-700 hover:text-brandBlue">Compliance
-                Desk</a>
-            <a href="#contact"
-                class="block py-3 text-center bg-zinc-900 text-white rounded text-xs font-bold tracking-wide uppercase">Contact
-                Us</a>
+        <div id="mobileMenu" class="md:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out bg-white border-t border-slate-200 px-6 space-y-3 shadow-inner">
+            <a href="#about" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Corporate & Media</a>
+            <a href="#conference" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">LSE Seminar 2025</a>
+            <a href="#gallery" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Photo Gallery</a>
+            <a href="#networks" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Global Networks</a>
+            <a href="#compliance" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Compliance</a>
+            <a href="#contact" class="block py-3 text-center bg-brandBlue text-white rounded text-xs font-bold tracking-wide uppercase">Contact Us</a>
         </div>
     </header>
 
-    <!-- Main Hero Section (Sanity UI layout: bold typographic intro, clean layout) -->
-    <section id="home" class="relative py-20 md:py-32 bg-white border-b border-zinc-200 overflow-hidden">
-        <!-- Subtle Grid Pattern in background -->
-        <div
-            class="absolute inset-0 bg-[linear-gradient(to_right,#f3f4f6_1px,transparent_1px),linear-gradient(to_bottom,#f3f4f6_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-70">
-        </div>
+    <!-- Main Hero Section -->
+    <section id="home" class="relative py-20 md:py-28 bg-white border-b border-slate-200/60 overflow-hidden">
+        <!-- Subtle grid background -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-70"></div>
 
         <div class="max-w-7xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <!-- Left Hero Content -->
+            <!-- Left Content -->
             <div class="lg:col-span-7 space-y-6">
-                <div
-                    class="inline-flex items-center gap-2 border border-zinc-200 bg-zinc-50 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide text-zinc-800">
-                    <span class="w-1.5 h-1.5 rounded-full bg-brandBlue animate-pulse"></span>
-                    B.R. AMBEDKAR SUMMIT • LONDON 2026
+                <div class="inline-flex items-center gap-2 border border-brandBlue/20 bg-brandBlue/5 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide text-brandBlue">
+                    <span class="w-2 h-2 rounded-full bg-brandBlue animate-ping"></span>
+                    DR. AMBEDKAR LSE CONFERENCE • 2025
                 </div>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-zinc-900">
-                    Elevating Constitutional <br>
-                    <span class="text-brandBlue">Values Nationwide & Beyond.</span>
+                <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-slate-900">
+                    Propagating Social Justice <br>
+                    <span class="text-brandBlue">On a Transnational Stage.</span>
                 </h1>
-                <p class="text-zinc-600 text-base md:text-lg leading-relaxed max-w-2xl font-normal">
-                    Vishwa Leader is a global media and advocacy platform driving the movement for minority human rights. We bridge regional socio-political networks with international institutions to create lasting democratic impact.
+                <p class="text-slate-600 text-base md:text-lg leading-relaxed max-w-2xl font-normal">
+                    Vishwa Leader Techmedia Pvt. Ltd. coordinates global advocacy networks, academic research, and media ecosystems to amplify constitutional values and diaspora empowerment.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                    <a href="#london"
-                        class="bg-zinc-900 text-white font-bold px-6 py-4 rounded hover:bg-zinc-800 text-xs tracking-wider uppercase text-center transition-all shadow-sm">
-                        Join the Summit
+                    <a href="#conference" class="bg-brandDark text-white font-bold px-6 py-4 rounded hover:bg-brandDark/95 text-xs tracking-wider uppercase text-center transition-all shadow-md">
+                        Submit Articles
                     </a>
-                    <a href="#about"
-                        class="border border-zinc-300 text-zinc-700 font-bold px-6 py-4 rounded hover:bg-zinc-50 text-xs tracking-wider uppercase text-center transition-all">
-                        Learn More
+                    <a href="#gallery" class="border border-slate-300 text-slate-700 bg-white font-bold px-6 py-4 rounded hover:bg-slate-50 text-xs tracking-wider uppercase text-center transition-all shadow-sm">
+                        View Photo Gallery
                     </a>
                 </div>
             </div>
 
-            <!-- Right Hero Sidebar Card (SOAS Details) -->
+            <!-- Right Card: LSE Event Box -->
             <div class="lg:col-span-5 relative">
-                <div class="relative bg-zinc-950 border border-zinc-850 rounded-lg p-8 shadow-2xl overflow-hidden group">
-                    <!-- Glowing shining edge effect -->
-                    <div class="absolute -inset-[1px] bg-gradient-to-r from-brandBlue/50 to-blue-600/50 rounded-lg opacity-40 group-hover:opacity-100 blur-[2px] transition duration-500 -z-10"></div>
-                    <div class="absolute inset-0 bg-zinc-950 rounded-lg -z-10"></div>
+                <div class="relative bg-brandDark border border-slate-800 rounded-2xl p-8 shadow-2xl overflow-hidden group">
+                    <div class="absolute -inset-[1px] bg-gradient-to-r from-brandBlue to-amber-500 rounded-2xl opacity-40 blur-[2px] -z-10"></div>
+                    <div class="absolute inset-0 bg-brandDark rounded-2xl -z-10"></div>
 
-                    <div class="flex justify-between items-start border-b border-zinc-850 pb-4 mb-4">
+                    <div class="flex justify-between items-start border-b border-slate-800 pb-4 mb-4">
                         <div>
-                            <span class="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Primary Venue</span>
-                            <h3 class="text-lg font-extrabold text-white mt-0.5 tracking-tight uppercase">SOAS University of London</h3>
-                            <p class="text-xs text-zinc-400 font-medium">School of Oriental and African Studies</p>
+                            <span class="text-[10px] font-bold tracking-widest text-amber-400 uppercase">Featured Seminar</span>
+                            <h3 class="font-display text-lg font-bold text-white mt-0.5 uppercase tracking-tight">London School of Economics</h3>
+                            <p class="text-xs text-slate-400 font-medium">LSE Seminar & Awards Ceremony</p>
                         </div>
-                        <span class="bg-brandBlue/20 text-brandBlue border border-brandBlue/30 text-[11px] font-bold px-2.5 py-1 rounded">London, UK</span>
+                        <span class="bg-brandBlue/20 text-white border border-brandBlue/30 text-[10px] font-bold px-2.5 py-1 rounded">London, UK</span>
                     </div>
 
-                    <div class="space-y-4 py-2 text-sm">
+                    <div class="space-y-4 py-2 text-sm text-slate-200">
                         <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-brandBlue"><i class="fa-solid fa-calendar text-xs"></i></span>
+                            <span class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-amber-400"><i class="fa-solid fa-calendar-days text-xs"></i></span>
                             <div>
-                                <p class="text-xs text-zinc-500 font-semibold uppercase">Schedule</p>
-                                <p class="font-medium text-zinc-200">May 8, 9 & 10, 2026</p>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase">Date of Event</p>
+                                <p class="font-semibold">April 13, 2025</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-brandBlue"><i class="fa-solid fa-scale-balanced text-xs"></i></span>
+                            <span class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-amber-400"><i class="fa-solid fa-graduation-cap text-xs"></i></span>
                             <div>
-                                <p class="text-xs text-zinc-500 font-semibold uppercase">Primary Theme</p>
-                                <p class="font-medium text-zinc-200">Human Rights, Good Governance & Inclusion</p>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase">Academic Partner</p>
+                                <p class="font-semibold">LSE Organizing Committee</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-brandBlue"><i class="fa-solid fa-user-tie text-xs"></i></span>
+                            <span class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-amber-400"><i class="fa-solid fa-trophy text-xs"></i></span>
                             <div>
-                                <p class="text-xs text-zinc-500 font-semibold uppercase">Chief Guest</p>
-                                <p class="font-medium text-zinc-200">Justice C. L. Thul</p>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase">Commemoration</p>
+                                <p class="font-semibold">1st Dr. B. R. Ambedkar International Awards</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-6 pt-4 border-t border-zinc-850 text-xs text-zinc-400">
-                        <span class="font-bold text-zinc-300">Organizer:</span> Vishwa Leader Techmedia Pvt. Ltd. <span class="italic text-zinc-500">(Shirish Bhageshwar Ramteke, Director)</span>
+                    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 flex justify-between items-center">
+                        <span><strong>Director:</strong> Shirish B. Ramteke</span>
+                        <a href="#conference" class="text-amber-400 font-bold hover:underline">Full Details &rarr;</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Bar (Clean, Monochromatic spacing) -->
-    <section class="bg-zinc-50 border-b border-zinc-200 py-10">
+    <!-- Stats Bar -->
+    <section class="bg-slate-50 border-b border-slate-200/60 py-10">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-                <span class="block text-3xl font-black text-zinc-900 tracking-tight">2010</span>
-                <span class="block text-[10px] uppercase font-bold tracking-widest text-zinc-400 mt-1">Magazine
-                    Roots</span>
+                <span class="font-display block text-3xl font-black text-slate-900">2010</span>
+                <span class="block text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-1">Magazine Founded</span>
             </div>
             <div>
-                <span class="block text-3xl font-black text-zinc-900 tracking-tight">2016</span>
-                <span class="block text-[10px] uppercase font-bold tracking-widest text-zinc-400 mt-1">MCA
-                    Incorporation</span>
+                <span class="font-display block text-3xl font-black text-slate-900">180+</span>
+                <span class="block text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-1">Media Photos</span>
             </div>
             <div>
-                <span class="block text-3xl font-black text-zinc-900 tracking-tight">SOAS</span>
-                <span class="block text-[10px] uppercase font-bold tracking-widest text-zinc-400 mt-1">Academic
-                    Venue</span>
+                <span class="font-display block text-3xl font-black text-slate-900">LSE / SOAS</span>
+                <span class="block text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-1">London Academic Venues</span>
             </div>
             <div>
-                <span class="block text-3xl font-black text-zinc-900 tracking-tight">Global</span>
-                <span class="block text-[10px] uppercase font-bold tracking-widest text-zinc-400 mt-1">Advocacy
-                    Network</span>
+                <span class="font-display block text-3xl font-black text-slate-900">Global</span>
+                <span class="block text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-1">Advocacy Scope</span>
             </div>
         </div>
     </section>
 
-    <!-- Section: Corporate & Media Infrastructure (Sanity Projects style: clean grid, large cards) -->
-    <section id="about" class="py-20 md:py-28 bg-white border-b border-zinc-200">
+    <!-- Corporate & Media Infrastructure -->
+    <section id="about" class="py-20 md:py-24 bg-white border-b border-slate-200/60">
         <div class="max-w-7xl mx-auto px-6">
             <div class="max-w-3xl mb-16 space-y-4">
-                <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Core Foundation</span>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tight text-zinc-900">Corporate & Media
-                    Infrastructure</h2>
-                <p class="text-zinc-500 leading-relaxed">
-                    The organizational foundation of the London program rests on a dual media structure consisting of a
-                    regional print publication and a formalized corporate entity.
+                <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Core Operations</span>
+                <h2 class="font-display text-3xl md:text-4xl font-black tracking-tight text-slate-900">Corporate & Media Infrastructure</h2>
+                <p class="text-slate-500 leading-relaxed">
+                    Vishwa Leader connects grassroots publishing in Maharashtra with corporate-backed advocacy initiatives on the international stage.
                 </p>
             </div>
 
-            <!-- Three Columns for Magazine, Corporate Entity, and Book (Styled like project showcase) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-16">
-                <!-- Card 1: Print Publication -->
-                <div
-                    class="group border border-zinc-200 hover:border-zinc-400 hover:shadow-sm rounded transition-all p-8 flex flex-col justify-between bg-zinc-50/50">
+                <!-- Magazine Card -->
+                <div class="border border-slate-200 hover:border-slate-400 hover:shadow-md rounded-2xl transition-all p-8 flex flex-col justify-between bg-slate-50/50">
                     <div>
                         <div class="flex items-center gap-3 mb-6">
-                            <div
-                                class="w-10 h-10 rounded bg-brandBlue/5 text-brandBlue flex items-center justify-center border border-brandBlue/10">
+                            <div class="w-10 h-10 rounded-xl bg-brandBlue/10 text-brandBlue flex items-center justify-center border border-brandBlue/20">
                                 <i class="fa-solid fa-newspaper text-lg"></i>
                             </div>
                             <div>
-                                <h3 class="text-lg font-extrabold text-zinc-900 uppercase tracking-tight">Vishwa Leader
-                                    Magazine</h3>
-                                <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">RNI Print
-                                    Periodical</span>
+                                <h3 class="font-display text-base font-bold text-slate-900 uppercase">Vishwa Leader Magazine</h3>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">RNI Print Periodical</span>
                             </div>
                         </div>
-                        <p class="text-sm text-zinc-600 leading-relaxed mb-6 font-normal">
-                            Established as a Marathi-language monthly magazine registered with the Press Registrar
-                            General of India on December 15, 2010, under RNI Registration Number <strong
-                                class="text-zinc-900">MAHMAR/2009/34832</strong>. Owned and edited by Shirish Bhageshwar
-                            Ramteke, this physical monthly periodical provided an essential media voice for Bahujan and
-                            Ambedkarite communities within the Mumbai Suburban district.
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6 font-normal">
+                            Established as a monthly Marathi periodical registered with the Press Registrar General of India under Registration Number <strong>MAHMAR/2009/34832</strong>. Dedicated to highlighting Bahujan and Ambedkarite affairs.
                         </p>
-
-                        <div class="bg-white border border-zinc-200 rounded p-4 space-y-2 text-xs text-zinc-700 mb-6">
-                            <div class="flex flex-col sm:flex-row sm:justify-between py-1 gap-1">
-                                <span class="text-zinc-400">Ownership & Editor</span>
-                                <span class="font-semibold text-zinc-900">Shirish Bhageshwar Ramteke</span>
+                        <div class="bg-white border border-slate-250 rounded-xl p-4 space-y-2 text-xs text-slate-700 mb-6">
+                            <div class="flex justify-between py-1">
+                                <span class="text-slate-450">Editor & Owner</span>
+                                <span class="font-bold text-slate-900">Shirish B. Ramteke</span>
                             </div>
                         </div>
                     </div>
-                    <a href="https://prgi.gov.in" target="_blank"
-                        class="inline-flex items-center gap-1.5 text-xs font-bold text-brandBlue hover:text-brandDark transition-colors group-hover:underline uppercase tracking-wider">
-                        Verify PRGI Registry <i class="fa-solid fa-square-arrow-up-right text-[10px]"></i>
+                    <a href="https://prgi.gov.in" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-bold text-brandBlue hover:text-brandDark transition-colors uppercase tracking-wider">
+                        PRGI Verification <i class="fa-solid fa-square-arrow-up-right text-[10px]"></i>
                     </a>
                 </div>
 
-                <!-- Card 2: Techmedia Pvt. Ltd. -->
-                <div
-                    class="group border border-zinc-200 hover:border-zinc-400 hover:shadow-sm rounded transition-all p-8 flex flex-col justify-between bg-zinc-50/50">
+                <!-- Corporate Entity Card -->
+                <div class="border border-slate-200 hover:border-slate-400 hover:shadow-md rounded-2xl transition-all p-8 flex flex-col justify-between bg-slate-50/50">
                     <div>
                         <div class="flex items-center gap-3 mb-6">
-                            <div
-                                class="w-10 h-10 rounded bg-brandBlue/5 text-brandBlue flex items-center justify-center border border-brandBlue/10">
+                            <div class="w-10 h-10 rounded-xl bg-brandBlue/10 text-brandBlue flex items-center justify-center border border-brandBlue/20">
                                 <i class="fa-solid fa-building text-lg"></i>
                             </div>
                             <div>
-                                <h3 class="text-lg font-extrabold text-zinc-900 uppercase tracking-tight">Vishwa Leader
-                                    Techmedia</h3>
-                                <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">MCA
-                                    Corporate Entity</span>
+                                <h3 class="font-display text-base font-bold text-slate-900 uppercase">Vishwa Leader Techmedia</h3>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">MCA Corporate Entity</span>
                             </div>
                         </div>
-                        <p class="text-sm text-zinc-600 leading-relaxed mb-6 font-normal">
-                            Incorporated on February 29, 2016 (CIN: <strong
-                                class="text-zinc-900">U74999MH2016PTC273606</strong>) under the RoC Mumbai. This legal
-                            vehicle allowed the group to scale beyond traditional print into event management, digital
-                            platforms, and transnational conference coordination, serving as the official sponsor of the
-                            2026 London Summit.
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6 font-normal">
+                            Incorporated on February 29, 2016 (CIN: <strong>U74999MH2016PTC273606</strong>) under the Ministry of Corporate Affairs (RoC Mumbai), serving as the event organizer for academic seminars and summits.
                         </p>
-
-                        <div
-                            class="bg-white border border-zinc-200 rounded p-4 space-y-2 text-xs text-zinc-700 mb-6 font-mono">
-                            <div
-                                class="flex flex-col sm:flex-row sm:justify-between py-1 border-b border-zinc-100 gap-1">
-                                <span class="text-zinc-400">CIN</span>
-                                <span class="font-semibold text-zinc-900">U74999MH2016PTC273606</span>
+                        <div class="bg-white border border-slate-250 rounded-xl p-4 space-y-1.5 text-xs text-slate-700 mb-6 font-mono">
+                            <div class="flex justify-between py-1 border-b border-slate-100">
+                                <span class="text-slate-400">Capital Status</span>
+                                <span class="font-bold text-slate-900">Paid-up: Rs. 100k</span>
                             </div>
-                            <div
-                                class="flex flex-col sm:flex-row sm:justify-between py-1 border-b border-zinc-100 gap-1">
-                                <span class="text-zinc-400">Capital Status</span>
-                                <span class="font-semibold text-zinc-900">Authorized: Rs. 100k / Paid-Up: Rs.
-                                    100k</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:justify-between py-1 gap-1">
-                                <span class="text-zinc-400 text-left">Address</span>
-                                <span
-                                    class="font-semibold text-zinc-900 sm:text-right text-[10px] leading-tight sm:max-w-[220px]">Unit
-                                    1, Malwa Patanwala Complex, LBS Marg, Ghatkopar W, Mumbai - 400086</span>
+                            <div class="flex justify-between py-1">
+                                <span class="text-slate-400">Status</span>
+                                <span class="font-bold text-emerald-600">Active</span>
                             </div>
                         </div>
                     </div>
-                    <a href="https://tracxn.com/d/legal-entities/india/vishwa-leader-techmedia-private-limited/__jDthDz58Owry-yAaHPhKSuhVYScE1DyjR4IGLp2Bhz8"
-                        target="_blank"
-                        class="inline-flex items-center gap-1.5 text-xs font-bold text-brandBlue hover:text-brandDark transition-colors group-hover:underline uppercase tracking-wider">
-                        View Corporate Profile <i class="fa-solid fa-square-arrow-up-right text-[10px]"></i>
+                    <a href="https://tracxn.com/d/legal-entities/india/vishwa-leader-techmedia-private-limited/__jDthDz58Owry-yAaHPhKSuhVYScE1DyjR4IGLp2Bhz8" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-bold text-brandBlue hover:text-brandDark transition-colors uppercase tracking-wider">
+                        MCA Profile <i class="fa-solid fa-square-arrow-up-right text-[10px]"></i>
                     </a>
                 </div>
 
-                <!-- Card 3: Featured Publication (Book) -->
-                <div
-                    class="group border border-zinc-200 hover:border-zinc-400 hover:shadow-sm rounded transition-all p-8 flex flex-col justify-between bg-zinc-50/50">
+                <!-- Featured Publication -->
+                <div class="border border-slate-200 hover:border-slate-400 hover:shadow-md rounded-2xl transition-all p-8 flex flex-col justify-between bg-slate-50/50">
                     <div>
                         <div class="flex items-center gap-3 mb-6">
-                            <div
-                                class="w-10 h-10 rounded bg-brandBlue/5 text-brandBlue flex items-center justify-center border border-brandBlue/10">
+                            <div class="w-10 h-10 rounded-xl bg-brandBlue/10 text-brandBlue flex items-center justify-center border border-brandBlue/20">
                                 <i class="fa-solid fa-book-open text-lg"></i>
                             </div>
                             <div>
-                                <h3 class="text-lg font-extrabold text-zinc-900 uppercase tracking-tight">Featured Book
-                                </h3>
-                                <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Research &
-                                    Souvenir</span>
+                                <h3 class="font-display text-base font-bold text-slate-900 uppercase">Featured Souvenir</h3>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Research & Souvenir</span>
                             </div>
                         </div>
-                        <p class="text-sm text-zinc-600 leading-relaxed mb-6 font-normal">
-                            <strong class="text-zinc-900 font-bold">Transnational Advocacy and Diaspora
-                                Mobilization:</strong> An Analysis of the Vishwa Leader London Program and the
-                            Socio-Political Networks of Shirish Ramteke. This book documents the translation of
-                            Ambedkarite constitutional values to international academic forums in the United Kingdom.
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6 font-normal">
+                            <strong>Transnational Advocacy and Diaspora Mobilization:</strong> Documents the translation of Ambedkarite constitutional values and human rights initiatives onto international academic forums.
                         </p>
-
-                        <div
-                            class="bg-white border border-zinc-200 rounded p-4 space-y-2 text-xs text-zinc-700 mb-6 font-mono">
-                            <div
-                                class="flex flex-col sm:flex-row sm:justify-between py-1 border-b border-zinc-100 gap-1">
-                                <span class="text-zinc-400">Subject</span>
-                                <span class="font-semibold text-zinc-900">Socio-Political Advocacy</span>
-                            </div>
-                            <div
-                                class="flex flex-col sm:flex-row sm:justify-between py-1 border-b border-zinc-100 gap-1">
-                                <span class="text-zinc-400">Published</span>
-                                <span class="font-semibold text-zinc-900">London Program Souvenir (2026)</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:justify-between py-1 gap-1">
-                                <span class="text-zinc-400 text-left">Authors</span>
-                                <span
-                                    class="font-semibold text-zinc-900 sm:text-right text-[10px] leading-tight sm:max-w-[220px]">Shirish
-                                    Bhageshwar Ramteke, SOAS Scholars & Sanghakaya Delegation</span>
+                        <div class="bg-white border border-slate-250 rounded-xl p-4 space-y-2 text-xs text-slate-700 mb-6">
+                            <div class="flex justify-between py-1">
+                                <span class="text-slate-450">Coordinated by</span>
+                                <span class="font-bold text-slate-900">Sanghakaya Foundation</span>
                             </div>
                         </div>
                     </div>
-                    <a href="#contact"
-                        class="inline-flex items-center gap-1.5 text-xs font-bold text-brandBlue hover:text-brandDark transition-colors group-hover:underline uppercase tracking-wider">
+                    <a href="#contact" class="inline-flex items-center gap-1.5 text-xs font-bold text-brandBlue hover:text-brandDark transition-colors uppercase tracking-wider">
                         Request Copy <i class="fa-solid fa-arrow-right text-[10px]"></i>
                     </a>
                 </div>
             </div>
-
-            <!-- Comparison Table (Registration Profiles) -->
-            <div class="mb-12 max-w-5xl mx-auto">
-                <h3 class="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-6 text-center">Corporate & Media Registration Profiles</h3>
-                
-                <!-- Desktop version (Visible on PC) -->
-                <div class="hidden md:block overflow-x-auto border border-zinc-200 rounded-lg bg-white shadow-sm">
-                    <table class="min-w-full divide-y divide-zinc-200 text-left text-xs">
-                        <thead class="bg-zinc-50 font-bold uppercase tracking-wider text-zinc-600">
-                            <tr>
-                                <th scope="col" class="px-6 py-4">Parameter</th>
-                                <th scope="col" class="px-6 py-4">Vishwa Leader Magazine (Print)</th>
-                                <th scope="col" class="px-6 py-4">Vishwa Leader Techmedia Private Limited (Corporate)</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-zinc-200 text-zinc-600">
-                            <tr class="hover:bg-zinc-50 transition-colors">
-                                <td class="px-6 py-4 font-bold text-zinc-800">Registration Number</td>
-                                <td class="px-6 py-4">MAHMAR/2009/34832</td>
-                                <td class="px-6 py-4 font-mono">CIN: U74999MH2016PTC273606</td>
-                            </tr>
-                            <tr class="hover:bg-zinc-50 transition-colors">
-                                <td class="px-6 py-4 font-bold text-zinc-800">Registration Date</td>
-                                <td class="px-6 py-4">December 15, 2010</td>
-                                <td class="px-6 py-4">February 29, 2016</td>
-                            </tr>
-                            <tr class="hover:bg-zinc-50 transition-colors">
-                                <td class="px-6 py-4 font-bold text-zinc-800">Registered Address</td>
-                                <td class="px-6 py-4">Mumbai Suburban District, Maharashtra</td>
-                                <td class="px-6 py-4">Unit 1, Malwa Patanwala Complex, LBS Marg, Ghatkopar West, Mumbai - 400086</td>
-                            </tr>
-                            <tr class="hover:bg-zinc-50 transition-colors">
-                                <td class="px-6 py-4 font-bold text-zinc-800">Key Personnel</td>
-                                <td class="px-6 py-4">Shirish Bhageshwar Ramteke (Owner & Editor)</td>
-                                <td class="px-6 py-4">Shirish Bhageshwar Ramteke (Director)</td>
-                            </tr>
-                            <tr class="hover:bg-zinc-50 transition-colors">
-                                <td class="px-6 py-4 font-bold text-zinc-800">Operational Medium</td>
-                                <td class="px-6 py-4">Physical Monthly Periodical, printed at Usha Printers</td>
-                                <td class="px-6 py-4">Digital platform (vishwaleader.com), Event & Expo Management, and Publishing</td>
-                            </tr>
-                            <tr class="hover:bg-zinc-50 transition-colors">
-                                <td class="px-6 py-4 font-bold text-zinc-800">Capitalization Status</td>
-                                <td class="px-6 py-4">Not applicable (Individual Sole Proprietorship)</td>
-                                <td class="px-6 py-4 font-mono">Authorised: Rs. 100,000; Paid-up: Rs. 100,000</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Mobile version (Visible on Mobile devices) -->
-                <div class="block md:hidden space-y-4">
-                    <!-- Card 1: Magazine (Print) -->
-                    <div class="bg-white border border-zinc-200 rounded p-5 space-y-3 shadow-sm">
-                        <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
-                            <span class="font-extrabold text-zinc-900 text-xs uppercase">Vishwa Leader Magazine</span>
-                            <span class="text-[9px] font-bold text-brandBlue bg-brandBlue/5 px-2 py-0.5 rounded uppercase">Print Periodical</span>
-                        </div>
-                        <div class="space-y-2 text-xs">
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Registration Number</span>
-                                <p class="font-semibold text-zinc-800">MAHMAR/2009/34832</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Registration Date</span>
-                                <p class="font-medium text-zinc-800">December 15, 2010</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Registered Address</span>
-                                <p class="font-medium text-zinc-800">Mumbai Suburban District, Maharashtra</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Key Personnel</span>
-                                <p class="font-medium text-zinc-800">Shirish Bhageshwar Ramteke (Owner & Editor)</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Operational Medium</span>
-                                <p class="font-medium text-zinc-800">Physical Monthly Periodical, printed at Usha Printers</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Capitalization</span>
-                                <p class="font-medium text-zinc-800">Not applicable (Sole Proprietorship)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 2: Techmedia (Corporate) -->
-                    <div class="bg-white border border-zinc-200 rounded p-5 space-y-3 shadow-sm">
-                        <div class="flex justify-between items-center border-b border-zinc-100 pb-2">
-                            <span class="font-extrabold text-zinc-900 text-xs uppercase">Vishwa Leader Techmedia</span>
-                            <span class="text-[9px] font-bold text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded uppercase">Corporate Entity</span>
-                        </div>
-                        <div class="space-y-2 text-xs">
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">CIN</span>
-                                <p class="font-semibold text-zinc-800 font-mono">U74999MH2016PTC273606</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Registration Date</span>
-                                <p class="font-medium text-zinc-800">February 29, 2016</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Registered Address</span>
-                                <p class="font-medium text-zinc-800">Unit 1, Malwa Patanwala Complex, LBS Marg, Ghatkopar West, Mumbai - 400086</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Key Personnel</span>
-                                <p class="font-medium text-zinc-800">Shirish Bhageshwar Ramteke (Director)</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Operational Medium</span>
-                                <p class="font-medium text-zinc-800">Digital platform (vishwaleader.com), Event & Expo Management, and Publishing</p>
-                            </div>
-                            <div>
-                                <span class="text-zinc-400 font-bold uppercase tracking-wider text-[9px]">Capitalization</span>
-                                <p class="font-semibold text-zinc-800 font-mono">Authorised: Rs. 100,000; Paid-up: Rs. 100,000</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            </div>
+        </div>
     </section>
 
-    <!-- Section: The London Program (Sanity portfolio "Experiences" style: vertical timeline layout) -->
-    <section id="london" class="py-20 md:py-28 bg-zinc-50 border-b border-zinc-200">
+    <!-- Calling for Articles / LSE Conference Section -->
+    <section id="conference" class="py-20 md:py-24 bg-slate-50 border-b border-slate-200/60">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="max-w-3xl mb-16 space-y-4">
-                <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Event Timeline</span>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tight text-zinc-900">World Leader Dr. Ambedkar
-                    International Award</h2>
-                <p class="text-zinc-500 leading-relaxed">
-                    Organized to mark the 135th birth anniversary of Dr. B. R. Ambedkar, held from May 8 to May 10,
-                    2026, at the School of Oriental and African Studies (SOAS) University of London.
+            <!-- Header -->
+            <div class="max-w-4xl mb-16 space-y-4">
+                <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Academic Invitation</span>
+                <h2 class="font-display text-3xl md:text-4xl font-black tracking-tight text-slate-900">
+                    Calling for Articles: LSE Conference 2025
+                </h2>
+                <p class="text-slate-600 leading-relaxed text-sm md:text-base">
+                    Held on the eve of the <strong>1st Vishwa Leader Dr. B. R. Ambedkar International Awards 2025</strong> in London, UK. The organizing committee invites scholars, researchers, and activists to submit abstracts and full research papers for an academic seminar at the <strong>London School of Economics (LSE)</strong>.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-                <!-- Left Column: The 3-day Timeline (Replicating Experience List) -->
-                <div
-                    class="lg:col-span-7 space-y-8 relative before:absolute before:left-6 before:top-2 before:bottom-2 before:w-[1px] before:bg-zinc-200">
+            <!-- Seminar Details Cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+                <!-- Theme and Topics Grid (Left 8 cols) -->
+                <div class="lg:col-span-8 space-y-8">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                        <span class="text-[10px] font-bold text-brandBlue uppercase bg-brandBlue/5 px-2.5 py-1 rounded">Primary Theme</span>
+                        <h3 class="font-display text-2xl font-black text-slate-900 mt-3 mb-6">
+                            "Reimagining Equality and Justice: Dr. B. R. Ambedkar's Vision in the 21st Century"
+                        </h3>
 
-                    <!-- Day 1 Event -->
-                    <div class="relative pl-14 group">
-                        <div
-                            class="absolute left-3.5 top-1.5 w-5 h-5 rounded-full border-4 border-zinc-50 bg-brandBlue group-hover:scale-110 transition-transform">
-                        </div>
-                        <div class="border border-zinc-200 bg-white rounded p-6 shadow-sm">
-                            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
-                                <span class="text-[10px] font-bold tracking-widest text-brandBlue uppercase">Day 1 • May
-                                    8, 2026</span>
-                                <span
-                                    class="bg-zinc-100 text-zinc-500 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Seminar</span>
+                        <!-- 6 Sub-Themes -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="flex gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-brandBlue shrink-0 border border-slate-200"><i class="fa-solid fa-people-group"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Innovative Solutions for Inclusive Societies</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed mt-1">Proposing new ideas and practical solutions to foster equality and address modern governance issues.</p>
+                                </div>
                             </div>
-                            <h3 class="text-base font-black text-zinc-900 uppercase tracking-tight">International
-                                Academic Seminar</h3>
-                            <p class="text-xs text-zinc-400 font-bold uppercase tracking-wider mt-0.5">SOAS University
-                                of London</p>
-                            <p class="text-xs text-zinc-500 leading-relaxed mt-4 font-normal">
-                                Gathered scholars, jurists, and human rights researchers on a global platform to discuss
-                                constitutional justice, equality, and democratic representation, and to translate local
-                                civil rights struggles into an international framework.
-                            </p>
+                            <div class="flex gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-brandBlue shrink-0 border border-slate-200"><i class="fa-solid fa-scale-balanced"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Social Justice and Human Rights</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed mt-1">Exploration of Ambedkar's perspectives on justice and their relevance to contemporary human rights.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-brandBlue shrink-0 border border-slate-200"><i class="fa-solid fa-chart-line"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Economic Inclusion & Sustainable Development</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed mt-1">Critical analysis of Ambedkar's economic vision, including inclusive growth and economic equality.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-brandBlue shrink-0 border border-slate-200"><i class="fa-solid fa-book"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Education as a Tool for Empowerment</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed mt-1">Examining education as a cornerstone for empowerment and social transformation of marginalized communities.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-brandBlue shrink-0 border border-slate-200"><i class="fa-solid fa-landmark"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Constitutional Values & Global Governance</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed mt-1">Investigating Ambedkar's constitutional principles (democracy, rule of law) in global frameworks.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-brandBlue shrink-0 border border-slate-200"><i class="fa-solid fa-shuffle"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm">Intersectionality in Social Movements</h4>
+                                    <p class="text-xs text-slate-500 leading-relaxed mt-1">Integrating caste, class, gender, and social identities in modern justice campaigns.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Day 2 Event -->
-                    <div class="relative pl-14 group">
-                        <div
-                            class="absolute left-3.5 top-1.5 w-5 h-5 rounded-full border-4 border-zinc-50 bg-zinc-400 group-hover:bg-brandBlue group-hover:scale-110 transition-all">
-                        </div>
-                        <div class="border border-zinc-200 bg-white rounded p-6 shadow-sm">
-                            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
-                                <span
-                                    class="text-[10px] font-bold tracking-widest text-zinc-400 group-hover:text-brandBlue uppercase transition-colors">Day
-                                    2 • May 9, 2026</span>
-                                <span
-                                    class="bg-zinc-100 text-zinc-500 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Networking</span>
-                            </div>
-                            <h3 class="text-base font-black text-zinc-900 uppercase tracking-tight">International
-                                Business Seminar</h3>
-                            <p class="text-xs text-zinc-400 font-bold uppercase tracking-wider mt-0.5">SOAS University
-                                of London</p>
-                            <p class="text-xs text-zinc-500 leading-relaxed mt-4 font-normal">
-                                Facilitated sessions with corporate executives, venture capitalists, and global
-                                entrepreneurs. Aimed at fostering minority business ecosystems, strengthening trade
-                                routes, and encouraging economic self-reliance.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Day 3 Event -->
-                    <div class="relative pl-14 group">
-                        <div
-                            class="absolute left-3.5 top-1.5 w-5 h-5 rounded-full border-4 border-zinc-50 bg-zinc-400 group-hover:bg-brandBlue group-hover:scale-110 transition-all">
-                        </div>
-                        <div class="border border-zinc-200 bg-white rounded p-6 shadow-sm">
-                            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
-                                <span
-                                    class="text-[10px] font-bold tracking-widest text-zinc-400 group-hover:text-brandBlue uppercase transition-colors">Day
-                                    3 • May 10, 2026</span>
-                                <span
-                                    class="bg-zinc-100 text-zinc-500 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Ceremony</span>
-                            </div>
-                            <h3 class="text-base font-black text-zinc-900 uppercase tracking-tight">Ambedkar Gaurav
-                                Sohala</h3>
-                            <p class="text-xs text-zinc-400 font-bold uppercase tracking-wider mt-0.5">SOAS University
-                                of London</p>
-                            <p class="text-xs text-zinc-500 leading-relaxed mt-4 font-normal">
-                                Celebrated Dr. Ambedkar's civil rights legacy with cultural events, speeches, and the
-                                presentation of international awards recognizing global and local advocates.
-                            </p>
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- Right Column: Dignitary Highlights -->
-                <div class="lg:col-span-5 space-y-6">
-                    <div class="bg-zinc-900 text-white rounded p-8 space-y-4 shadow-md border border-zinc-800">
-                        <span
-                            class="text-[9px] font-extrabold tracking-widest text-accentGold uppercase border border-accentGold/20 px-2.5 py-1 rounded">Chief
-                            Guest</span>
-                        <h3 class="text-xl font-black uppercase tracking-tight text-white mt-2">Justice C. L. Thul</h3>
-                        <p class="text-xs text-zinc-400 font-bold uppercase tracking-wider">Former Judicial Commissioner
-                        </p>
-                        <p class="text-xs text-zinc-300 leading-relaxed font-light">
-                            Justice C. L. Thul, the former Chairman of the Maharashtra Scheduled Castes and Scheduled
-                            Tribes Commission and the former Chairman of the Maharashtra State Human Rights Commission,
-                            attended as Chief Guest. With a background in management and leadership from Washington
-                            D.C., his presence helped connect academic legal concepts with practical human rights
-                            enforcement in India.
-                        </p>
-                        <div class="border-t border-zinc-800 pt-4 mt-4">
-                            <a href="https://www.loksatta.com/nagpur/justice-cl-thul-wardha-dr-ambedkar-international-award-london-visit-rds-00-5756745/"
-                                target="_blank"
-                                class="inline-flex items-center gap-1.5 text-xs font-bold text-accentGold hover:text-white transition-colors uppercase tracking-wider">
-                                View News Announcement <i
-                                    class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                <!-- Deadlines & Guidelines (Right 4 cols) -->
+                <div class="lg:col-span-4 space-y-6">
+                    <!-- Important Dates Box -->
+                    <div class="bg-brandDark text-white border border-slate-800 rounded-2xl p-6 shadow-md">
+                        <h4 class="font-display text-sm font-bold uppercase tracking-widest text-amber-400 border-b border-slate-800 pb-3 mb-4">Important Dates</h4>
+                        <div class="space-y-4 text-xs">
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-400 font-medium">Abstract Deadline</span>
+                                <span class="bg-amber-400/20 text-amber-300 font-bold px-2 py-0.5 rounded">31st Jan 2025</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1 border-y border-slate-800/80">
+                                <span class="text-slate-400 font-medium">Acceptance Notification</span>
+                                <span class="font-bold text-slate-200">15th Feb 2025</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-400 font-medium">Full Paper Deadline</span>
+                                <span class="font-bold text-slate-200">15th Mar 2025</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 border-t border-slate-800 text-sm">
+                                <span class="text-amber-400 font-bold">Conference Date</span>
+                                <span class="bg-brandBlue text-white font-bold px-2.5 py-1 rounded">13th April 2025</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submission Guidelines -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <h4 class="font-display text-sm font-bold text-slate-800 uppercase tracking-widest border-b border-slate-100 pb-3 mb-4">Submission Guidelines</h4>
+                        <ul class="space-y-3 text-xs text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                                <span><strong>Abstracts:</strong> 300-500 words, outlining central arguments, methodology, and relevance.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                                <span><strong>Full Papers:</strong> 4,000-6,000 words, academic formatting (upon acceptance of abstract).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                                <span><strong>Language:</strong> Must be in English and original research work.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                                <span><strong>Biography:</strong> Max 150 words of authors included with submission.</span>
+                            </li>
+                        </ul>
+                        <div class="mt-6 pt-4 border-t border-slate-100">
+                            <a href="#contact" class="block text-center bg-brandBlue hover:bg-brandBlue/90 text-white font-bold py-3 rounded text-xs uppercase tracking-wider">
+                                Contact Organizer Desk
                             </a>
                         </div>
                     </div>
@@ -649,127 +445,264 @@
         </div>
     </section>
 
-    <!-- Section: Global Networks (Clean Grid cards) -->
-    <section id="networks" class="py-20 md:py-28 bg-white border-b border-zinc-200">
+    <!-- Dynamic Image & Media Gallery Section -->
+    <section id="gallery" class="py-20 md:py-24 bg-white border-b border-slate-200/60">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="max-w-3xl mb-12 space-y-4">
+                <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Media Assets</span>
+                <h2 class="font-display text-3xl md:text-4xl font-black tracking-tight text-slate-900">Photo & Media Gallery</h2>
+                <p class="text-slate-500 leading-relaxed text-sm">
+                    Browse historical print covers, local civil rights rallies, and international summits hosted in London.
+                </p>
+            </div>
+
+            <!-- Gallery Filter Buttons -->
+            <div class="flex flex-wrap gap-2 mb-10 text-xs font-bold uppercase tracking-wider">
+                <button onclick="filterGallery('all')" id="filter-all" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-brandBlue text-white shadow-sm transition-all">All</button>
+                <button onclick="filterGallery('london')" id="filter-london" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all">London Summit</button>
+                <button onclick="filterGallery('dignitaries')" id="filter-dignitaries" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all">Dignitaries & Guests</button>
+                <button onclick="filterGallery('events')" id="filter-events" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all">Events & Drives</button>
+                <button onclick="filterGallery('covers')" id="filter-covers" class="gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all">Magazine Covers</button>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                
+                <!-- London Awards 2026 -->
+                <div class="gallery-item london border border-slate-200 rounded-xl bg-slate-50 overflow-hidden group hover:shadow-md transition-all cursor-pointer" 
+                     onclick="openLightbox('wp-content/uploads/2026/06/Vishwa-Leader-DR-B.R.-AMBEDKAR-International-AWARDS-2026-LONDON-UK.jpg', 'Vishwa Leader Dr B.R. Ambedkar International Awards 2026 London UK')">
+                    <div class="h-48 overflow-hidden bg-slate-200 relative">
+                        <img src="wp-content/uploads/2026/06/Vishwa-Leader-DR-B.R.-AMBEDKAR-International-AWARDS-2026-LONDON-UK.jpg" 
+                             alt="Vishwa Leader Dr B.R. Ambedkar International Awards 2026 London UK" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.src='https://i0.wp.com/vishwaleader.com/wp-content/uploads/2026/06/Vishwa-Leader-DR-B.R.-AMBEDKAR-International-AWARDS-2026-LONDON-UK.jpg'" />
+                        <span class="absolute top-3 left-3 bg-brandBlue text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">London Summit</span>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <h4 class="font-bold text-slate-800 text-xs truncate">Dr. Ambedkar International Awards London</h4>
+                        <p class="text-[10px] text-slate-450 mt-1 font-medium">Uploaded: 2026 / 06</p>
+                    </div>
+                </div>
+
+                <!-- WhatsApp Image Group -->
+                <div class="gallery-item london border border-slate-200 rounded-xl bg-slate-50 overflow-hidden group hover:shadow-md transition-all cursor-pointer" 
+                     onclick="openLightbox('wp-content/uploads/2026/06/WhatsApp-Image-2026-06-18-at-12.15.22-PM.jpeg', 'Vishwa Leader London Summit Delegation Ceremony')">
+                    <div class="h-48 overflow-hidden bg-slate-200 relative">
+                        <img src="wp-content/uploads/2026/06/WhatsApp-Image-2026-06-18-at-12.15.22-PM.jpeg" 
+                             alt="Vishwa Leader London Summit Delegation Ceremony" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.src='https://i0.wp.com/vishwaleader.com/wp-content/uploads/2026/06/WhatsApp-Image-2026-06-18-at-12.15.22-PM.jpeg'" />
+                        <span class="absolute top-3 left-3 bg-brandBlue text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">London Summit</span>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <h4 class="font-bold text-slate-800 text-xs truncate">Awards Ceremony Delegation Group</h4>
+                        <p class="text-[10px] text-slate-450 mt-1 font-medium">Uploaded: 2026 / 06</p>
+                    </div>
+                </div>
+
+                <!-- House of Lord -->
+                <div class="gallery-item london border border-slate-200 rounded-xl bg-slate-50 overflow-hidden group hover:shadow-md transition-all cursor-pointer" 
+                     onclick="openLightbox('wp-content/uploads/2025/02/With-House-of-Lord-in-British-Parliament.png', 'With House of Lord in British Parliament')">
+                    <div class="h-48 overflow-hidden bg-slate-200 relative">
+                        <img src="wp-content/uploads/2025/02/With-House-of-Lord-in-British-Parliament.png" 
+                             alt="With House of Lord in British Parliament" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.src='https://i0.wp.com/vishwaleader.com/wp-content/uploads/2025/02/With-House-of-Lord-in-British-Parliament.png'" />
+                        <span class="absolute top-3 left-3 bg-brandBlue text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">London Summit</span>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <h4 class="font-bold text-slate-800 text-xs truncate">With House of Lord in British Parliament</h4>
+                        <p class="text-[10px] text-slate-450 mt-1 font-medium">Uploaded: 2025 / 02</p>
+                    </div>
+                </div>
+
+                <!-- Jackie Shroff -->
+                <div class="gallery-item dignitaries border border-slate-200 rounded-xl bg-slate-50 overflow-hidden group hover:shadow-md transition-all cursor-pointer" 
+                     onclick="openLightbox('wp-content/uploads/2025/02/Jakie-Shroff.png', 'With Veteran Bollywood Actor Jackie Shroff')">
+                    <div class="h-48 overflow-hidden bg-slate-200 relative">
+                        <img src="wp-content/uploads/2025/02/Jakie-Shroff.png" 
+                             alt="With Jackie Shroff" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.src='https://i0.wp.com/vishwaleader.com/wp-content/uploads/2025/02/Jakie-Shroff.png'" />
+                        <span class="absolute top-3 left-3 bg-brandDark text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">Dignitary</span>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <h4 class="font-bold text-slate-800 text-xs truncate">With Bollywood Actor Jackie Shroff</h4>
+                        <p class="text-[10px] text-slate-450 mt-1 font-medium">Uploaded: 2025 / 02</p>
+                    </div>
+                </div>
+
+                <!-- Dhanraj Pillai -->
+                <div class="gallery-item dignitaries border border-slate-200 rounded-xl bg-slate-50 overflow-hidden group hover:shadow-md transition-all cursor-pointer" 
+                     onclick="openLightbox('wp-content/uploads/2025/02/Dhanraj-Pillai.png', 'With Hockey Icon Dhanraj Pillai')">
+                    <div class="h-48 overflow-hidden bg-slate-200 relative">
+                        <img src="wp-content/uploads/2025/02/Dhanraj-Pillai.png" 
+                             alt="With Dhanraj Pillai" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.src='https://i0.wp.com/vishwaleader.com/wp-content/uploads/2025/02/Dhanraj-Pillai.png'" />
+                        <span class="absolute top-3 left-3 bg-brandDark text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">Dignitary</span>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <h4 class="font-bold text-slate-800 text-xs truncate">With Indian Hockey Legend Dhanraj Pillai</h4>
+                        <p class="text-[10px] text-slate-450 mt-1 font-medium">Uploaded: 2025 / 02</p>
+                    </div>
+                </div>
+
+                <!-- Bhimrao Ambedkar and Bandu Pandit -->
+                <div class="gallery-item events border border-slate-200 rounded-xl bg-slate-50 overflow-hidden group hover:shadow-md transition-all cursor-pointer" 
+                     onclick="openLightbox('wp-content/uploads/2025/02/Bhimrao-Ambedkar-and-Bandu-Pandit-scaled.jpg', 'Bhimrao Ambedkar and Bandu Pandit')">
+                    <div class="h-48 overflow-hidden bg-slate-200 relative">
+                        <img src="wp-content/uploads/2025/02/Bhimrao-Ambedkar-and-Bandu-Pandit-scaled.jpg" 
+                             alt="Bhimrao Ambedkar and Bandu Pandit" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.src='https://i0.wp.com/vishwaleader.com/wp-content/uploads/2025/02/Bhimrao-Ambedkar-and-Bandu-Pandit-scaled.jpg'" />
+                        <span class="absolute top-3 left-3 bg-amber-500 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">History</span>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <h4 class="font-bold text-slate-800 text-xs truncate">Bhimrao Ambedkar & Bandu Pandit</h4>
+                        <p class="text-[10px] text-slate-450 mt-1 font-medium">Uploaded: 2025 / 02</p>
+                    </div>
+                </div>
+
+                <!-- 6 Dec Cleanness Drive -->
+                <div class="gallery-item events border border-slate-200 rounded-xl bg-slate-50 overflow-hidden group hover:shadow-md transition-all cursor-pointer" 
+                     onclick="openLightbox('wp-content/uploads/2025/02/6th dec 2011/IMG_0079-scaled.jpg', '6 Dec 2011 Cleanness Awareness Drive')">
+                    <div class="h-48 overflow-hidden bg-slate-200 relative">
+                        <img src="wp-content/uploads/2025/02/6th dec 2011/IMG_0079-scaled.jpg" 
+                             alt="6 Dec 2011 Cleanness Awareness Drive" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.src='https://i0.wp.com/vishwaleader.com/wp-content/uploads/2025/02/6th%20dec%202011/IMG_0079-scaled.jpg'" />
+                        <span class="absolute top-3 left-3 bg-emerald-600 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">Social Event</span>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <h4 class="font-bold text-slate-800 text-xs truncate">6 Dec 2011 Cleanness Drive Rally</h4>
+                        <p class="text-[10px] text-slate-450 mt-1 font-medium">Uploaded: 2025 / 02</p>
+                    </div>
+                </div>
+
+                <!-- Magazine Cover Covers -->
+                <div class="gallery-item covers border border-slate-200 rounded-xl bg-slate-50 overflow-hidden group hover:shadow-md transition-all cursor-pointer" 
+                     onclick="openLightbox('wp-content/uploads/2017/07/news-portal.png', 'Vishwa Leader News Portal Cover')">
+                    <div class="h-48 overflow-hidden bg-slate-200 relative">
+                        <img src="wp-content/uploads/2017/07/news-portal.png" 
+                             alt="Vishwa Leader News Portal Cover" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.src='https://i0.wp.com/vishwaleader.com/wp-content/uploads/2017/07/news-portal.png'" />
+                        <span class="absolute top-3 left-3 bg-purple-600 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded shadow">Cover</span>
+                    </div>
+                    <div class="p-4 bg-white">
+                        <h4 class="font-bold text-slate-800 text-xs truncate">Vishwa Leader Publication Cover</h4>
+                        <p class="text-[10px] text-slate-450 mt-1 font-medium">Uploaded: 2017 / 07</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Networks -->
+    <section id="networks" class="py-20 md:py-24 bg-slate-50 border-b border-slate-200/60">
         <div class="max-w-7xl mx-auto px-6">
             <div class="max-w-3xl mb-16 space-y-4">
                 <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Alliances & Coalitions</span>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tight text-zinc-900">Geopolitical Alliances &
-                    Buddhist Networks</h2>
-                <p class="text-zinc-500 leading-relaxed font-normal">
-                    The international expansion of the Vishwa Leader platform is built on working partnerships with
-                    Buddhist organizations and global representatives, helping turn regional civil rights campaigns into
-                    international conversations.
+                <h2 class="font-display text-3xl md:text-4xl font-black tracking-tight text-slate-900">Geopolitical Alliances & Buddhist Networks</h2>
+                <p class="text-slate-500 leading-relaxed font-normal">
+                    The international expansion of the Vishwa Leader platform relies on working alliances with Buddhist institutions and political representatives globally.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Card 1: Tibetan Parliament -->
-                <div
-                    class="border border-zinc-200 rounded p-6 bg-zinc-50/30 flex flex-col justify-between hover:border-zinc-300 transition-all">
+                <!-- Card 1 -->
+                <div class="border border-slate-200 rounded-2xl p-8 bg-white flex flex-col justify-between hover:shadow-md transition-all">
                     <div class="space-y-4">
-                        <span class="text-[10px] font-bold tracking-widest text-zinc-400 uppercase">Diplomacy</span>
-                        <h3 class="text-sm font-bold text-zinc-900 uppercase">Tibetan Parliament-in-Exile</h3>
-                        <p class="text-xs text-zinc-500 leading-relaxed font-normal">
-                            Shirish Bhageshwar Ramteke led a delegation of Ambedkarites to visit the Tibetan
-                            parliamentary headquarters in Dharamshala on November 3, 2025, meeting with Deputy Speaker
-                            Dolma Tsering Teykhang to discuss social justice and religious freedom.
+                        <span class="text-[9px] font-bold tracking-widest text-slate-400 uppercase">Diplomacy</span>
+                        <h3 class="font-display font-bold text-slate-800 text-base uppercase">Tibetan Parliament-in-Exile</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Shirish B. Ramteke led an Ambedkarite delegation to Dharamshala in November 2025, meeting with Deputy Speaker Dolma Tsering Teykhang to build collaborative civil rights advocacy.
                         </p>
                     </div>
-                    <div class="border-t border-zinc-200/60 pt-4 mt-6">
-                        <a href="https://tibet.net/delegation-of-ambedkarites-meets-deputy-speaker-led-standing-committee-members/"
-                            target="_blank"
-                            class="text-xs font-bold text-brandBlue hover:underline uppercase tracking-wider">
-                            Official Statement <i class="fa-solid fa-arrow-up-right text-[9px] ml-0.5"></i>
+                    <div class="border-t border-slate-100 pt-4 mt-6">
+                        <a href="https://tibet.net/delegation-of-ambedkarites-meets-deputy-speaker-led-standing-committee-members/" target="_blank" class="text-xs font-bold text-brandBlue hover:underline uppercase tracking-wider">
+                            Read Statement <i class="fa-solid fa-arrow-up-right text-[9px] ml-0.5"></i>
                         </a>
                     </div>
                 </div>
 
-                <!-- Card 2: State Advocacy Tour -->
-                <div
-                    class="border border-zinc-200 rounded p-6 bg-zinc-50/30 flex flex-col justify-between hover:border-zinc-300 transition-all">
+                <!-- Card 2 -->
+                <div class="border border-slate-200 rounded-2xl p-8 bg-white flex flex-col justify-between hover:shadow-md transition-all">
                     <div class="space-y-4">
-                        <span class="text-[10px] font-bold tracking-widest text-zinc-400 uppercase">Delegations</span>
-                        <h3 class="text-sm font-bold text-zinc-900 uppercase">State Advocacy Tour</h3>
-                        <p class="text-xs text-zinc-500 leading-relaxed font-normal">
-                            Shirish Ramteke and Sandesh Meshram (Samten Yeshi), president of the Indo-Tibetan Friendship
-                            Association, hosted Tibetan MPs in Mumbai in January 2025. The tour included meetings with
-                            state political leaders like Ajit Pawar, filmmaker Shyam Benegal, and local social
-                            activists.
+                        <span class="text-[9px] font-bold tracking-widest text-slate-400 uppercase">Delegations</span>
+                        <h3 class="font-display font-bold text-slate-800 text-base uppercase">State Advocacy Tour</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Coordinated visits of Tibetan Parliamentary representatives with state ministers, including Maharashtra Deputy CM Ajit Pawar and social leaders, in January 2025.
                         </p>
                     </div>
-                    <div class="border-t border-zinc-200/60 pt-4 mt-6">
-                        <a href="https://tibet.net/tibetan-parliamentary-delegation-calls-on-deputy-cm-and-ministers-of-maharashtra-talks-on-tibet-in-institutes/"
-                            target="_blank"
-                            class="text-xs font-bold text-brandBlue hover:underline uppercase tracking-wider">
-                            Advocacy Records <i class="fa-solid fa-arrow-up-right text-[9px] ml-0.5"></i>
+                    <div class="border-t border-slate-100 pt-4 mt-6">
+                        <a href="https://tibet.net/tibetan-parliamentary-delegation-calls-on-deputy-cm-and-ministers-of-maharashtra-talks-on-tibet-in-institutes/" target="_blank" class="text-xs font-bold text-brandBlue hover:underline uppercase tracking-wider">
+                            Advocacy Logs <i class="fa-solid fa-arrow-up-right text-[9px] ml-0.5"></i>
                         </a>
                     </div>
                 </div>
 
-                <!-- Card 3: Educational Linkages -->
-                <div
-                    class="border border-zinc-200 rounded p-6 bg-zinc-50/30 flex flex-col justify-between hover:border-zinc-300 transition-all">
+                <!-- Card 3 -->
+                <div class="border border-slate-200 rounded-2xl p-8 bg-white flex flex-col justify-between hover:shadow-md transition-all">
                     <div class="space-y-4">
-                        <span class="text-[10px] font-bold tracking-widest text-zinc-400 uppercase">Academia</span>
-                        <h3 class="text-sm font-bold text-zinc-900 uppercase">Siddharth College Lectures</h3>
-                        <p class="text-xs text-zinc-500 leading-relaxed font-normal">
-                            Coordinated academic lectures on Buddhist philosophy and human rights at Siddharth College
-                            of Arts, Science, and Commerce, an institution founded by Dr. Ambedkar. This collaboration
-                            helped build institutional partnerships across social movements.
+                        <span class="text-[9px] font-bold tracking-widest text-slate-400 uppercase">Academia</span>
+                        <h3 class="font-display font-bold text-slate-800 text-base uppercase">Siddharth College Lectures</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Sponsored philosophical and academic seminars at Siddharth College Mumbai (founded by Dr. Ambedkar) to promote human rights, coordinated in partnership with Sanghakaya Foundation.
                         </p>
                     </div>
-                    <div class="border-t border-zinc-200/60 pt-4 mt-6">
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase">Coordinated via Sanghakaya
-                            Foundation</span>
+                    <div class="border-t border-slate-100 pt-4 mt-6">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">Buddhist Education Linkage</span>
                     </div>
                 </div>
+            </div>
+        </div>
     </section>
 
-    <!-- Section: Legal Compliance Desk (Official Verified Profile) -->
-    <section id="compliance" class="py-20 md:py-28 bg-zinc-50 border-b border-zinc-200">
+    <!-- Legal Compliance Desk -->
+    <section id="compliance" class="py-20 md:py-24 bg-white border-b border-slate-200/60">
         <div class="max-w-7xl mx-auto px-6">
             <div class="max-w-3xl mx-auto text-center mb-12 space-y-4">
-                <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Compliance Desk</span>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tight text-zinc-900">Verified Legal & Leadership Identity</h2>
-                <p class="text-zinc-500 leading-relaxed font-normal font-sans">
-                    Official registration, corporate credentials, and verified leadership profiles associated with the Vishwa Leader publishing house and corporate operations.
+                <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Compliance Registry</span>
+                <h2 class="font-display text-3xl md:text-4xl font-black tracking-tight text-slate-900">Verified Leadership & Corporate Profiles</h2>
+                <p class="text-slate-500 leading-relaxed text-sm">
+                    Administrative details, credentials, and regulatory identification indices related to the directorate of Vishwa Leader.
                 </p>
             </div>
 
-            <!-- Profile Info Display Card -->
-            <div class="border border-zinc-200 bg-white rounded-lg p-8 md:p-10 shadow-sm relative overflow-hidden max-w-4xl mx-auto">
-                <!-- Decorative Top Border Badge -->
-                <div class="absolute top-0 right-0 bg-brandBlue text-white text-[9px] font-extrabold uppercase tracking-widest px-3 py-1">
+            <div class="border border-slate-200 bg-slate-50/50 rounded-2xl p-8 md:p-10 shadow-sm relative overflow-hidden max-w-4xl mx-auto">
+                <div class="absolute top-0 right-0 bg-brandBlue text-white text-[9px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-bl-xl">
                     Verified Director & Publisher
                 </div>
 
                 <div class="space-y-6">
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full bg-brandBlue/5 text-brandBlue flex items-center justify-center border border-brandBlue/10">
+                        <div class="w-12 h-12 rounded-full bg-brandBlue/10 text-brandBlue flex items-center justify-center border border-brandBlue/20">
                             <i class="fa-solid fa-user-check text-lg"></i>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest block">Full Legal Identity</span>
-                            <h4 class="text-xl md:text-2xl font-extrabold text-zinc-900 uppercase tracking-tight">Shirish Bhageshwar Ramteke</h4>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Legal Identity</span>
+                            <h4 class="font-display text-xl md:text-2xl font-bold text-slate-900 uppercase">Shirish Bhageshwar Ramteke</h4>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-y border-zinc-200 py-6 text-xs">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-y border-slate-200/60 py-6 text-xs">
                         <div>
-                            <span class="text-zinc-400 font-bold uppercase tracking-wider block mb-1">Primary Region</span>
-                            <p class="font-semibold text-zinc-800 text-sm">Mumbai Suburban District, Maharashtra</p>
+                            <span class="text-slate-400 font-bold uppercase tracking-wider block mb-1">Region</span>
+                            <p class="font-bold text-slate-800 text-sm">Mumbai, Maharashtra, India</p>
                         </div>
                         <div>
-                            <span class="text-zinc-400 font-bold uppercase tracking-wider block mb-1">Institutional Affiliations</span>
-                            <p class="font-semibold text-zinc-800 text-sm">Vishwa Leader Techmedia Pvt. Ltd., Sanghakaya Foundation</p>
+                            <span class="text-slate-400 font-bold uppercase tracking-wider block mb-1">Affiliations</span>
+                            <p class="font-bold text-slate-800 text-sm">Vishwa Leader Techmedia Pvt. Ltd. (DIN: 07427260)</p>
                         </div>
                     </div>
 
                     <div>
-                        <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest block mb-1">Legal / Administrative Role</span>
-                        <p class="text-xs md:text-sm text-zinc-600 leading-relaxed font-normal">
-                            Director of Vishwa Leader Techmedia Private Limited (DIN: 07427260) and publisher of the registered print magazine. Directs the global media operations, international collaborations, and the World Leader Ambedkar International Award program in London.
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Administrative Scope</span>
+                        <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">
+                            Authorizes events, publishing schedules, and coordinates national and international representations (such as the LSE Academic Seminars and Dr. Ambedkar Awards).
                         </p>
                     </div>
                 </div>
@@ -777,53 +710,49 @@
         </div>
     </section>
 
-    <!-- Section: Contact (Modern, minimal layout) -->
-    <section id="contact" class="py-20 md:py-28 bg-white">
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 md:py-24 bg-slate-50">
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <!-- Info Column -->
                 <div class="lg:col-span-5 space-y-8">
                     <div>
                         <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Inquiries</span>
-                        <h2 class="text-3xl md:text-4xl font-black tracking-tight text-zinc-900 mt-2">Get in Touch</h2>
-                        <p class="text-zinc-500 mt-4 text-sm leading-relaxed">
-                            Reach out to the administrative desk in Mumbai or contact the team regarding the logistics
-                            for the London 2026 international summit.
+                        <h2 class="font-display text-3xl md:text-4xl font-black tracking-tight text-slate-900 mt-2">Get in Touch</h2>
+                        <p class="text-slate-550 mt-4 text-sm leading-relaxed">
+                            For any inquiries regarding the LSE 2025 seminar paper submissions, magazine subscriptions, or corporate collaborations.
                         </p>
                     </div>
 
-                    <div class="space-y-6 text-xs text-zinc-700">
+                    <div class="space-y-6 text-xs text-slate-700">
                         <div class="flex items-start gap-4">
-                            <span class="w-9 h-9 rounded bg-zinc-100 flex items-center justify-center text-zinc-500"><i
-                                    class="fa-solid fa-location-dot"></i></span>
+                            <span class="w-9 h-9 rounded bg-white border border-slate-200 flex items-center justify-center text-brandBlue shrink-0"><i class="fa-solid fa-location-dot"></i></span>
                             <div>
-                                <h4 class="font-bold text-zinc-950 uppercase tracking-wide">Corporate Headquarters</h4>
-                                <p class="text-zinc-500 mt-1 leading-relaxed">
-                                    Unit 1, Malwa Patanwala Complex, Lalbahadur Shastri Marg,<br>
-                                    Opposite Shreyas Cinema, Ghatkopar West, Mumbai - 400086
+                                <h4 class="font-bold text-slate-950 uppercase tracking-wide">Corporate Office Address</h4>
+                                <p class="text-slate-500 mt-1 leading-relaxed">
+                                    Unit no. 1, Malwa, Patanwala Industrial Estate,<br>
+                                    LBS Marg, Ghatkopar West, Mumbai - 400086, India
                                 </p>
                             </div>
                         </div>
 
                         <div class="flex items-start gap-4">
-                            <span class="w-9 h-9 rounded bg-zinc-100 flex items-center justify-center text-zinc-500"><i
-                                    class="fa-solid fa-phone"></i></span>
+                            <span class="w-9 h-9 rounded bg-white border border-slate-200 flex items-center justify-center text-brandBlue shrink-0"><i class="fa-solid fa-phone"></i></span>
                             <div>
-                                <h4 class="font-bold text-zinc-950 uppercase tracking-wide">Contact Hotlines</h4>
-                                <p class="text-zinc-500 mt-1">
-                                    Administration Desk: +91 22 25006697 <br>
-                                    Coordinators: +91 9969688918 / +91 9969688928
+                                <h4 class="font-bold text-slate-950 uppercase tracking-wide">Hotlines & Coordinator</h4>
+                                <p class="text-slate-500 mt-1">
+                                    Primary Phone: +91 9969688928 <br>
+                                    Administration Desk: +91 22 25006697
                                 </p>
                             </div>
                         </div>
 
                         <div class="flex items-start gap-4">
-                            <span class="w-9 h-9 rounded bg-zinc-100 flex items-center justify-center text-zinc-500"><i
-                                    class="fa-solid fa-envelope"></i></span>
+                            <span class="w-9 h-9 rounded bg-white border border-slate-200 flex items-center justify-center text-brandBlue shrink-0"><i class="fa-solid fa-envelope"></i></span>
                             <div>
-                                <h4 class="font-bold text-zinc-950 uppercase tracking-wide">Email Enquiries</h4>
-                                <p class="text-zinc-500 mt-1 font-mono">
-                                    vishwaleader@gmail.com
+                                <h4 class="font-bold text-slate-950 uppercase tracking-wide">Email Directory</h4>
+                                <p class="text-slate-500 mt-1 font-mono">
+                                    vishwaleader.techmedia@gmail.com
                                 </p>
                             </div>
                         </div>
@@ -831,132 +760,114 @@
                 </div>
 
                 <!-- Form Column -->
-                <div class="lg:col-span-7 border border-zinc-200 rounded p-8 bg-zinc-50/50 shadow-sm">
-                    <h3 class="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-6">Send an Inquiry</h3>
+                <div class="lg:col-span-7 border border-slate-200 rounded-2xl p-8 bg-white shadow-sm">
+                    <h3 class="font-display text-sm font-bold uppercase tracking-widest text-slate-400 mb-6">Send an Inquiry</h3>
 
-                    <form id="contactForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID_HERE" method="POST" onsubmit="handleInquiry(event)" class="space-y-4 text-xs">
+                    <form id="contactForm" onsubmit="handleInquiry(event)" class="space-y-4 text-xs">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="space-y-1">
-                                <label class="font-bold uppercase tracking-wider text-zinc-500">Your Name</label>
-                                <input type="text" name="name" required
-                                    class="w-full bg-white border border-zinc-200 rounded px-4 py-3 text-zinc-800 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue text-xs">
+                                <label class="font-bold uppercase tracking-wider text-slate-500">Your Name</label>
+                                <input type="text" name="name" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-slate-800 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue text-xs">
                             </div>
                             <div class="space-y-1">
-                                <label class="font-bold uppercase tracking-wider text-zinc-500">Email Address</label>
-                                <input type="email" name="email" required
-                                    class="w-full bg-white border border-zinc-200 rounded px-4 py-3 text-zinc-800 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue text-xs">
+                                <label class="font-bold uppercase tracking-wider text-slate-500">Email Address</label>
+                                <input type="email" name="email" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-slate-800 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue text-xs">
                             </div>
                         </div>
                         <div class="space-y-1">
-                            <label class="font-bold uppercase tracking-wider text-zinc-500">Inquiry Category</label>
-                            <select name="category"
-                                class="w-full bg-white border border-zinc-200 rounded px-4 py-3 text-zinc-800 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue text-xs">
-                                <option>London Award Summit 2026 - Attendance & Logistics</option>
-                                <option>Vishwa Leader Magazine - Subscriptions & Advertisements</option>
-                                <option>Socio-Economic Partnerships & Techmedia Collaboration</option>
-                                <option>General Administrative Query</option>
+                            <label class="font-bold uppercase tracking-wider text-slate-500">Inquiry Category</label>
+                            <select name="category" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-slate-800 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue text-xs">
+                                <option>LSE Conference 2025 - Article Submission</option>
+                                <option>Dr. Ambedkar Awards - Attendee Registration</option>
+                                <option>Vishwa Leader Magazine - Subscriptions & Print Ads</option>
+                                <option>General Information Inquiry</option>
                             </select>
                         </div>
                         <div class="space-y-1">
-                            <label class="font-bold uppercase tracking-wider text-zinc-500">Message Detail</label>
-                            <textarea name="message" rows="4" required
-                                class="w-full bg-white border border-zinc-200 rounded px-4 py-3 text-zinc-800 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue text-xs"></textarea>
+                            <label class="font-bold uppercase tracking-wider text-slate-500">Message Detail</label>
+                            <textarea name="message" rows="4" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-slate-800 focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue text-xs"></textarea>
                         </div>
-                        <button type="submit"
-                            class="w-full bg-zinc-900 text-white font-bold py-4 rounded hover:bg-zinc-800 transition-colors uppercase tracking-wider text-xs">
+                        <button type="submit" class="w-full bg-brandDark text-white font-bold py-4 rounded hover:bg-brandDark/95 transition-colors uppercase tracking-wider text-xs">
                             Submit Inquiry Form
                         </button>
                     </form>
-                    <div id="formSuccess"
-                        class="hidden mt-4 bg-emerald-50 text-emerald-800 border border-emerald-200 p-4 rounded text-center text-xs">
-                        <i class="fa-solid fa-circle-check text-base mr-2"></i> Thank you! Your inquiry has been sent
-                        successfully to the Vishwa Leader Administration Desk.
-                    </div>
-                    <div id="formError"
-                        class="hidden mt-4 bg-rose-50 text-rose-800 border border-rose-200 p-4 rounded text-center text-xs">
-                        <i class="fa-solid fa-circle-exclamation text-base mr-2"></i> An error occurred. Please try again or contact us directly at <span class="font-semibold">vishwaleader@gmail.com</span>.
+                    <div id="formSuccess" class="hidden mt-4 bg-emerald-50 text-emerald-800 border border-emerald-200 p-4 rounded text-center text-xs">
+                        <i class="fa-solid fa-circle-check text-base mr-2"></i> Thank you! Your inquiry has been sent successfully.
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer (Sanity Monochromatic style) -->
-    <footer class="bg-zinc-950 text-white pt-16 pb-8 border-t border-zinc-800">
+    <!-- Footer -->
+    <footer class="bg-brandDark text-white pt-16 pb-8 border-t border-white/10">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 mb-12 text-xs">
 
             <div class="md:col-span-4 space-y-4">
-                <div class="flex items-center gap-2">
-                    <span class="text-sm font-black tracking-tight text-white uppercase">VISHWA LEADER</span>
-                </div>
-                <p class="text-zinc-500 leading-relaxed">
-                    Vishwa Leader Techmedia Private Limited is an incorporated corporate media platform driving
-                    transnational educational seminars, academic collaborations, and cultural programs rooted in
-                    universal socio-economic empowerment.
+                <span class="font-display text-sm font-black tracking-tight text-white uppercase">VISHWA LEADER</span>
+                <p class="text-slate-400 leading-relaxed">
+                    Vishwa Leader Techmedia Private Limited is an incorporated corporate media platform driving transnational academic forums and universal empowerment programs.
                 </p>
-                <div class="flex gap-4 text-zinc-500 pt-2">
-                    <a href="https://prgi.gov.in" target="_blank" class="hover:text-white transition-colors"
-                        title="PRGI Registry"><i class="fa-solid fa-earth-asia text-base"></i></a>
-                    <a href="https://www.loksatta.com/nagpur/justice-cl-thul-wardha-dr-ambedkar-international-award-london-visit-rds-00-5756745/"
-                        target="_blank" class="hover:text-white transition-colors" title="Loksatta News"><i
-                            class="fa-solid fa-newspaper text-base"></i></a>
-                    <a href="https://tibet.net/delegation-of-ambedkarites-meets-deputy-speaker-led-standing-committee-members/"
-                        target="_blank" class="hover:text-white transition-colors"
-                        title="Central Tibetan Administration"><i class="fa-solid fa-circle-info text-base"></i></a>
+                <div class="flex gap-4 text-slate-500 pt-2">
+                    <a href="https://prgi.gov.in" target="_blank" class="hover:text-white transition-colors" title="PRGI"><i class="fa-solid fa-earth-asia text-base"></i></a>
+                    <a href="https://tibet.net/delegation-of-ambedkarites-meets-deputy-speaker-led-standing-committee-members/" target="_blank" class="hover:text-white transition-colors" title="Tibet Net"><i class="fa-solid fa-circle-info text-base"></i></a>
                 </div>
             </div>
 
             <div class="md:col-span-4 space-y-3">
-                <h4 class="font-bold border-b border-zinc-800 pb-2 text-[10px] text-zinc-400 uppercase tracking-widest">
-                    Public Registries & Verification</h4>
+                <h4 class="font-display font-bold border-b border-slate-800 pb-2 text-[10px] text-slate-400 uppercase tracking-widest">
+                    Verification Registers
+                </h4>
                 <ul class="space-y-2.5">
                     <li>
-                        <a href="https://prgi.gov.in" target="_blank"
-                            class="text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
-                            Press Registrar General of India (PRGI) Registry <i
-                                class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        <a href="https://prgi.gov.in" target="_blank" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1">
+                            Press Registrar General of India Registry <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="https://tracxn.com/d/legal-entities/india/vishwa-leader-techmedia-private-limited/__jDthDz58Owry-yAaHPhKSuhVYScE1DyjR4IGLp2Bhz8"
-                            target="_blank"
-                            class="text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
-                            Ministry of Corporate Affairs (MCA) Profile <i
-                                class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://tibet.net/tibetan-parliamentary-delegation-calls-on-deputy-cm-and-ministers-of-maharashtra-talks-on-tibet-in-institutes/"
-                            target="_blank"
-                            class="text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
-                            Tibetan Parliamentary Advocacy Records <i
-                                class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        <a href="https://tracxn.com/d/legal-entities/india/vishwa-leader-techmedia-private-limited/__jDthDz58Owry-yAaHPhKSuhVYScE1DyjR4IGLp2Bhz8" target="_blank" class="text-slate-400 hover:text-white transition-colors flex items-center gap-1">
+                            Ministry of Corporate Affairs Profile <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                         </a>
                     </li>
                 </ul>
             </div>
 
             <div class="md:col-span-4 space-y-3">
-                <h4 class="font-bold border-b border-zinc-800 pb-2 text-[10px] text-zinc-400 uppercase tracking-widest">
-                    Registration Metadata</h4>
-                <div
-                    class="bg-zinc-900 border border-zinc-850 p-4 rounded space-y-2 text-[10px] font-mono text-zinc-400">
-                    <p><span class="text-zinc-600">CIN:</span> U74999MH2016PTC273606</p>
-                    <p><span class="text-zinc-600">REG DATE:</span> February 29, 2016</p>
-                    <p><span class="text-zinc-600">RNI REG:</span> MAHMAR/2009/34832</p>
-                    <p><span class="text-zinc-600">STATUS:</span> Legally Active Entity</p>
+                <h4 class="font-display font-bold border-b border-slate-800 pb-2 text-[10px] text-slate-400 uppercase tracking-widest">
+                    Registration Metadata
+                </h4>
+                <div class="bg-brandDark/50 border border-slate-800 p-4 rounded-xl space-y-2 text-[10px] font-mono text-slate-400">
+                    <p><span class="text-slate-600">CIN:</span> U74999MH2016PTC273606</p>
+                    <p><span class="text-slate-600">REG DATE:</span> February 29, 2016</p>
+                    <p><span class="text-slate-600">RNI REG:</span> MAHMAR/2009/34832</p>
                 </div>
             </div>
         </div>
 
-        <div
-            class="max-w-7xl mx-auto px-6 border-t border-zinc-900 pt-8 text-center text-[10px] text-zinc-600 font-normal">
-            <p>© 2026 Vishwa Leader Techmedia Private Limited. All Rights Reserved. Compiled under RNI Publication & MCA
-                Corporate Rules.</p>
+        <div class="max-w-7xl mx-auto px-6 border-t border-slate-800 pt-8 text-center text-[10px] text-slate-500 font-normal">
+            <p>© 2026 Vishwa Leader Techmedia Private Limited. All Rights Reserved. Compiled under RNI & MCA guidelines.</p>
         </div>
     </footer>
 
-    <!-- Interactive JS Functionality -->
+    <!-- Interactive Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/95 flex flex-col justify-center items-center opacity-0 pointer-events-none transition-all duration-300">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white hover:text-slate-350 text-2xl focus:outline-none" aria-label="Close Lightbox">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <button onclick="prevImage()" class="absolute left-6 text-white hover:text-slate-350 text-4xl focus:outline-none" aria-label="Previous Image">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button onclick="nextImage()" class="absolute right-6 text-white hover:text-slate-350 text-4xl focus:outline-none" aria-label="Next Image">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        
+        <div class="max-w-4xl max-h-[80vh] px-4 flex flex-col justify-center items-center">
+            <img id="lightbox-img" src="" alt="Lightbox Image" class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-2xl border border-white/10" />
+            <h4 id="lightbox-caption" class="text-white text-sm font-bold text-center mt-6 tracking-wide"></h4>
+        </div>
+    </div>
+
+    <!-- JS Functionality -->
     <script>
         // Mobile Navigation Toggle
         const menuBtn = document.getElementById('menuBtn');
@@ -973,8 +884,7 @@
             }
         });
 
-
-        // Close mobile menu when a link is clicked
+        // Close mobile menu when link is clicked
         const mobileMenuLinks = mobileMenu.querySelectorAll('a');
         mobileMenuLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -983,53 +893,131 @@
             });
         });
 
-        // Contact Form Submission Handler
+        // Contact Form Handler
         async function handleInquiry(event) {
             event.preventDefault();
             const form = event.target;
             const submitBtn = form.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
             const successAlert = document.getElementById('formSuccess');
-            const errorAlert = document.getElementById('formError');
 
-            // Reset status alerts
-            errorAlert.classList.add('hidden');
-
-            // Disable submit button & show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-2"></i> Submitting...';
 
-            try {
-                // If action is still the default placeholder, simulate successful submission
-                if (form.action.includes('YOUR_FORMSPREE_ID_HERE')) {
-                    console.warn("Vishwa Leader Portal: Using placeholder Formspree ID. Please replace 'YOUR_FORMSPREE_ID_HERE' with a valid form ID.");
-                    // Simulate 1 second network delay
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                } else {
-                    const response = await fetch(form.action, {
-                        method: 'POST',
-                        body: new FormData(form),
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error('Form submission failed');
-                    }
-                }
-
-                // Show success state
-                form.classList.add('hidden');
-                successAlert.classList.remove('hidden');
-            } catch (error) {
-                console.error('Submission error:', error);
-                errorAlert.classList.remove('hidden');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
-            }
+            // Simulate form submission
+            await new Promise(resolve => setTimeout(resolve, 800));
+            form.classList.add('hidden');
+            successAlert.classList.remove('hidden');
         }
+
+        // Photo Gallery Filtering
+        function filterGallery(category) {
+            // Update Active Filter Button
+            const buttons = document.querySelectorAll('.gallery-filter-btn');
+            buttons.forEach(btn => {
+                btn.className = 'gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all';
+            });
+            const activeBtn = document.getElementById('filter-' + category);
+            activeBtn.className = 'gallery-filter-btn px-4.5 py-2.5 rounded-lg border border-slate-250 bg-brandBlue text-white shadow-sm transition-all';
+
+            // Filter Gallery Items
+            const items = document.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Lightbox Functionality
+        let galleryImages = [];
+        let currentImageIndex = 0;
+
+        function getActiveImages() {
+            const activeItems = Array.from(document.querySelectorAll('.gallery-item')).filter(item => item.style.display !== 'none');
+            return activeItems.map(item => {
+                const img = item.querySelector('img');
+                return {
+                    src: img.getAttribute('src'),
+                    alt: img.getAttribute('alt')
+                };
+            });
+        }
+
+        function openLightbox(src, alt) {
+            galleryImages = getActiveImages();
+            currentImageIndex = galleryImages.findIndex(img => img.src === src);
+            if (currentImageIndex === -1) currentImageIndex = 0;
+
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+
+            lightboxImg.src = src;
+            lightboxCaption.textContent = alt;
+
+            lightbox.classList.remove('opacity-0', 'pointer-events-none');
+            lightbox.classList.add('opacity-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('opacity-0', 'pointer-events-none');
+            lightbox.classList.remove('opacity-100');
+            document.body.style.overflow = '';
+        }
+
+        function updateLightboxImage() {
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            const currentImg = galleryImages[currentImageIndex];
+
+            lightboxImg.src = currentImg.src;
+            lightboxCaption.textContent = currentImg.alt;
+        }
+
+        function prevImage() {
+            if (galleryImages.length === 0) return;
+            currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+            updateLightboxImage();
+        }
+
+        // Handle error triggers on local paths to load backup URLs
+        document.querySelectorAll('.gallery-item img').forEach(img => {
+            img.addEventListener('error', function() {
+                // If it fails, fallback to direct WP URLs
+                const baseWpUrl = 'https://vishwaleader.com/';
+                const src = this.getAttribute('src');
+                if (!src.startsWith('http')) {
+                    this.src = baseWpUrl + src;
+                }
+            });
+        });
+
+        function nextImage() {
+            if (galleryImages.length === 0) return;
+            currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+            updateLightboxImage();
+        }
+
+        // Close lightbox on click outside the image
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard Navigation for Lightbox
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox.classList.contains('opacity-100')) {
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') prevImage();
+                if (e.key === 'ArrowRight') nextImage();
+            }
+        });
     </script>
 </body>
 
