@@ -122,7 +122,7 @@
                 <a href="#conference" class="hover:text-brandBlue transition-colors">LSE Seminar</a>
                 <a href="#events" class="hover:text-brandBlue transition-colors">Events</a>
                 <a href="#gallery" class="hover:text-brandBlue transition-colors">Gallery</a>
-                <a href="#archives" class="hover:text-brandBlue transition-colors">Archive</a>
+                <a href="archives.html" class="hover:text-brandBlue transition-colors">Archive</a>
                 <a href="#networks" class="hover:text-brandBlue transition-colors">Networks</a>
                 <a href="#advertisers" class="hover:text-brandBlue transition-colors">Advertisers</a>
                 <a href="#compliance" class="hover:text-brandBlue transition-colors">Compliance</a>
@@ -143,7 +143,7 @@
             <a href="#conference" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">LSE Seminar</a>
             <a href="#events" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Events</a>
             <a href="#gallery" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Gallery</a>
-            <a href="#archives" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Archive</a>
+            <a href="archives.html" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Archive</a>
             <a href="#networks" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Networks</a>
             <a href="#advertisers" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Advertisers</a>
             <a href="#compliance" class="block py-2 text-sm font-semibold text-slate-700 hover:text-brandBlue">Compliance</a>
@@ -856,49 +856,7 @@
         </div>
     </section>
 
-    <!-- Downloads & Magazine Archive Section -->
-    <section id="archives" class="py-20 md:py-24 bg-slate-50 border-b border-slate-200/60">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                <div class="max-w-3xl space-y-4">
-                    <span class="text-xs font-bold tracking-widest text-brandBlue uppercase">Resources & Publications</span>
-                    <h2 class="font-display text-3xl md:text-4xl font-black tracking-tight text-slate-900">
-                        Downloads & Magazine Archive
-                    </h2>
-                    <p class="text-slate-500 leading-relaxed text-sm">
-                        Access and download official Circulars, Conference forms, and explore the complete archive of our monthly print magazine covers.
-                    </p>
-                </div>
-                <a href="archives.html" class="inline-flex items-center gap-2 bg-brandDark hover:bg-brandDark/95 text-white font-bold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl shrink-0">
-                    <i class="fa-solid fa-folder-open text-amber-400"></i> Open Document Center &rarr;
-                </a>
-            </div>
 
-            <!-- Tab Navigation -->
-            <div class="flex border-b border-slate-200 mb-8 max-w-md">
-                <button onclick="switchArchiveTab('pdfs')" id="tab-btn-pdfs" class="flex-1 pb-4 text-center font-display font-bold text-sm tracking-wide border-b-2 border-brandBlue text-brandBlue transition-all focus:outline-none">
-                    <i class="fa-solid fa-file-pdf mr-2"></i>Circulars & Forms
-                </button>
-                <button onclick="switchArchiveTab('covers')" id="tab-btn-covers" class="flex-1 pb-4 text-center font-display font-bold text-sm tracking-wide border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all focus:outline-none">
-                    <i class="fa-solid fa-book-open mr-2"></i>Magazine Covers
-                </button>
-            </div>
-
-            <!-- PDFs Tab Panel -->
-            <div id="panel-pdfs" class="block animate-fade-in">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="pdfs-grid">
-                    <!-- PDF items rendered dynamically -->
-                </div>
-            </div>
-
-            <!-- Covers Tab Panel -->
-            <div id="panel-covers" class="hidden animate-fade-in">
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="covers-grid">
-                    <!-- Cover items rendered dynamically -->
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Contact Section -->
     <section id="contact" class="py-20 md:py-24 bg-white">
@@ -1607,63 +1565,7 @@
             }
         }
 
-        // Archive list definitions
-        const pdfDownloadsList = [
-            {
-                file: 'awards-circular-2026.pdf',
-                title: 'Dr. Ambedkar International Awards Circular',
-                desc: 'Official May 2026 circular detailing the awards ceremony, venue, and participation guidelines.',
-                size: '5.1 MB'
-            },
-            {
-                file: 'nomination-form-2026.pdf',
-                title: 'Award Nominations Application Form',
-                desc: 'Official submission form to nominate candidates for the Dr. B. R. Ambedkar International Awards.',
-                size: '4.7 MB'
-            },
-            {
-                file: 'business-prospectus-2026.pdf',
-                title: 'International Business Summit Prospectus',
-                desc: 'Detailed overview of partnership models, session structures, and corporate networking tables.',
-                size: '1.4 MB'
-            },
-            {
-                file: 'lse-call-for-papers.pdf',
-                title: 'LSE Academic Conference Call for Papers',
-                desc: 'Full list of sub-themes, guidelines, word count limits, and submission dates for LSE seminar papers.',
-                size: '3.0 MB'
-            },
-            {
-                file: 'event-brochure.pdf',
-                title: 'Vishwa Leader Corporate Event Brochure',
-                desc: 'Multi-page brochure detailing the organizational vision, past drives, and upcoming global campaigns.',
-                size: '3.3 MB'
-            },
-            {
-                file: 'souvenir-invitation.pdf',
-                title: 'Public Invitation for Souvenir Articles',
-                desc: 'Invitation for contributors, scholars, and associates to submit articles and congratulatory messages.',
-                size: '970 KB'
-            },
-            {
-                file: 'advertisement-booking-form.pdf',
-                title: 'Souvenir Print Advertisement Booking Form',
-                desc: 'Ad slots pricing list, print specification requirements, and booking agreement contract form.',
-                size: '1.7 MB'
-            },
-            {
-                file: 'london-itinerary.pdf',
-                title: 'Official London Tour & Seminar Itinerary',
-                desc: 'Day-by-day flight, hotel, seminar schedule, and city tour details for the international delegation.',
-                size: '4.7 MB'
-            },
-            {
-                file: 'summit-poster.pdf',
-                title: 'Dr. Ambedkar London Summit Event Poster',
-                desc: 'High-resolution official poster containing details of the LSE Seminar and Awards Ceremony.',
-                size: '238 KB'
-            }
-        ];
+
 
         const magazineCoversList = [
             { src: 'December Cover 09.jpg', title: 'December 2009 Cover', date: 'Dec 2009' },
@@ -1689,79 +1591,7 @@
             { src: 'feb 2012.jpg', title: 'February 2012 Cover', date: 'Feb 2012' }
         ];
 
-        function switchArchiveTab(tabId) {
-            const btnPdfs = document.getElementById('tab-btn-pdfs');
-            const btnCovers = document.getElementById('tab-btn-covers');
-            const panelPdfs = document.getElementById('panel-pdfs');
-            const panelCovers = document.getElementById('panel-covers');
 
-            if (tabId === 'pdfs') {
-                btnPdfs.className = "flex-1 pb-4 text-center font-display font-bold text-sm tracking-wide border-b-2 border-brandBlue text-brandBlue transition-all focus:outline-none";
-                btnCovers.className = "flex-1 pb-4 text-center font-display font-bold text-sm tracking-wide border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all focus:outline-none";
-                panelPdfs.classList.remove('hidden');
-                panelPdfs.classList.add('block');
-                panelCovers.classList.remove('block');
-                panelCovers.classList.add('hidden');
-            } else {
-                btnCovers.className = "flex-1 pb-4 text-center font-display font-bold text-sm tracking-wide border-b-2 border-brandBlue text-brandBlue transition-all focus:outline-none";
-                btnPdfs.className = "flex-1 pb-4 text-center font-display font-bold text-sm tracking-wide border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition-all focus:outline-none";
-                panelCovers.classList.remove('hidden');
-                panelCovers.classList.add('block');
-                panelPdfs.classList.remove('block');
-                panelPdfs.classList.add('hidden');
-            }
-        }
-
-        function openMagazineLightbox(src, alt) {
-            lightboxMode = 'magazine';
-            openLightbox(src, alt);
-        }
-
-        function renderArchives() {
-            const pdfsGrid = document.getElementById('pdfs-grid');
-            const coversGrid = document.getElementById('covers-grid');
-
-            // Render PDFs
-            if (pdfsGrid) {
-                pdfsGrid.innerHTML = pdfDownloadsList.map(pdf => `
-                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-                        <div class="space-y-3">
-                            <div class="flex items-center gap-3">
-                                <span class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center border border-red-100 shrink-0">
-                                    <i class="fa-solid fa-file-pdf text-lg"></i>
-                                </span>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-sm leading-tight line-clamp-2" title="\${pdf.title}">\${pdf.title}</h4>
-                                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">\${pdf.size}</span>
-                                </div>
-                            </div>
-                            <p class="text-xs text-slate-550 leading-relaxed font-normal">\${pdf.desc}</p>
-                        </div>
-                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                            <a href="pdfs/\${encodeURIComponent(pdf.file)}" download="\${pdf.file}" class="inline-flex items-center gap-1.5 bg-brandBlue text-white font-bold px-4 py-2.5 rounded-lg text-[10px] hover:bg-brandBlue/90 transition-colors uppercase tracking-wider shadow-sm">
-                                <i class="fa-solid fa-download"></i> Download
-                            </a>
-                            <a href="archives.html?file=\${encodeURIComponent(pdf.file)}" class="text-[10px] font-bold text-slate-500 hover:text-brandBlue transition-colors uppercase tracking-wide">
-                                Preview <i class="fa-solid fa-arrow-up-right-from-square text-[9px] ml-0.5"></i>
-                            </a>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // Render Covers
-            if (coversGrid) {
-                coversGrid.innerHTML = magazineCoversList.map(cover => `
-                    <a href="archives.html?cover=\${encodeURIComponent(cover.src)}" class="group relative aspect-[3/4] w-full rounded-xl overflow-hidden bg-slate-100 border border-slate-200 hover:border-slate-450 hover:shadow-md transition-all focus:outline-none">
-                        <img src="magazine-covers/\${cover.src}" alt="\${cover.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-left">
-                            <h4 class="text-white text-xs font-bold font-display leading-tight">\${cover.title}</h4>
-                            <span class="text-amber-400 text-[9px] font-bold mt-1 uppercase tracking-widest">\${cover.date}</span>
-                        </div>
-                    </a>
-                `).join('');
-            }
-        }
 
         function renderTicker() {
             const tickerTrack = document.getElementById('ticker-track');
@@ -1784,7 +1614,6 @@
         // Trigger dynamic API load on document mount
         window.addEventListener('DOMContentLoaded', () => {
             loadWordPressMedia();
-            renderArchives();
             renderTicker();
         });
     </script>
