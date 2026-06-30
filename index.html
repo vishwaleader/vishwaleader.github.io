@@ -120,6 +120,18 @@
             border-color: rgba(79, 70, 229, 0.25);
             color: #4F46E5;
         }
+
+        /* ── Hamburger Morphing CSS ── */
+        #menuBtn.menu-open #bar1 {
+            transform: translateY(7px) rotate(45deg);
+        }
+        #menuBtn.menu-open #bar2 {
+            opacity: 0;
+            transform: scale(0);
+        }
+        #menuBtn.menu-open #bar3 {
+            transform: translateY(-7px) rotate(-45deg);
+        }
     </style>
 </head>
 
@@ -215,51 +227,90 @@
             </nav>
 
             <!-- Mobile Hamburger Menu Button -->
-            <button id="menuBtn" class="md:hidden text-slate-800 hover:text-brandBlue text-xl focus:outline-none" aria-label="Toggle Menu">
-                <i class="fa-solid fa-bars"></i>
+            <button id="menuBtn" class="md:hidden relative w-10 h-10 text-slate-800 hover:text-brandBlue focus:outline-none flex items-center justify-center" aria-label="Toggle Menu">
+                <div class="w-6 h-4 flex flex-col justify-between items-center relative">
+                    <span class="w-full h-0.5 bg-slate-800 rounded transition-all duration-300 transform" id="bar1"></span>
+                    <span class="w-full h-0.5 bg-slate-800 rounded transition-all duration-300 transform" id="bar2"></span>
+                    <span class="w-full h-0.5 bg-slate-800 rounded transition-all duration-300 transform" id="bar3"></span>
+                </div>
             </button>
         </div>
 
         <!-- Mobile Navigation Menu -->
         <div id="mobileMenu" class="md:hidden max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out bg-white border-t border-slate-200 px-4 space-y-1 shadow-inner">
-            <a href="#about" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Corporate</a>
-            <a href="#conference" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">SOAS Conference</a>
-            <a href="#events" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Events</a>
-            <a href="gallery" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Gallery</a>
-            <a href="archives" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Archive</a>
-            <a href="#networks" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Networks</a>
-            <a href="#advertisers" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Advertisers</a>
-
-            <!-- Mobile: shown when NOT logged in -->
-            <div id="mobile-login-links" class="py-2.5 border-b border-slate-100 flex flex-col gap-1.5">
-                <a href="member" class="text-sm font-semibold text-brandBlue hover:text-brandBlue/85 flex items-center gap-1">
-                    <i class="fa-solid fa-right-to-bracket text-xs"></i> Login/SignIn
+            <div class="py-3 space-y-1.5">
+                <a href="#about" class="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
+                    <i class="fa-solid fa-building text-slate-400 mr-3 w-5 text-center text-xs"></i>
+                    <span>Corporate</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
                 </a>
-                <a href="admin" class="text-[10px] text-slate-405 hover:text-indigo-655 font-bold tracking-wide">
-                    login as team
+                <a href="#conference" class="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
+                    <i class="fa-solid fa-graduation-cap text-slate-400 mr-3 w-5 text-center text-xs"></i>
+                    <span>SOAS Conference</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
                 </a>
-            </div>
+                <a href="#events" class="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
+                    <i class="fa-solid fa-calendar-days text-slate-400 mr-3 w-5 text-center text-xs"></i>
+                    <span>Events</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
+                </a>
+                <a href="gallery" class="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
+                    <i class="fa-solid fa-images text-slate-400 mr-3 w-5 text-center text-xs"></i>
+                    <span>Gallery</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
+                </a>
+                <a href="archives" class="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
+                    <i class="fa-solid fa-box-archive text-slate-400 mr-3 w-5 text-center text-xs"></i>
+                    <span>Archive</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
+                </a>
+                <a href="#networks" class="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
+                    <i class="fa-solid fa-circle-nodes text-slate-400 mr-3 w-5 text-center text-xs"></i>
+                    <span>Networks</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
+                </a>
+                <a href="#advertisers" class="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
+                    <i class="fa-solid fa-rectangle-ad text-slate-400 mr-3 w-5 text-center text-xs"></i>
+                    <span>Advertisers</span>
+                    <i class="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
+                </a>
 
+                <!-- Mobile: shown when NOT logged in -->
+                <div id="mobile-login-links" class="pt-2 border-t border-slate-100 flex flex-col gap-1.5">
+                    <a href="member" class="flex items-center py-2.5 px-3 text-sm font-semibold text-brandBlue hover:text-brandBlue/85 active:bg-slate-50 rounded-xl transition-all">
+                        <i class="fa-solid fa-right-to-bracket text-brandBlue mr-3 w-5 text-center text-xs"></i>
+                        <span>Login/SignIn</span>
+                        <i class="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
+                    </a>
+                    <a href="admin" class="flex items-center py-1.5 px-3 text-xs font-semibold text-indigo-600 hover:text-indigo-750 active:bg-slate-50 rounded-lg transition-all pl-11">
+                        <i class="fa-solid fa-user-shield mr-2"></i> login as team
+                    </a>
+                </div>
 
-            <!-- Mobile: shown when logged in (hidden by default) -->
-            <div id="mobile-user-status" class="hidden py-3 border-b border-slate-100 space-y-2">
-                <div class="flex items-center gap-3">
-                    <div id="mobile-avatar" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"></div>
-                    <div class="overflow-hidden flex-1">
-                        <p id="mobile-display-name" class="text-xs font-bold text-slate-900 truncate"></p>
-                        <p id="mobile-status-label" class="text-[10px] font-extrabold uppercase tracking-wider"></p>
+                <!-- Mobile: shown when logged in (hidden by default) -->
+                <div id="mobile-user-status" class="hidden pt-3 border-t border-slate-100 space-y-2">
+                    <div class="flex items-center gap-3 px-3 py-2 bg-slate-55/50 rounded-xl">
+                        <div id="mobile-avatar" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 bg-brandBlue"></div>
+                        <div class="overflow-hidden flex-1">
+                            <p id="mobile-display-name" class="text-xs font-bold text-slate-900 truncate"></p>
+                            <p id="mobile-status-label" class="text-[9px] font-extrabold uppercase tracking-wider text-brandBlue"></p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <a id="mobile-portal-link" href="member" class="flex items-center py-2.5 px-3 text-sm font-semibold text-brandBlue hover:text-brandBlue/85 active:bg-slate-50 rounded-xl transition-all">
+                            <i id="mobile-portal-icon" class="fa-solid fa-user text-brandBlue mr-3 w-5 text-center text-xs"></i>
+                            <span id="mobile-portal-text">Member Portal</span>
+                            <i class="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
+                        </a>
+                        <button onclick="handleIndexSignOut()" class="flex items-center py-2.5 px-3 text-sm font-semibold text-rose-600 hover:text-rose-750 active:bg-rose-55/30 rounded-xl transition-all w-full text-left">
+                            <i class="fa-solid fa-right-from-bracket text-rose-500 mr-3 w-5 text-center text-xs"></i>
+                            <span>Sign Out</span>
+                        </button>
                     </div>
                 </div>
-                <a id="mobile-portal-link" href="member" class="flex items-center gap-2 text-xs font-semibold text-brandBlue hover:underline">
-                    <i id="mobile-portal-icon" class="fa-solid fa-user"></i>
-                    <span id="mobile-portal-text">Member Portal</span>
-                </a>
-                <button onclick="handleIndexSignOut()" class="flex items-center gap-2 text-xs font-semibold text-rose-600 hover:text-rose-700">
-                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-                </button>
-            </div>
 
-            <a href="#contact" class="block py-3 my-2 text-center bg-brandBlue text-white rounded text-xs font-bold tracking-wide uppercase">Contact Us</a>
+                <a href="#contact" class="block py-3 mt-4 text-center bg-brandBlue text-white rounded-xl text-xs font-bold tracking-wide uppercase active:scale-[0.98] transition-transform shadow-md">Contact Us</a>
+            </div>
         </div>
     </header>
 
@@ -277,7 +328,7 @@
                     <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
                     <span data-field="hero.location">London, UK</span> • SEPTEMBER 18-20, 2026
                 </div>
-                <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-white">
+                <h1 class="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-white">
                     <span data-field="hero.title">Vishwa Leader Dr. B. R. Ambedkar International Awards 2026</span>
                 </h1>
                 <p class="text-slate-300 text-base md:text-lg leading-relaxed max-w-2xl font-normal" data-field="hero.description">
@@ -285,14 +336,14 @@
                 </p>
                 
                 <!-- CTA buttons for the three main calls -->
-                <div class="flex flex-col sm:flex-row flex-wrap gap-4 pt-4">
-                    <a id="btn-abstract" data-field="announcements.abstractLink" href="#conference" class="bg-brandBlue text-white font-bold px-6 py-4 rounded hover:bg-brandBlue/90 text-xs tracking-wider uppercase text-center transition-all shadow-md flex items-center justify-center gap-2">
+                <div class="flex flex-col sm:flex-row flex-wrap gap-4 pt-4 w-full">
+                    <a id="btn-abstract" data-field="announcements.abstractLink" href="#conference" class="w-full sm:w-auto bg-brandBlue text-white font-bold px-6 py-4 rounded hover:bg-brandBlue/90 active:scale-[0.98] text-xs tracking-wider uppercase text-center transition-all shadow-md flex items-center justify-center gap-2">
                         <i class="fa-solid fa-graduation-cap"></i> Submit Abstract
                     </a>
-                    <a id="btn-nomination" data-field="announcements.awardLink" href="#contact" class="bg-amber-500 text-brandDark font-bold px-6 py-4 rounded hover:bg-amber-400 text-xs tracking-wider uppercase text-center transition-all shadow-md flex items-center justify-center gap-2">
+                    <a id="btn-nomination" data-field="announcements.awardLink" href="#contact" class="w-full sm:w-auto bg-amber-500 text-brandDark font-bold px-6 py-4 rounded hover:bg-amber-400 active:scale-[0.98] text-xs tracking-wider uppercase text-center transition-all shadow-md flex items-center justify-center gap-2">
                         <i class="fa-solid fa-trophy"></i> Nominate for Award
                     </a>
-                    <a id="btn-business" data-field="announcements.businessLink" href="#contact" class="border border-slate-500 text-white bg-slate-900/60 font-bold px-6 py-4 rounded hover:bg-slate-800 text-xs tracking-wider uppercase text-center transition-all shadow-sm flex items-center justify-center gap-2">
+                    <a id="btn-business" data-field="announcements.businessLink" href="#contact" class="w-full sm:w-auto border border-slate-500 text-white bg-slate-900/60 font-bold px-6 py-4 rounded hover:bg-slate-800 active:scale-[0.98] text-xs tracking-wider uppercase text-center transition-all shadow-sm flex items-center justify-center gap-2">
                         <i class="fa-solid fa-briefcase"></i> Business Participation
                     </a>
                 </div>
@@ -1128,11 +1179,13 @@
         const mobileMenu = document.getElementById('mobileMenu');
 
         menuBtn.addEventListener('click', () => {
-            const isOpen = !mobileMenu.classList.contains('max-h-0');
+            const isOpen = menuBtn.classList.contains('menu-open');
             if (isOpen) {
+                menuBtn.classList.remove('menu-open');
                 mobileMenu.classList.add('max-h-0', 'opacity-0');
                 mobileMenu.classList.remove('max-h-[600px]', 'opacity-100', 'py-4');
             } else {
+                menuBtn.classList.add('menu-open');
                 mobileMenu.classList.remove('max-h-0', 'opacity-0');
                 mobileMenu.classList.add('max-h-[600px]', 'opacity-100', 'py-4');
             }
@@ -1142,6 +1195,7 @@
         const mobileMenuLinks = mobileMenu.querySelectorAll('a');
         mobileMenuLinks.forEach(link => {
             link.addEventListener('click', () => {
+                menuBtn.classList.remove('menu-open');
                 mobileMenu.classList.add('max-h-0', 'opacity-0');
                 mobileMenu.classList.remove('max-h-[600px]', 'opacity-100', 'py-4');
             });
