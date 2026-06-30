@@ -169,9 +169,10 @@
                          alt="Vishwa Leader Logo" 
                          class="h-9 md:h-12 w-auto object-contain transition-transform group-hover:scale-105" 
                          onerror="this.src='assets/images/vishwaleader-logo-hd.png'" />
-                    <span class="hidden sm:inline text-[10px] font-black tracking-widest text-brandBlue uppercase border border-brandBlue/20 px-2.5 py-0.5 rounded bg-brandBlue/5">
-                        Techmedia
-                    </span>
+                    <div class="flex flex-col gap-0.5 leading-none">
+                        <span class="text-base md:text-lg font-black tracking-tight text-brandBlue font-display">Vishwa Leader</span>
+                        <span class="text-[9px] md:text-[10px] font-black tracking-widest text-brandBlue uppercase border border-brandBlue/20 px-2 py-0.5 rounded bg-brandBlue/5 self-start">Techmedia</span>
+                    </div>
                 </a>
             </div>
 
@@ -254,7 +255,8 @@
                 .cp-member-login-wrapper {
                     position: fixed; left: 0; right: 0; bottom: 0; top: 80px; z-index: 9999;
                     font-family: 'Open Sans', sans-serif; overflow: hidden;
-                    background: #f8fafc;
+                    background: url('assets/images/buddha-bg.png') no-repeat center center;
+                    background-size: cover;
                 }
 
                 .cp-mbtn { display: inline-block; *display: inline; *zoom: 1; padding: 4px 10px 4px; margin-bottom: 0; font-size: 13px; line-height: 18px; color: #333333; text-align: center; text-shadow: 0 1px 1px rgba(255,255,255,0.75); vertical-align: middle; background-color: #f5f5f5; background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6); background-image: linear-gradient(to bottom, #ffffff, #e6e6e6); background-repeat: repeat-x; border: 1px solid #e6e6e6; border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25); -webkit-border-radius: 4px; border-radius: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; }
@@ -270,12 +272,18 @@
                     position: absolute;
                     top: 50%;
                     left: 50%;
-                    margin: -280px 0 0 -150px;
-                    width: 300px;
-                    height: 560px;
+                    transform: translate(-50%, -50%);
+                    width: 340px;
+                    background: rgba(255, 255, 255, 0.85);
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    padding: 40px 30px;
+                    border-radius: 20px;
+                    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+                    border: 1px solid rgba(255,255,255,0.4);
                 }
-                .cp-mlogin-logo { display: block; width: 200px; height: 200px; margin: 0 auto 16px auto; object-fit: contain; }
-                .cp-mlogin h1 { color: #0f172a; letter-spacing: 1px; text-align: center; padding-bottom: 15px; font-weight: normal; margin: 0; }
+                .cp-mlogin-logo { display: block; width: 160px; height: 160px; margin: 0 auto 16px auto; object-fit: contain; }
+                .cp-mlogin h1 { color: #0f172a; letter-spacing: 1px; text-align: center; padding-bottom: 20px; font-weight: bold; margin: 0; font-size: 22px; }
 
                 .cp-minput {
                     width: 100%; margin-bottom: 10px;
