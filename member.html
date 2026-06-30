@@ -232,6 +232,12 @@
                             </div>
                         </div>
 
+                        <!-- Full Name -->
+                        <div class="space-y-1.5">
+                            <label class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Full Name</label>
+                            <input type="text" id="profile-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-brandBlue focus:bg-white" placeholder="e.g. John Doe" required>
+                        </div>
+
                         <!-- Designation / Title -->
                         <div class="space-y-1.5">
                             <label class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">Designation / Profession</label>
@@ -610,17 +616,29 @@
             if (!memberData) return;
 
             // Update ID Card Text
-            document.getElementById('card-name').textContent = memberData.name;
-            document.getElementById('card-title').textContent = memberData.designation;
-            document.getElementById('card-country').innerHTML = `<i class="fa-solid fa-earth-americas mr-0.5"></i> ${memberData.country}`;
-            document.getElementById('card-id').textContent = memberData.memberId;
-            document.getElementById('card-since').textContent = memberData.memberSince;
+            document.getElementById('card-name').textContent = memberData.name || 'Full Name';
+            document.getElementById('card-title').textContent = memberData.designation || 'Professional Title';
+            document.getElementById('card-country').innerHTML = `<i class="fa-solid fa-earth-americas mr-0.5"></i> ${memberData.country || 'Country'}`;
+            document.getElementById('card-id').textContent = memberData.memberId || 'VL-2026-XXXX';
+            document.getElementById('card-since').textContent = memberData.memberSince || 'Jun 30, 2026';
 
             if (memberData.photoURL) {
                 document.getElementById('card-photo').src = memberData.photoURL;
             }
 
+            // Update Header and Mobile badges with the name from profile
+            const displayName = memberData.name || auth.currentUser.displayName || auth.currentUser.email.split('@')[0];
+            if (document.getElementById('header-username')) {
+                document.getElementById('header-username').textContent = displayName;
+            }
+            if (document.getElementById('mobile-username')) {
+                document.getElementById('mobile-username').textContent = displayName;
+            }
+
             // Update Profile Form Fields
+            if (document.getElementById('profile-name')) {
+                document.getElementById('profile-name').value = memberData.name || '';
+            }
             document.getElementById('profile-designation').value = memberData.designation || '';
             document.getElementById('profile-organization').value = memberData.organization || '';
             document.getElementById('profile-country').value = memberData.country || '';
@@ -661,6 +679,7 @@
                 }
 
                 const updated = {
+                    name: document.getElementById('profile-name').value.trim(),
                     designation: document.getElementById('profile-designation').value.trim(),
                     organization: document.getElementById('profile-organization').value.trim(),
                     country: document.getElementById('profile-country').value.trim(),
