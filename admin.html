@@ -107,10 +107,11 @@
                     position: absolute;
                     top: 50%;
                     left: 50%;
-                    margin: -150px 0 0 -150px;
+                    margin: -210px 0 0 -150px;
                     width:300px;
-                    height:300px;
+                    height:420px;
                 }
+                .cp-login-logo { display: block; width: 90px; height: 90px; margin: 0 auto 12px auto; object-fit: contain; }
                 .cp-login h1 { color: #0f172a; letter-spacing:1px; text-align:center; padding-bottom: 15px; font-weight: normal; margin: 0; }
 
                 .cp-input { 
@@ -139,6 +140,7 @@
             </style>
             
             <div class="cp-login">
+                <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" class="cp-login-logo" />
                 <h1>Login</h1>
                 <form method="post" onsubmit="handleAdminLogin(event)">
                     <input type="text" id="admin-username-input" class="cp-input" name="u" placeholder="Username" required="required" />
