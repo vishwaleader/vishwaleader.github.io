@@ -109,527 +109,650 @@
         <div id="admin-tabs-nav" class="hidden w-full flex border-b border-slate-850 gap-4 mb-6">
             <button onclick="switchAdminTab('settings')" id="admin-tab-settings" class="px-5 py-3 border-b-2 border-brandBlue font-bold text-xs uppercase tracking-wider text-white transition-all flex items-center gap-1.5">
                 <i class="fa-solid fa-gears"></i> Site Settings
-            </button>
-            <button onclick="switchAdminTab('gallery')" id="admin-tab-gallery" class="px-5 py-3 border-b-2 border-transparent font-bold text-xs uppercase tracking-wider text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
-                <i class="fa-solid fa-images"></i> Photo Gallery
-            </button>
-            <button onclick="switchAdminTab('archives')" id="admin-tab-archives" class="px-5 py-3 border-b-2 border-transparent font-bold text-xs uppercase tracking-wider text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
-                <i class="fa-solid fa-file-pdf"></i> Document Archives
-            </button>
-        </div>
+        <!-- Compatible hidden nav element to prevent JS errors -->
+        <div id="admin-tabs-nav" class="hidden"></div>
 
-        <!-- Dashboard Panel Content (Hidden by default until auth) -->
-        <div id="admin-dashboard" class="hidden w-full space-y-8">
+        <!-- Redesigned Friendly Visual Workspace -->
+        <div id="admin-dashboard" class="hidden w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            <!-- Tab 1: Settings Wrapper -->
-            <div id="admin-tab-content-settings" class="space-y-8">
-                <form onsubmit="handleSaveSettings(event)" class="space-y-8">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
-                    <div>
-                        <h1 class="font-display text-3xl font-black text-white uppercase tracking-tight">Configuration Console</h1>
-                        <p class="text-xs text-slate-400 mt-1">Make changes below and press Save. Updates propagate to the main website immediately.</p>
+            <!-- LEFT COLUMN: Simplified Navigation & Path Guide -->
+            <div class="lg:col-span-3 space-y-6">
+                <!-- Brand & User Profile Widget -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-lg space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-brandBlue/10 border border-brandBlue/20 flex items-center justify-center text-brandBlue text-lg">
+                            <i class="fa-solid fa-square-poll-horizontal"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-display text-sm font-black text-white uppercase tracking-wider">Site Manager</h2>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Admin Workspace</p>
+                        </div>
                     </div>
-                    <button type="submit" class="bg-brandBlue hover:bg-brandBlue/90 text-white font-bold px-8 py-3.5 rounded-xl transition-all shadow-md text-xs uppercase tracking-wider flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-floppy-disk"></i> Save All Changes
-                    </button>
+                    
+                    <div class="border-t border-slate-800 pt-3 flex items-center justify-between text-[11px] text-slate-300">
+                        <span id="user-display-name-sidebar" class="font-bold truncate max-w-[130px]"><i class="fa-solid fa-user-circle mr-1 text-slate-500"></i> admin</span>
+                        <button onclick="handleSignOut()" class="text-rose-500 hover:text-rose-400 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Grid Layout for Settings Cards -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <!-- Left Column (8 cols): Announcements, Hero, Conference, Events -->
-                    <div class="lg:col-span-8 space-y-8">
-                        
-                        <!-- Card: Main Calls & Link URLs -->
-                        <div class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md rounded-2xl p-6 space-y-4">
-                            <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3 mb-2">
-                                <i class="fa-solid fa-link text-brandBlue text-sm"></i>
-                                <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Call-to-Action Link Overrides</h3>
+                <!-- Interactive Page Guides (Sidebar Menu) -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-4 shadow-lg space-y-1.5">
+                    <div class="text-[9px] font-extrabold text-slate-500 uppercase tracking-widest px-2.5 mb-3">
+                        Website Sections to Edit
+                    </div>
+                    
+                    <button onclick="switchAdminTab('settings')" id="sidebar-tab-settings" class="w-full text-left p-3.5 rounded-2xl flex items-center gap-3 transition-all">
+                        <span class="w-8 h-8 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-house"></i></span>
+                        <div class="flex-grow">
+                            <div class="text-xs font-bold">Homepage Content</div>
+                            <div class="text-[9px] text-slate-450 leading-snug">Edit banners, text, & schedule</div>
+                        </div>
+                    </button>
+
+                    <button onclick="switchAdminTab('gallery')" id="sidebar-tab-gallery" class="w-full text-left p-3.5 rounded-2xl flex items-center gap-3 transition-all">
+                        <span class="w-8 h-8 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-images"></i></span>
+                        <div class="flex-grow">
+                            <div class="text-xs font-bold">Photo Gallery Page</div>
+                            <div class="text-[9px] text-slate-450 leading-snug">Add or remove summit photos</div>
+                        </div>
+                    </button>
+
+                    <button onclick="switchAdminTab('archives')" id="sidebar-tab-archives" class="w-full text-left p-3.5 rounded-2xl flex items-center gap-3 transition-all">
+                        <span class="w-8 h-8 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-file-pdf"></i></span>
+                        <div class="flex-grow">
+                            <div class="text-xs font-bold">Digital Library (PDF)</div>
+                            <div class="text-[9px] text-slate-450 leading-snug">Publish circulars & forms</div>
+                        </div>
+                    </button>
+
+                    <button onclick="switchAdminTab('security')" id="sidebar-tab-security" class="w-full text-left p-3.5 rounded-2xl flex items-center gap-3 transition-all">
+                        <span class="w-8 h-8 rounded-xl flex items-center justify-center text-sm"><i class="fa-solid fa-key"></i></span>
+                        <div class="flex-grow">
+                            <div class="text-xs font-bold">Workspace Password</div>
+                            <div class="text-[9px] text-slate-450 leading-snug">Change access credentials</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Interactive Editors -->
+            <div class="lg:col-span-9 space-y-8">
+                
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <!-- TAB 1: SITE CONFIGURATION / SETTINGS                         -->
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <div id="admin-tab-content-settings" class="space-y-8">
+                    <form onsubmit="handleSaveSettings(event)" class="space-y-8">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                            <div>
+                                <h1 class="font-display text-2xl font-black text-white uppercase tracking-tight">Homepage Content Editor</h1>
+                                <p class="text-xs text-slate-400 mt-1">Make changes below and click Save. Updates appear on the live website immediately.</p>
                             </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Call for Abstracts Href</label>
-                                    <input type="text" id="announcements-abstract" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" placeholder="#conference">
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Call for Nominations Href</label>
-                                    <input type="text" id="announcements-award" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" placeholder="#contact">
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Business Participation Href</label>
-                                    <input type="text" id="announcements-business" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" placeholder="#contact">
-                                </div>
-                            </div>
+                            <button type="submit" class="bg-brandBlue hover:bg-brandBlue/90 text-white font-bold px-8 py-3.5 rounded-xl transition-all shadow-md text-xs uppercase tracking-wider flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Content Updates
+                            </button>
                         </div>
 
-                        <!-- Card: Hero Banner Override -->
-                        <div class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md rounded-2xl p-6 space-y-4">
-                            <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3 mb-2">
-                                <i class="fa-solid fa-fire text-amber-500 text-sm"></i>
-                                <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Hero Section (Main Banner)</h3>
+                        <!-- Card 1: Homepage Title & Main Announcement Text -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 space-y-5">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-fire text-amber-500 text-sm"></i>
+                                    <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Main Banner (Hero Section)</h3>
+                                </div>
+                                <span class="text-[8px] font-bold text-brandBlue uppercase bg-brandBlue/10 px-2 py-0.5 rounded border border-brandBlue/20">
+                                    📍 TOP OF HOMEPAGE (index.html)
+                                </span>
                             </div>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hero Display Title</label>
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Main Banner Heading</label>
                                     <input type="text" id="hero-title" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
+                                    <span class="text-[9px] text-slate-500 block">The big title showing at the top.</span>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hero Location Label</label>
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Location Tagline</label>
                                     <input type="text" id="hero-location" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
+                                    <span class="text-[9px] text-slate-500 block">The location header (e.g. London, UK).</span>
                                 </div>
                             </div>
                             
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hero Description Paragraph</label>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Banner Description Text</label>
                                 <textarea id="hero-description" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required></textarea>
+                                <span class="text-[9px] text-slate-500 block">A detailed paragraph describing the organization/summit.</span>
                             </div>
                         </div>
 
-                        <!-- Card: Conference Details & Dates -->
-                        <div class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md rounded-2xl p-6 space-y-4">
-                            <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3 mb-2">
-                                <i class="fa-solid fa-graduation-cap text-indigo-400 text-sm"></i>
-                                <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Academic Conference Details</h3>
+                        <!-- Card 2: Calls to Action Links -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 space-y-5">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-link text-brandBlue text-sm"></i>
+                                    <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Action Button Links</h3>
+                                </div>
+                                <span class="text-[8px] font-bold text-brandBlue uppercase bg-brandBlue/10 px-2 py-0.5 rounded border border-brandBlue/20">
+                                    📍 NAV BARS & HERO BUTTONS
+                                </span>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Call for Abstracts Button</label>
+                                    <input type="text" id="announcements-abstract" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" placeholder="#conference">
+                                    <span class="text-[9px] text-slate-500 block">Where to go when clicked (e.g. #conference).</span>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Award Nominations Button</label>
+                                    <input type="text" id="announcements-award" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" placeholder="#contact">
+                                    <span class="text-[9px] text-slate-500 block">Where to go when clicked (e.g. #contact).</span>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Business Booking Button</label>
+                                    <input type="text" id="announcements-business" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" placeholder="#contact">
+                                    <span class="text-[9px] text-slate-500 block">Where to go when clicked (e.g. #contact).</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: SOAS Academic Conference Dates -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 space-y-5">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-graduation-cap text-indigo-400 text-sm"></i>
+                                    <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Conference Details & Deadlines</h3>
+                                </div>
+                                <span class="text-[8px] font-bold text-brandBlue uppercase bg-brandBlue/10 px-2 py-0.5 rounded border border-brandBlue/20">
+                                    📍 SOAS CONFERENCE SECTION
+                                </span>
                             </div>
                             
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Primary Theme Statement</label>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Primary Conference Theme</label>
                                 <input type="text" id="conference-theme" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
+                                <span class="text-[9px] text-slate-500 block">Main research topic headline.</span>
                             </div>
                             
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <div class="space-y-1.5">
-                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Abstract Deadline</label>
-                                    <input type="text" id="conference-abstract" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
+                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Abstracts Deadline</label>
+                                    <input type="text" id="conference-abstract" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                 </div>
                                 <div class="space-y-1.5">
                                     <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Acceptance Date</label>
-                                    <input type="text" id="conference-acceptance" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
+                                    <input type="text" id="conference-acceptance" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                 </div>
                                 <div class="space-y-1.5">
                                     <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Full Paper Deadline</label>
-                                    <input type="text" id="conference-paper" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
+                                    <input type="text" id="conference-paper" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                 </div>
                                 <div class="space-y-1.5">
                                     <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Conference Date</label>
-                                    <input type="text" id="conference-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
+                                    <input type="text" id="conference-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Card: Events Timeline (Day 1, 2, 3) -->
-                        <div class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md rounded-2xl p-6 space-y-6">
-                            <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3 mb-2">
-                                <i class="fa-solid fa-calendar-days text-emerald-400 text-sm"></i>
-                                <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Three-Day Event Schedule</h3>
+                        <!-- Card 4: Three-Day Event Timelines -->
+                        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 space-y-6">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                <div class="flex items-center gap-2.5">
+                                    <i class="fa-solid fa-calendar-days text-emerald-400 text-sm"></i>
+                                    <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Event Timelines (Day 1, 2, 3)</h3>
+                                </div>
+                                <span class="text-[8px] font-bold text-brandBlue uppercase bg-brandBlue/10 px-2 py-0.5 rounded border border-brandBlue/20">
+                                    📍 TIMELINE SECTION ON HOMEPAGE
+                                </span>
                             </div>
                             
                             <!-- Day 1 -->
                             <div class="space-y-4 bg-slate-950/40 p-4 rounded-xl border border-slate-800/60">
-                                <span class="text-[10px] font-extrabold text-brandBlue uppercase tracking-wider bg-brandBlue/10 border border-brandBlue/20 px-2 py-0.5 rounded">Day 1 Segment</span>
+                                <span class="text-[10px] font-extrabold text-brandBlue uppercase tracking-wider bg-brandBlue/10 border border-brandBlue/20 px-2 py-0.5 rounded">Day 1 Details</span>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                                     <div class="space-y-1.5">
-                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Date label</label>
+                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Date</label>
                                         <input type="text" id="event1-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                     </div>
                                     <div class="space-y-1.5 md:col-span-2">
-                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Event Name</label>
+                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Name of Segment</label>
                                         <input type="text" id="event1-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                     </div>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Venue</label>
+                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Venue Location</label>
                                     <input type="text" id="event1-venue" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Focus/Description</label>
+                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Segment Focus (Short Description)</label>
                                     <textarea id="event1-focus" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none" required></textarea>
                                 </div>
                             </div>
 
                             <!-- Day 2 -->
                             <div class="space-y-4 bg-slate-950/40 p-4 rounded-xl border border-slate-800/60">
-                                <span class="text-[10px] font-extrabold text-amber-500 uppercase tracking-wider bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">Day 2 Segment</span>
+                                <span class="text-[10px] font-extrabold text-amber-500 uppercase tracking-wider bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">Day 2 Details</span>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                                     <div class="space-y-1.5">
-                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Date label</label>
+                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Date</label>
                                         <input type="text" id="event2-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                     </div>
                                     <div class="space-y-1.5 md:col-span-2">
-                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Event Name</label>
+                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Name of Segment</label>
                                         <input type="text" id="event2-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                     </div>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Venue</label>
+                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Venue Location</label>
                                     <input type="text" id="event2-venue" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Focus/Description</label>
+                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Segment Focus (Short Description)</label>
                                     <textarea id="event2-focus" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none" required></textarea>
                                 </div>
                             </div>
 
                             <!-- Day 3 -->
                             <div class="space-y-4 bg-slate-950/40 p-4 rounded-xl border border-slate-800/60">
-                                <span class="text-[10px] font-extrabold text-purple-400 uppercase tracking-wider bg-purple-550/10 border border-purple-550/20 px-2 py-0.5 rounded">Day 3 Segment</span>
+                                <span class="text-[10px] font-extrabold text-purple-400 uppercase tracking-wider bg-purple-550/10 border border-purple-550/20 px-2 py-0.5 rounded">Day 3 Details</span>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                                     <div class="space-y-1.5">
-                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Date label</label>
+                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Date</label>
                                         <input type="text" id="event3-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                     </div>
                                     <div class="space-y-1.5 md:col-span-2">
-                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Event Name</label>
+                                        <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Name of Segment</label>
                                         <input type="text" id="event3-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                     </div>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Venue</label>
+                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Venue Location</label>
                                     <input type="text" id="event3-venue" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none" required>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Focus/Description</label>
+                                    <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Segment Focus (Short Description)</label>
                                     <textarea id="event3-focus" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none" required></textarea>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Right Column (4 cols): Souvenir Rates & Coordinator Contact -->
-                    <div class="lg:col-span-4 space-y-8">
-                        
-                        <!-- Card: General / Coordinator -->
-                        <div class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md rounded-2xl p-6 space-y-4">
-                            <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3 mb-2">
-                                <i class="fa-solid fa-address-book text-slate-400 text-sm"></i>
-                                <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Coordinator Desk</h3>
+                        <!-- Card 5: Coordinator Phone Number & Souvenir Ad Pricing Rates -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            
+                            <!-- Coordinator phone -->
+                            <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 space-y-4">
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <i class="fa-solid fa-address-book text-slate-450 text-sm"></i>
+                                        <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Coordinator Hotline</h3>
+                                    </div>
+                                    <span class="text-[8px] font-bold text-brandBlue uppercase bg-brandBlue/10 px-2 py-0.5 rounded">📍 HOMEPAGE FOOTER</span>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Coordinator Mobile Line</label>
+                                    <input type="text" id="contact-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
+                                    <span class="text-[9px] text-slate-500 block">Mobile number with country code.</span>
+                                </div>
                             </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Primary Phone Number</label>
-                                <input type="text" id="contact-phone" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
-                            </div>
-                        </div>
 
-                        <!-- Card: Souvenir Ads Pricing Rates -->
-                        <div class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md rounded-2xl p-6 space-y-4 flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                            <!-- Souvenir Ad Pricing Rates -->
+                            <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 space-y-4">
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                                     <div class="flex items-center gap-2.5">
                                         <i class="fa-solid fa-tags text-rose-500 text-sm"></i>
-                                        <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Souvenir Ad Rates</h3>
+                                        <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Souvenir Ad Packages</h3>
                                     </div>
-                                    <button type="button" onclick="addNewRateRow()" class="text-[10px] bg-brandBlue/10 border border-brandBlue/30 text-brandBlue hover:bg-brandBlue/20 px-2 py-1 rounded font-bold uppercase transition-all flex items-center gap-1">
-                                        <i class="fa-solid fa-plus"></i> Add Rate
+                                    <button type="button" onclick="addNewRateRow()" class="text-[9px] bg-brandBlue/10 border border-brandBlue/30 text-brandBlue hover:bg-brandBlue/20 px-2.5 py-1 rounded font-bold uppercase transition-all flex items-center gap-1">
+                                        <i class="fa-solid fa-plus"></i> Add Package
                                     </button>
                                 </div>
                                 
-                                <!-- Rates List Container -->
-                                <div id="admin-rates-list" class="space-y-4">
-                                    <!-- Dynamic Rates Inputs Rendered Here -->
+                                <div id="admin-rates-list" class="space-y-4 max-h-[350px] overflow-y-auto pr-1">
+                                    <!-- Dynamic Rates List Elements -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bottom Action Panel -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <span class="text-xs text-slate-400 leading-normal flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-emerald-500 text-sm shrink-0"></i> 
+                                Ready to publish? Click "Save Content Updates" to push changes to the active website.
+                            </span>
+                            <button type="submit" class="w-full sm:w-auto bg-brandBlue hover:bg-brandBlue/90 text-white font-bold px-10 py-4 rounded-xl transition-all shadow-md text-xs uppercase tracking-wider">
+                                Save Content Updates
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <!-- TAB 2: GALLERY MANAGER                                       -->
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <div id="admin-tab-content-gallery" class="hidden w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Left: Upload Photo Form -->
+                    <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 h-fit">
+                        <div class="flex items-center gap-2 border-b border-slate-800 pb-3 mb-2">
+                            <i class="fa-solid fa-plus text-brandBlue text-sm"></i>
+                            <h3 id="gallery-form-title" class="font-display text-sm font-bold text-white uppercase tracking-wide">Upload Photo</h3>
+                        </div>
+                        <form id="gallery-form" onsubmit="handleSavePhoto(event)" class="space-y-4">
+                            <input type="hidden" id="gallery-edit-id" value="">
+                            
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Title of Photo</label>
+                                <input type="text" id="gallery-title" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" placeholder="e.g. London Summit Scholarly Panel" required>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Short Caption / Description</label>
+                                <textarea id="gallery-description" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" placeholder="e.g. Scholarly delegates reviewing key constitutional themes..." required></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Date Taken</label>
+                                    <input type="text" id="gallery-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. Sep 18, 2026" required>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Location / Venue</label>
+                                    <input type="text" id="gallery-location" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. SOAS London, UK" required>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Gallery Category</label>
+                                    <select id="gallery-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" onchange="updateGalleryBadgeDefaults()">
+                                        <option value="events">Social Events</option>
+                                        <option value="london">London Summit</option>
+                                        <option value="dignitaries">Dignitaries</option>
+                                        <option value="covers">Magazine Covers</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Badge Tag</label>
+                                    <input type="text" id="gallery-badgetext" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. Event" required>
+                                </div>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Image Attachment</label>
+                                <div class="flex gap-4 mb-2">
+                                    <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
+                                        <input type="radio" name="gallery-src-type" value="file" checked onchange="toggleGallerySrcType()" class="mr-1.5 accent-brandBlue"> Upload Photo file
+                                    </label>
+                                    <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
+                                        <input type="radio" name="gallery-src-type" value="url" onchange="toggleGallerySrcType()" class="mr-1.5 accent-brandBlue"> Enter Web Path / URL
+                                    </label>
+                                </div>
+                                
+                                <div id="gallery-file-container">
+                                    <input type="file" id="gallery-file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-950 file:text-slate-300 file:hover:bg-slate-850 cursor-pointer bg-slate-950/40 p-2.5 border border-slate-800 rounded-xl">
+                                </div>
+                                
+                                <div id="gallery-url-container" class="hidden">
+                                    <input type="text" id="gallery-url" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. wp-content/uploads/2026/06/summit.jpg">
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-6 pt-2">
+                                <label class="inline-flex items-center text-xs text-slate-300 cursor-pointer">
+                                    <input type="checkbox" id="gallery-featured" class="mr-2 rounded border-slate-800 bg-slate-950 text-brandBlue focus:ring-brandBlue accent-brandBlue"> Show on Homepage
+                                </label>
+                                <label class="inline-flex items-center text-xs text-slate-300 cursor-pointer">
+                                    <input type="checkbox" id="gallery-popular" class="mr-2 rounded border-slate-800 bg-slate-950 text-brandBlue focus:ring-brandBlue accent-brandBlue"> High Priority
+                                </label>
+                            </div>
+
+                            <div class="flex gap-3 pt-4 border-t border-slate-850">
+                                <button type="submit" id="gallery-submit-btn" class="flex-1 bg-brandBlue hover:bg-brandBlue/90 text-white font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Publish Photo
+                                </button>
+                                <button type="button" onclick="resetGalleryForm()" class="bg-slate-850 hover:bg-slate-800 text-slate-400 font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right: Photo List & Empty State Guide -->
+                    <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-3 mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-images text-brandBlue text-sm"></i>
+                                <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Active Photo Catalog</h3>
+                            </div>
+                            
+                            <div class="relative w-full sm:w-64">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                                <input type="text" id="gallery-search" oninput="renderGalleryList()" class="w-full bg-slate-950 border border-slate-800 rounded-full pl-9 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="Search catalog...">
+                            </div>
+                        </div>
+
+                        <!-- Gallery Table List -->
+                        <div class="overflow-x-auto min-h-[300px] max-h-[600px] overflow-y-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-800 text-slate-500 uppercase tracking-widest text-[9px] font-bold">
+                                        <th class="pb-3 w-16">Preview</th>
+                                        <th class="pb-3 pl-4">Title / Details</th>
+                                        <th class="pb-3 w-28">Category</th>
+                                        <th class="pb-3 w-28">Priority Status</th>
+                                        <th class="pb-3 text-right w-24">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gallery-list-body" class="divide-y divide-slate-850">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                            
+                            <!-- Visual Empty State Step-by-Step Walkthrough -->
+                            <div id="gallery-empty-state" class="hidden text-center py-12 px-6 bg-slate-950/40 rounded-2xl border border-slate-800 border-dashed space-y-4">
+                                <div class="w-12 h-12 rounded-full bg-brandBlue/10 flex items-center justify-center mx-auto text-brandBlue text-lg">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-xs font-bold text-slate-300">Photo Catalog is Currently Empty</p>
+                                    <p class="text-[10px] text-slate-500 max-w-sm mx-auto leading-relaxed">
+                                        To add your first photo, fill the upload form on the left:
+                                    </p>
+                                </div>
+                                <div class="max-w-xs mx-auto text-left text-[10px] text-slate-400 space-y-1.5 bg-slate-950 p-4 rounded-xl border border-slate-850">
+                                    <div>1️⃣ Enter a clear, readable title.</div>
+                                    <div>2️⃣ Type a brief description for visitors.</div>
+                                    <div>3️⃣ Click <strong>Choose Photo file</strong> and pick a picture.</div>
+                                    <div>4️⃣ Click <strong>Publish Photo</strong> button to post!</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Bottom Save Bar -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <span class="text-xs text-slate-400 leading-normal flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-500"></i> Auto-saves settings in Firestore for immediate client website sync.</span>
-                    <button type="submit" class="w-full sm:w-auto bg-brandBlue hover:bg-brandBlue/90 text-white font-bold px-10 py-4 rounded-xl transition-all shadow-md text-xs uppercase tracking-wider">
-                        Save Configuration
-                    </button>
-                </div>
-            </form>
 
-            <!-- Section: Administrator Account Credentials -->
-            <div id="admin-security-section" class="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6 mt-8">
-                <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
-                    <i class="fa-solid fa-key text-brandBlue text-lg"></i>
-                    <div>
-                        <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Administrator Credentials</h3>
-                        <p class="text-[10px] text-slate-400">Change your secure login password for the vishwaleader-team panel.</p>
-                    </div>
-                </div>
-                
-                <form onsubmit="handleChangeAdminPassword(event)" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-                    <div class="space-y-1.5 col-span-1">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Current Password</label>
-                        <input type="password" id="admin-current-password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" required>
-                    </div>
-                    <div class="space-y-1.5 col-span-1">
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">New Password</label>
-                        <input type="password" id="admin-new-password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" required>
-                    </div>
-                    <div class="col-span-1">
-                        <button type="submit" id="admin-change-pwd-btn" class="w-full bg-slate-850 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl transition-all border border-slate-800 hover:border-slate-700 text-xs uppercase tracking-wider">
-                            Update Password
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-            <!-- Tab 2: Gallery Manager -->
-            <div id="admin-tab-content-gallery" class="hidden w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Left: Add Photo Form -->
-                <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 h-fit">
-                    <div class="flex items-center gap-2 border-b border-slate-800 pb-3 mb-2">
-                        <i class="fa-solid fa-plus text-brandBlue text-sm"></i>
-                        <h3 id="gallery-form-title" class="font-display text-sm font-bold text-white uppercase tracking-wide">Add New Photo</h3>
-                    </div>
-                    <form id="gallery-form" onsubmit="handleSavePhoto(event)" class="space-y-4">
-                        <input type="hidden" id="gallery-edit-id" value="">
-                        
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Photo Title</label>
-                            <input type="text" id="gallery-title" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required>
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <!-- TAB 3: ARCHIVES MANAGER (DIGITAL LIBRARY)                    -->
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <div id="admin-tab-content-archives" class="hidden w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Left: Add Document Form -->
+                    <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 h-fit">
+                        <div class="flex items-center gap-2 border-b border-slate-800 pb-3 mb-2">
+                            <i class="fa-solid fa-plus text-brandBlue text-sm"></i>
+                            <h3 id="archives-form-title" class="font-display text-sm font-bold text-white uppercase tracking-wide">Add Library Item</h3>
                         </div>
-
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Description</label>
-                            <textarea id="gallery-description" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue transition-colors" required></textarea>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
+                        <form id="archives-form" onsubmit="handleSaveArchive(event)" class="space-y-4">
+                            <input type="hidden" id="archives-edit-id" value="">
+                            
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Date</label>
-                                <input type="text" id="gallery-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. Jun 18, 2026" required>
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Location</label>
-                                <input type="text" id="gallery-location" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. London, UK" required>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Category</label>
-                                <select id="gallery-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" onchange="updateGalleryBadgeDefaults()">
-                                    <option value="events">Social Events</option>
-                                    <option value="london">London Summit</option>
-                                    <option value="dignitaries">Dignitaries</option>
-                                    <option value="covers">Magazine Covers</option>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Item Format</label>
+                                <select id="archives-type" onchange="toggleArchiveFields()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue">
+                                    <option value="pdf">PDF Booklet / Circular Document</option>
+                                    <option value="cover">Magazine Print Edition Cover</option>
                                 </select>
                             </div>
+
                             <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Badge Text</label>
-                                <input type="text" id="gallery-badgetext" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. Photo" required>
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Document Title</label>
+                                <input type="text" id="archives-title" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. Official Call for Papers" required>
                             </div>
-                        </div>
 
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Image Source</label>
-                            <div class="flex gap-4 mb-2">
-                                <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
-                                    <input type="radio" name="gallery-src-type" value="file" checked onchange="toggleGallerySrcType()" class="mr-1.5 accent-brandBlue"> Upload File
-                                </label>
-                                <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
-                                    <input type="radio" name="gallery-src-type" value="url" onchange="toggleGallerySrcType()" class="mr-1.5 accent-brandBlue"> Input URL / Path
-                                </label>
+                            <!-- PDF Only fields -->
+                            <div id="archives-pdf-fields" class="space-y-4">
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Short Summary of Document</label>
+                                    <textarea id="archives-desc" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="Briefly describe what this document contains..."></textarea>
+                                </div>
+                                
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estimated File Size (Label)</label>
+                                    <input type="text" id="archives-size" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. 1.2 MB">
+                                </div>
+
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">PDF File</label>
+                                    <div class="flex gap-4 mb-2">
+                                        <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
+                                            <input type="radio" name="pdf-src-type" value="file" checked onchange="togglePdfSrcType()" class="mr-1.5 accent-brandBlue"> Upload PDF file
+                                        </label>
+                                        <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
+                                            <input type="radio" name="pdf-src-type" value="url" onchange="togglePdfSrcType()" class="mr-1.5 accent-brandBlue"> Enter File Path / Link
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="pdf-file-container">
+                                        <input type="file" id="pdf-file" accept="application/pdf" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-950 file:text-slate-300 file:hover:bg-slate-850 cursor-pointer bg-slate-950/40 p-2.5 border border-slate-800 rounded-xl">
+                                    </div>
+                                    
+                                    <div id="pdf-url-container" class="hidden">
+                                        <input type="text" id="pdf-url" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none" placeholder="e.g. pdfs/call-for-papers.pdf">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Magazine Cover Only fields -->
+                            <div id="archives-cover-fields" class="space-y-4 hidden">
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Publish Date / Issue Label</label>
+                                    <input type="text" id="archives-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none" placeholder="e.g. Feb 2026">
+                                </div>
+
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Cover Image file</label>
+                                    <div class="flex gap-4 mb-2">
+                                        <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
+                                            <input type="radio" name="cover-src-type" value="file" checked onchange="toggleCoverSrcType()" class="mr-1.5 accent-brandBlue"> Upload Cover Image
+                                        </label>
+                                        <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
+                                            <input type="radio" name="cover-src-type" value="url" onchange="toggleCoverSrcType()" class="mr-1.5 accent-brandBlue"> Enter Image Path / URL
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="cover-file-container">
+                                        <input type="file" id="cover-file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-950 file:text-slate-300 file:hover:bg-slate-850 cursor-pointer bg-slate-950/40 p-2.5 border border-slate-800 rounded-xl">
+                                    </div>
+                                    
+                                    <div id="cover-url-container" class="hidden">
+                                        <input type="text" id="cover-url" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none" placeholder="e.g. magazine-covers/issue-feb.jpg">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3 pt-4 border-t border-slate-850">
+                                <button type="submit" id="archives-submit-btn" class="flex-1 bg-brandBlue hover:bg-brandBlue/90 text-white font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Save Document
+                                </button>
+                                <button type="button" onclick="resetArchivesForm()" class="bg-slate-850 hover:bg-slate-800 text-slate-400 font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Right: Documents List & Empty State Onboarding -->
+                    <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-3 mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-file-invoice text-brandBlue text-sm"></i>
+                                <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Library Catalog</h3>
                             </div>
                             
-                            <div id="gallery-file-container">
-                                <input type="file" id="gallery-file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-950 file:text-slate-300 file:hover:bg-slate-850 cursor-pointer bg-slate-950/40 p-2.5 border border-slate-800 rounded-xl">
+                            <div class="relative w-full sm:w-64">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                                <input type="text" id="archives-search" oninput="renderArchivesList()" class="w-full bg-slate-950 border border-slate-800 rounded-full pl-9 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="Search library...">
                             </div>
+                        </div>
+
+                        <!-- Archives Table List -->
+                        <div class="overflow-x-auto min-h-[300px] max-h-[600px] overflow-y-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-800 text-slate-500 uppercase tracking-widest text-[9px] font-bold">
+                                        <th class="pb-3 w-28">Type</th>
+                                        <th class="pb-3 pl-4">Title</th>
+                                        <th class="pb-3 pl-4">File Location</th>
+                                        <th class="pb-3 w-24">Size/Details</th>
+                                        <th class="pb-3 text-right w-24">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="archives-list-body" class="divide-y divide-slate-850">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
                             
-                            <div id="gallery-url-container" class="hidden">
-                                <input type="text" id="gallery-url" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. wp-content/uploads/2026/06/my-image.jpg">
+                            <!-- Visual Empty State Step-by-Step Onboarding -->
+                            <div id="archives-empty-state" class="hidden text-center py-12 px-6 bg-slate-950/40 rounded-2xl border border-slate-800 border-dashed space-y-4">
+                                <div class="w-12 h-12 rounded-full bg-brandBlue/10 flex items-center justify-center mx-auto text-brandBlue text-lg">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-xs font-bold text-slate-300">Digital Library is Currently Empty</p>
+                                    <p class="text-[10px] text-slate-500 max-w-sm mx-auto leading-relaxed">
+                                        To add your first PDF document or print cover, complete the form on the left:
+                                    </p>
+                                </div>
+                                <div class="max-w-xs mx-auto text-left text-[10px] text-slate-400 space-y-1.5 bg-slate-950 p-4 rounded-xl border border-slate-850">
+                                    <div>1️⃣ Select format (PDF Document or Magazine Cover).</div>
+                                    <div>2️⃣ Enter a short, professional title.</div>
+                                    <div>3️⃣ Select <strong>Upload file</strong> and select file from computer.</div>
+                                    <div>4️⃣ Click <strong>Save Document</strong> to publish!</div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="flex items-center gap-6 pt-2">
-                            <label class="inline-flex items-center text-xs text-slate-300 cursor-pointer">
-                                <input type="checkbox" id="gallery-featured" class="mr-2 rounded border-slate-800 bg-slate-950 text-brandBlue focus:ring-brandBlue accent-brandBlue"> Featured
-                            </label>
-                            <label class="inline-flex items-center text-xs text-slate-300 cursor-pointer">
-                                <input type="checkbox" id="gallery-popular" class="mr-2 rounded border-slate-800 bg-slate-950 text-brandBlue focus:ring-brandBlue accent-brandBlue"> Popular
-                            </label>
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <!-- TAB 4: SYSTEM PASSWORD / SECURITY                            -->
+                <!-- ══════════════════════════════════════════════════════════════ -->
+                <div id="admin-tab-content-security" class="hidden w-full bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+                        <div class="w-10 h-10 rounded-xl bg-brandBlue/10 border border-brandBlue/20 flex items-center justify-center text-brandBlue text-lg">
+                            <i class="fa-solid fa-key"></i>
                         </div>
-
-                        <div class="flex gap-3 pt-4 border-t border-slate-850">
-                            <button type="submit" id="gallery-submit-btn" class="flex-1 bg-brandBlue hover:bg-brandBlue/90 text-white font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-cloud-arrow-up"></i> Save Photo
-                            </button>
-                            <button type="button" onclick="resetGalleryForm()" class="bg-slate-850 hover:bg-slate-800 text-slate-400 font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all">
-                                Cancel
+                        <div>
+                            <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Workspace Security credentials</h3>
+                            <p class="text-[10px] text-slate-400">Change your secure login password to access the vishwaleader-team dashboard.</p>
+                        </div>
+                    </div>
+                    
+                    <form onsubmit="handleChangeAdminPassword(event)" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                        <div class="space-y-1.5 col-span-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Current Password</label>
+                            <input type="password" id="admin-current-password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="••••••••" required>
+                        </div>
+                        <div class="space-y-1.5 col-span-1">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">New Password</label>
+                            <input type="password" id="admin-new-password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="Min. 6 characters" required>
+                        </div>
+                        <div class="col-span-1">
+                            <button type="submit" id="admin-change-pwd-btn" class="w-full bg-brandBlue hover:bg-brandBlue/90 text-white font-bold py-3 px-6 rounded-xl transition-all text-xs uppercase tracking-wider">
+                                Update Password
                             </button>
                         </div>
                     </form>
                 </div>
 
-                <!-- Right: Photo List -->
-                <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-3 mb-2">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-images text-brandBlue text-sm"></i>
-                            <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Photo Catalog</h3>
-                        </div>
-                        
-                        <div class="relative w-full sm:w-64">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
-                            <input type="text" id="gallery-search" oninput="renderGalleryList()" class="w-full bg-slate-950 border border-slate-800 rounded-full pl-9 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="Search photos...">
-                        </div>
-                    </div>
-
-                    <!-- Gallery Table List -->
-                    <div class="overflow-x-auto min-h-[300px] max-h-[600px] overflow-y-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead>
-                                <tr class="border-b border-slate-800 text-slate-500 uppercase tracking-widest text-[9px] font-bold">
-                                    <th class="pb-3 w-16">Preview</th>
-                                    <th class="pb-3 pl-4">Title / Info</th>
-                                    <th class="pb-3 w-28">Category</th>
-                                    <th class="pb-3 w-28">Status</th>
-                                    <th class="pb-3 text-right w-24">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="gallery-list-body" class="divide-y divide-slate-850">
-                                <!-- Rendered dynamically -->
-                            </tbody>
-                        </table>
-                        
-                        <div id="gallery-empty-state" class="hidden text-center py-16 space-y-2">
-                            <i class="fa-solid fa-image-slash text-2xl text-slate-700"></i>
-                            <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">No photos found in database</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 3: Archives Manager -->
-            <div id="admin-tab-content-archives" class="hidden w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Left: Add Document Form -->
-                <div class="lg:col-span-4 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 h-fit">
-                    <div class="flex items-center gap-2 border-b border-slate-800 pb-3 mb-2">
-                        <i class="fa-solid fa-plus text-brandBlue text-sm"></i>
-                        <h3 id="archives-form-title" class="font-display text-sm font-bold text-white uppercase tracking-wide">Add Archive Item</h3>
-                    </div>
-                    <form id="archives-form" onsubmit="handleSaveArchive(event)" class="space-y-4">
-                        <input type="hidden" id="archives-edit-id" value="">
-                        
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Archive Item Type</label>
-                            <select id="archives-type" onchange="toggleArchiveFields()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue">
-                                <option value="pdf">PDF Circular / Document</option>
-                                <option value="cover">Magazine Print Cover</option>
-                            </select>
-                        </div>
-
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Title</label>
-                            <input type="text" id="archives-title" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" required>
-                        </div>
-
-                        <!-- PDF Only fields -->
-                        <div id="archives-pdf-fields" class="space-y-4">
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Description</label>
-                                <textarea id="archives-desc" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. Official circular detailing awards ceremony guidelines..."></textarea>
-                            </div>
-                            
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">File Size Label</label>
-                                <input type="text" id="archives-size" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. 2.4 MB">
-                            </div>
-
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">PDF File Source</label>
-                                <div class="flex gap-4 mb-2">
-                                    <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
-                                        <input type="radio" name="pdf-src-type" value="file" checked onchange="togglePdfSrcType()" class="mr-1.5 accent-brandBlue"> Upload PDF File
-                                    </label>
-                                    <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
-                                        <input type="radio" name="pdf-src-type" value="url" onchange="togglePdfSrcType()" class="mr-1.5 accent-brandBlue"> File Name / URL
-                                    </label>
-                                </div>
-                                
-                                <div id="pdf-file-container">
-                                    <input type="file" id="pdf-file" accept="application/pdf" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-950 file:text-slate-300 file:hover:bg-slate-850 cursor-pointer bg-slate-950/40 p-2.5 border border-slate-800 rounded-xl">
-                                </div>
-                                
-                                <div id="pdf-url-container" class="hidden">
-                                    <input type="text" id="pdf-url" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none" placeholder="e.g. awards-circular-2026.pdf">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Cover Only fields -->
-                        <div id="archives-cover-fields" class="hidden space-y-4">
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Date Tag</label>
-                                <input type="text" id="archives-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="e.g. Dec 2009">
-                            </div>
-
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Cover Image Source</label>
-                                <div class="flex gap-4 mb-2">
-                                    <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
-                                        <input type="radio" name="cover-src-type" value="file" checked onchange="toggleCoverSrcType()" class="mr-1.5 accent-brandBlue"> Upload Cover Image
-                                    </label>
-                                    <label class="inline-flex items-center text-xs text-slate-350 cursor-pointer">
-                                        <input type="radio" name="cover-src-type" value="url" onchange="toggleCoverSrcType()" class="mr-1.5 accent-brandBlue"> Image File Name / URL
-                                    </label>
-                                </div>
-                                
-                                <div id="cover-file-container">
-                                    <input type="file" id="cover-file" accept="image/*" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-950 file:text-slate-300 file:hover:bg-slate-850 cursor-pointer bg-slate-950/40 p-2.5 border border-slate-800 rounded-xl">
-                                </div>
-                                
-                                <div id="cover-url-container" class="hidden">
-                                    <input type="text" id="cover-url" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none" placeholder="e.g. December Cover 09.jpg">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-3 pt-4 border-t border-slate-850">
-                            <button type="submit" id="archives-submit-btn" class="flex-1 bg-brandBlue hover:bg-brandBlue/90 text-white font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-cloud-arrow-up"></i> Save Archive
-                            </button>
-                            <button type="button" onclick="resetArchivesForm()" class="bg-slate-850 hover:bg-slate-800 text-slate-400 font-bold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-all">
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Right: Archive List -->
-                <div class="lg:col-span-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-3 mb-2">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-file-invoice text-brandBlue text-sm"></i>
-                            <h3 class="font-display text-sm font-bold text-white uppercase tracking-wide">Archive Items</h3>
-                        </div>
-                        
-                        <div class="relative w-full sm:w-64">
-                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
-                            <input type="text" id="archives-search" oninput="renderArchivesList()" class="w-full bg-slate-950 border border-slate-800 rounded-full pl-9 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-brandBlue" placeholder="Search archives...">
-                        </div>
-                    </div>
-
-                    <!-- Archives Table List -->
-                    <div class="overflow-x-auto min-h-[300px] max-h-[600px] overflow-y-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead>
-                                <tr class="border-b border-slate-800 text-slate-500 uppercase tracking-widest text-[9px] font-bold">
-                                    <th class="pb-3 w-28">Type</th>
-                                    <th class="pb-3 pl-4">Title</th>
-                                    <th class="pb-3 pl-4">File Name / Path / Date</th>
-                                    <th class="pb-3 w-24">Size/Details</th>
-                                    <th class="pb-3 text-right w-24">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="archives-list-body" class="divide-y divide-slate-850">
-                                <!-- Rendered dynamically -->
-                            </tbody>
-                        </table>
-                        
-                        <div id="archives-empty-state" class="hidden text-center py-16 space-y-2">
-                            <i class="fa-solid fa-file-signature text-2xl text-slate-700"></i>
-                            <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">No archive items found in database</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -674,17 +797,22 @@
                 if (user.email && user.email.endsWith('@vishwaleader.com')) {
                     // Authorized Admin
                     document.getElementById('login-container').classList.add('hidden');
-                    document.getElementById('admin-tabs-nav').classList.remove('hidden');
                     document.getElementById('admin-dashboard').classList.remove('hidden');
                     document.getElementById('user-info-section').classList.remove('hidden');
                     
                     // Show username cleanly (without the @vishwaleader.com)
                     const displayUser = user.email.split('@')[0];
-                    document.getElementById('user-display-name').textContent = "Team: " + displayUser;
+                    if (document.getElementById('user-display-name')) {
+                        document.getElementById('user-display-name').textContent = "Team: " + displayUser;
+                    }
+                    if (document.getElementById('user-display-name-sidebar')) {
+                        document.getElementById('user-display-name-sidebar').innerHTML = `<i class="fa-solid fa-user-circle mr-1 text-brandBlue"></i> Team: ${displayUser}`;
+                    }
                     
                     loadSettings();
                     loadGallery();
                     loadArchives();
+                    switchAdminTab('settings');
                 } else {
                     // Unauthorized member trying to access admin
                     showToast("Access Denied: This area is restricted to vl-team administrators.", true);
@@ -693,7 +821,6 @@
             } else {
                 // User is not signed in
                 document.getElementById('login-container').classList.remove('hidden');
-                document.getElementById('admin-tabs-nav').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.add('hidden');
                 document.getElementById('user-info-section').classList.add('hidden');
             }
@@ -817,16 +944,24 @@
         function switchAdminTab(tabName) {
             currentTab = tabName;
             
-            // Toggle nav button highlighting
-            const tabs = ['settings', 'gallery', 'archives'];
+            // Toggle sidebar button highlighting
+            const tabs = ['settings', 'gallery', 'archives', 'security'];
             tabs.forEach(t => {
-                const btn = document.getElementById(`admin-tab-${t}`);
+                const btn = document.getElementById(`sidebar-tab-${t}`);
                 const content = document.getElementById(`admin-tab-content-${t}`);
                 if (t === tabName) {
-                    btn.className = "px-5 py-3 border-b-2 border-brandBlue font-bold text-xs uppercase tracking-wider text-white transition-all flex items-center gap-1.5";
+                    if (btn) {
+                        btn.className = "w-full text-left p-3.5 rounded-2xl flex items-center gap-3 bg-brandBlue text-white font-bold shadow-lg transition-all";
+                        const span = btn.querySelector('span');
+                        if (span) span.className = "w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-sm text-white";
+                    }
                     if (content) content.classList.remove('hidden');
                 } else {
-                    btn.className = "px-5 py-3 border-b-2 border-transparent font-bold text-xs uppercase tracking-wider text-slate-400 hover:text-white transition-all flex items-center gap-1.5";
+                    if (btn) {
+                        btn.className = "w-full text-left p-3.5 rounded-2xl flex items-center gap-3 hover:bg-slate-850/60 text-slate-350 transition-all";
+                        const span = btn.querySelector('span');
+                        if (span) span.className = "w-8 h-8 rounded-xl bg-slate-950 flex items-center justify-center text-sm text-slate-400";
+                    }
                     if (content) content.classList.add('hidden');
                 }
             });
