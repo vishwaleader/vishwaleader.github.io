@@ -106,7 +106,7 @@
     <header class="bg-slate-950/80 backdrop-blur-md border-b border-slate-900 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 shrink-0">
-                <a href="index.html" class="group flex items-center gap-2 md:gap-3">
+                <a href="/" class="group flex items-center gap-2 md:gap-3">
                     <img src="wp-content/uploads/2025/02/vishwaleader-logo-latest.png" 
                           alt="Vishwa Leader Logo" 
                           class="h-9 md:h-12 w-auto object-contain transition-transform group-hover:scale-105" 
@@ -117,13 +117,13 @@
                 </a>
             </div>
             <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap justify-end">
-                <a href="member.html" class="inline-flex items-center gap-1.5 bg-brandBlue/10 hover:bg-brandBlue/15 text-brandBlue font-bold px-3 py-2 rounded-xl text-xs transition-colors uppercase tracking-wider border border-brandBlue/20">
+                <a href="member" class="inline-flex items-center gap-1.5 bg-brandBlue/10 hover:bg-brandBlue/15 text-brandBlue font-bold px-3 py-2 rounded-xl text-xs transition-colors uppercase tracking-wider border border-brandBlue/20">
                     <i class="fa-solid fa-user text-[10px]"></i> Member
                 </a>
-                <a href="admin.html" class="inline-flex items-center gap-1.5 bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-400 font-bold px-3 py-2 rounded-xl text-xs transition-colors uppercase tracking-wider border border-indigo-900/40">
+                <a href="admin" class="inline-flex items-center gap-1.5 bg-indigo-950/40 hover:bg-indigo-900/60 text-indigo-400 font-bold px-3 py-2 rounded-xl text-xs transition-colors uppercase tracking-wider border border-indigo-900/40">
                     <i class="fa-solid fa-user-shield text-[10px]"></i> Team
                 </a>
-                <a href="index.html" class="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-850 text-slate-350 hover:text-white font-bold px-3 py-2 rounded-xl text-xs transition-colors uppercase tracking-wider border border-slate-800">
+                <a href="/" class="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-850 text-slate-350 hover:text-white font-bold px-3 py-2 rounded-xl text-xs transition-colors uppercase tracking-wider border border-slate-800">
                     <i class="fa-solid fa-house text-amber-500 text-[10px]"></i> Home
                 </a>
             </div>
@@ -438,8 +438,10 @@
             `).join('');
         }
 
+
+
         // Open Reader Modal with PDF
-        function openPdf(filename) {
+        function openPdf(filename, shouldPushState = true) {
             const pdf = pdfDownloadsList.find(p => p.file === filename);
             if (!pdf) return;
 
@@ -480,10 +482,15 @@
                 loader.classList.add('hidden');
                 pdfViewer.classList.remove('hidden');
             };
+
+            if (shouldPushState) {
+                const newUrl = `/archives/pdfs/PDF DOCUMENT-${pdf.title}`;
+                window.history.pushState({ type: 'pdf', file: filename }, '', newUrl);
+            }
         }
 
         // Open Reader Modal with Magazine Cover
-        function openCover(src) {
+        function openCover(src, shouldPushState = true) {
             const cover = magazineCoversList.find(c => c.src === src);
             if (!cover) return;
 
@@ -527,22 +534,62 @@
                 loader.classList.add('hidden');
                 imgViewer.classList.remove('hidden');
             };
+
+            if (shouldPushState) {
+                const newUrl = `/archives/covers/MAGAZINE COVER-${cover.title}`;
+                window.history.pushState({ type: 'cover', src: src }, '', newUrl);
+            }
         }
 
         // Close Reader Modal
-        function closeReader() {
+        function closeReader(shouldPushState = true) {
             const overlay = document.getElementById('reader-overlay');
             overlay.classList.add('pointer-events-none', 'opacity-0');
             overlay.classList.remove('opacity-100');
 
             // Clean up iframe to stop background content loading
             document.getElementById('pdf-viewer').src = '';
+
+            if (shouldPushState) {
+                window.history.pushState(null, '', '/archives');
+            }
         }
 
         // Close Reader on keypress Escape
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 closeReader();
+            }
+        });
+
+        // Handle deep-linking on load or popstate
+        function handleDeepLink() {
+            const path = window.location.pathname;
+            const pdfMatch = path.match(/\/(archives|archives\.html)\/pdfs\/(.+)$/);
+            const coverMatch = path.match(/\/(archives|archives\.html)\/covers\/(.+)$/);
+
+            if (pdfMatch) {
+                const title = decodeURIComponent(pdfMatch[2].replace('PDF DOCUMENT-', ''));
+                const pdf = pdfDownloadsList.find(p => p.title === title);
+                if (pdf) {
+                    openPdf(pdf.file, false);
+                }
+            } else if (coverMatch) {
+                const title = decodeURIComponent(coverMatch[2].replace('MAGAZINE COVER-', ''));
+                const cover = magazineCoversList.find(c => c.title === title);
+                if (cover) {
+                    openCover(cover.src, false);
+                }
+            }
+        }
+
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.type === 'pdf') {
+                openPdf(event.state.file, false);
+            } else if (event.state && event.state.type === 'cover') {
+                openCover(event.state.src, false);
+            } else {
+                closeReader(false);
             }
         });
 
@@ -603,6 +650,8 @@
                         openPdf(targetFile);
                     } else if (targetCover) {
                         openCover(targetCover);
+                    } else {
+                        handleDeepLink();
                     }
                 });
         });

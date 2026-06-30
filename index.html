@@ -161,17 +161,17 @@
                 <a href="#about" class="hover:text-brandBlue transition-colors">Corporate</a>
                 <a href="#conference" class="hover:text-brandBlue transition-colors">SOAS Conference</a>
                 <a href="#events" class="hover:text-brandBlue transition-colors">Events</a>
-                <a href="gallery.html" class="hover:text-brandBlue transition-colors">Gallery</a>
-                <a href="archives.html" class="hover:text-brandBlue transition-colors">Archive</a>
+                <a href="gallery" class="hover:text-brandBlue transition-colors">Gallery</a>
+                <a href="archives" class="hover:text-brandBlue transition-colors">Archive</a>
                 <a href="#networks" class="hover:text-brandBlue transition-colors">Networks</a>
                 <a href="#advertisers" class="hover:text-brandBlue transition-colors">Advertisers</a>
 
                 <!-- Auth State: shown when NOT logged in -->
                 <div id="nav-login-links" class="flex flex-col items-center justify-center leading-tight">
-                    <a href="member.html" class="text-brandBlue hover:text-brandBlue/80 transition-colors font-bold text-sm flex items-center gap-1">
+                    <a href="member" class="text-brandBlue hover:text-brandBlue/80 transition-colors font-bold text-sm flex items-center gap-1">
                         <i class="fa-solid fa-right-to-bracket text-xs"></i> Login/SignIn
                     </a>
-                    <a href="admin.html" class="text-[10px] text-slate-405 hover:text-indigo-600 transition-colors mt-0.5 font-bold tracking-wide">
+                    <a href="admin" class="text-[10px] text-slate-405 hover:text-indigo-600 transition-colors mt-0.5 font-bold tracking-wide">
                         login as team
                     </a>
                 </div>
@@ -199,7 +199,7 @@
                         <div id="nav-role-badge" class="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full mb-3 text-center"></div>
                         <!-- Actions -->
                         <div class="space-y-1.5">
-                            <a id="nav-portal-link" href="member.html" class="flex items-center gap-2 w-full text-left text-xs font-semibold text-slate-700 hover:text-brandBlue hover:bg-brandBlue/5 px-3 py-2 rounded-xl transition-all">
+                            <a id="nav-portal-link" href="member" class="flex items-center gap-2 w-full text-left text-xs font-semibold text-slate-700 hover:text-brandBlue hover:bg-brandBlue/5 px-3 py-2 rounded-xl transition-all">
                                 <i id="nav-portal-icon" class="fa-solid fa-user text-brandBlue"></i>
                                 <span id="nav-portal-text">Go to Member Portal</span>
                             </a>
@@ -226,17 +226,17 @@
             <a href="#about" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Corporate</a>
             <a href="#conference" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">SOAS Conference</a>
             <a href="#events" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Events</a>
-            <a href="gallery.html" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Gallery</a>
-            <a href="archives.html" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Archive</a>
+            <a href="gallery" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Gallery</a>
+            <a href="archives" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Archive</a>
             <a href="#networks" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Networks</a>
             <a href="#advertisers" class="block py-2.5 text-sm font-semibold text-slate-700 hover:text-brandBlue border-b border-slate-100">Advertisers</a>
 
             <!-- Mobile: shown when NOT logged in -->
             <div id="mobile-login-links" class="py-2.5 border-b border-slate-100 flex flex-col gap-1.5">
-                <a href="member.html" class="text-sm font-semibold text-brandBlue hover:text-brandBlue/85 flex items-center gap-1">
+                <a href="member" class="text-sm font-semibold text-brandBlue hover:text-brandBlue/85 flex items-center gap-1">
                     <i class="fa-solid fa-right-to-bracket text-xs"></i> Login/SignIn
                 </a>
-                <a href="admin.html" class="text-[10px] text-slate-405 hover:text-indigo-650 font-bold tracking-wide">
+                <a href="admin" class="text-[10px] text-slate-405 hover:text-indigo-655 font-bold tracking-wide">
                     login as team
                 </a>
             </div>
@@ -251,7 +251,7 @@
                         <p id="mobile-status-label" class="text-[10px] font-extrabold uppercase tracking-wider"></p>
                     </div>
                 </div>
-                <a id="mobile-portal-link" href="member.html" class="flex items-center gap-2 text-xs font-semibold text-brandBlue hover:underline">
+                <a id="mobile-portal-link" href="member" class="flex items-center gap-2 text-xs font-semibold text-brandBlue hover:underline">
                     <i id="mobile-portal-icon" class="fa-solid fa-user"></i>
                     <span id="mobile-portal-text">Member Portal</span>
                 </a>
@@ -1186,7 +1186,7 @@
                 avatar.textContent   = initials;
                 badge.textContent    = '🛡 Team Admin';
                 badge.className      = 'text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full mb-3 text-center bg-indigo-100 text-indigo-700';
-                portalLink.href      = 'admin.html';
+                portalLink.href      = 'admin';
                 portalIcon.className = 'fa-solid fa-user-shield text-indigo-600';
                 portalText.textContent = 'Go to Admin Dashboard';
             } else {
@@ -1203,7 +1203,7 @@
                 }
                 badge.textContent    = '✔ Verified Member';
                 badge.className      = 'text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full mb-3 text-center bg-blue-100 text-blue-700';
-                portalLink.href      = 'member.html';
+                portalLink.href      = 'member';
                 portalIcon.className = 'fa-solid fa-user text-brandBlue';
                 portalText.textContent = 'Go to Member Portal';
             }
@@ -1229,7 +1229,7 @@
                 mobileAvatar.textContent = initials;
                 mobileLabelEl.textContent = 'Logged in as Team';
                 mobileLabelEl.style.color = '#6366f1';
-                mobilePortalLink.href = 'admin.html';
+                mobilePortalLink.href = 'admin';
                 mobilePortalIcon.className = 'fa-solid fa-user-shield';
                 mobilePortalText.textContent = 'Admin Dashboard';
             } else {
@@ -1241,7 +1241,7 @@
                 }
                 mobileLabelEl.textContent = 'Logged in as Member';
                 mobileLabelEl.style.color = '#0056CA';
-                mobilePortalLink.href = 'member.html';
+                mobilePortalLink.href = 'member';
                 mobilePortalIcon.className = 'fa-solid fa-user';
                 mobilePortalText.textContent = 'Member Portal';
             }
@@ -1340,7 +1340,7 @@
                 // Duplicate covers list to ensure seamless infinite looping
                 const doubleList = [...magazineCoversList, ...magazineCoversList];
                 tickerTrack.innerHTML = doubleList.map(cover => `
-                    <a href="archives.html?cover=${encodeURIComponent(cover.src)}" 
+                    <a href="archives/covers/MAGAZINE COVER-${cover.title}" 
                        class="flex-shrink-0 w-[200px] md:w-[260px] aspect-[3/4] relative group rounded-xl overflow-hidden shadow-md bg-slate-900 border border-slate-700/50 hover:border-amber-400/80 transition-all cursor-pointer">
                         <img src="magazine-covers/${cover.src}" alt="${cover.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3 text-left">
