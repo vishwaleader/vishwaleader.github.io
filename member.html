@@ -246,24 +246,57 @@
             <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Verifying Membership Session...</p>
         </div>
 
-        <!-- Unauthenticated View: Sign In / Registration Options -->
-        <div id="login-card" class="hidden max-w-lg w-full bg-white border border-slate-200/80 rounded-3xl p-8 md:p-10 shadow-xl glow-card text-center space-y-8">
-            <div class="w-20 h-20 rounded-full bg-brandBlue/5 border border-brandBlue/10 flex items-center justify-center text-brandBlue text-3xl mx-auto shadow-inner">
-                <i class="fa-solid fa-users-rectangle"></i>
-            </div>
-            
-            <div class="space-y-2.5">
-                <span class="text-[9px] font-extrabold uppercase tracking-widest text-brandBlue border border-brandBlue/20 px-3 py-1 rounded-full bg-brandBlue/5">
-                    Vishwa Leader Network
-                </span>
-                <h2 class="font-display text-2xl font-black text-slate-900 uppercase tracking-tight">Become a Digital Member</h2>
-                <p class="text-xs text-slate-500 leading-relaxed max-w-sm mx-auto">Access direct downloads of Vishwa Leader publications, manage your attendee profile for the SOAS London Summit, and submit academic paper drafts.</p>
-            </div>
+        <!-- Unauthenticated View: Sign In -->
+        <div id="login-card" class="hidden cp-member-login-wrapper">
+            <style>
+                @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
-            <!-- Google Authentication Option -->
-            <div id="login-google-section" class="space-y-4">
-                <button onclick="handleGoogleSignIn()" class="w-full bg-slate-950 hover:bg-slate-900 text-white font-bold py-4 rounded-xl transition-all shadow-md flex items-center justify-center gap-3 text-xs uppercase tracking-wider">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24">
+                .cp-member-login-wrapper {
+                    position: fixed; inset: 0; z-index: 9999; width: 100%; height: 100%;
+                    font-family: 'Open Sans', sans-serif; overflow: hidden;
+                    background: #f8fafc;
+                }
+
+                .cp-mbtn { display: inline-block; *display: inline; *zoom: 1; padding: 4px 10px 4px; margin-bottom: 0; font-size: 13px; line-height: 18px; color: #333333; text-align: center; text-shadow: 0 1px 1px rgba(255,255,255,0.75); vertical-align: middle; background-color: #f5f5f5; background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6); background-image: linear-gradient(to bottom, #ffffff, #e6e6e6); background-repeat: repeat-x; border: 1px solid #e6e6e6; border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25); -webkit-border-radius: 4px; border-radius: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 2px rgba(0,0,0,0.05); cursor: pointer; }
+                .cp-mbtn:hover, .cp-mbtn:active, .cp-mbtn.active, .cp-mbtn[disabled] { background-color: #e6e6e6; }
+                .cp-mbtn-large { padding: 9px 14px; font-size: 15px; line-height: normal; -webkit-border-radius: 5px; border-radius: 5px; }
+                .cp-mbtn:hover { color: #333333; text-decoration: none; background-color: #e6e6e6; background-position: 0 -15px; transition: background-position 0.1s linear; }
+                .cp-mbtn-primary, .cp-mbtn-primary:hover { text-shadow: 0 -1px 0 rgba(0,0,0,0.25); color: #ffffff; }
+                .cp-mbtn-primary { background-color: #2563eb; background-image: -webkit-linear-gradient(top, #3b82f6, #1d4ed8); background-image: linear-gradient(to bottom, #3b82f6, #1d4ed8); background-repeat: repeat-x; border: 1px solid #1e40af; text-shadow: 1px 1px 1px rgba(0,0,0,0.4); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 2px rgba(0,0,0,0.5); }
+                .cp-mbtn-primary:hover, .cp-mbtn-primary:active, .cp-mbtn-primary[disabled] { background-color: #1d4ed8; }
+                .cp-mbtn-block { width: 100%; display: block; }
+
+                .cp-mlogin {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    margin: -280px 0 0 -150px;
+                    width: 300px;
+                    height: 560px;
+                }
+                .cp-mlogin-logo { display: block; width: 200px; height: 200px; margin: 0 auto 16px auto; object-fit: contain; }
+                .cp-mlogin h1 { color: #0f172a; letter-spacing: 1px; text-align: center; padding-bottom: 15px; font-weight: normal; margin: 0; }
+
+                .cp-minput {
+                    width: 100%; margin-bottom: 10px;
+                    background: #ffffff; border: none; outline: none;
+                    padding: 10px; font-size: 13px; color: #334155;
+                    border: 1px solid #cbd5e1; border-radius: 4px;
+                    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+                    transition: box-shadow .5s ease, border-color .5s ease;
+                }
+                .cp-minput:focus { box-shadow: inset 0 2px 4px rgba(0,0,0,0.05), 0 0 5px rgba(37,99,235,0.3); border-color: #2563eb; }
+
+                .cp-mback { text-align: center; margin-top: 15px; }
+                .cp-mback a { font-size: 11px; font-weight: bold; color: #64748b; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; }
+                .cp-mback a:hover { color: #2563eb; }
+            </style>
+
+            <div class="cp-mlogin">
+                <img src="assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" class="cp-mlogin-logo" />
+                <h1>Member Login</h1>
+                <button onclick="handleGoogleSignIn()" class="cp-mbtn cp-mbtn-primary cp-mbtn-block cp-mbtn-large" style="display:flex;align-items:center;justify-content:center;gap:10px;">
+                    <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24">
                         <path fill="#EA4335" d="M12 5.04c1.67 0 3.2.58 4.38 1.69l3.27-3.27C17.67 1.54 15.02 1 12 1 7.35 1 3.4 3.65 1.5 7.5l3.86 3C6.31 7.37 9 5.04 12 5.04z"/>
                         <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.29 1.48-1.14 2.73-2.42 3.57v2.96h3.9c2.28-2.1 3.55-5.19 3.55-8.68z"/>
                         <path fill="#FBBC05" d="M5.36 14.5c-.24-.72-.38-1.49-.38-2.3s.14-1.58.38-2.3L1.5 6.9C.55 8.79 0 10.9 0 13.1c0 2.2.55 4.31 1.5 6.2l3.86-2.8z"/>
@@ -271,7 +304,9 @@
                     </svg>
                     Continue with Google
                 </button>
-                <div class="text-[10px] text-slate-400">Required Google account for member verification.</div>
+                <div class="cp-mback">
+                    <a href="/"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+                </div>
             </div>
         </div>
 
