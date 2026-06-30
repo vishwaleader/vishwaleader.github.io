@@ -195,73 +195,71 @@
     </header>
 
     <!-- Main Workspace -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-12 space-y-20">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-6 py-8 md:py-12 space-y-14 md:space-y-20">
         
         <!-- Welcome Hero Section -->
-        <section class="relative rounded-3xl border border-slate-900 bg-slate-950 p-8 md:p-12 overflow-hidden shadow-2xl">
+        <section class="relative rounded-2xl md:rounded-3xl border border-slate-900 bg-slate-950 p-5 sm:p-8 md:p-12 overflow-hidden shadow-2xl">
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(0,86,202,0.15),transparent_100%)]"></div>
-            <div class="relative z-10 max-w-3xl space-y-4">
+            <div class="relative z-10 max-w-3xl space-y-3 md:space-y-4">
                 <span class="text-[10px] font-black tracking-widest text-amber-400 uppercase bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/25">Document Center</span>
-                <h1 class="font-display text-3xl md:text-5xl font-black text-white leading-none tracking-tight">
+                <h1 class="font-display text-2xl sm:text-3xl md:text-5xl font-black text-white leading-none tracking-tight">
                     Vishwa Leader Repository
                 </h1>
                 <p class="text-slate-400 text-xs md:text-sm leading-relaxed max-w-2xl font-light">
-                    Welcome to our archival publication library. Select any document or magazine issue from the storefront shelves below to preview high-fidelity pages instantly or download them directly to your device.
+                    Select any document or magazine issue below to download directly to your device.
                 </p>
             </div>
         </section>
 
         <!-- Shelf 1: Official Documents (PDF) -->
-        <section class="space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <section class="space-y-5 md:space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-lg bg-brandBlue/10 text-brandBlue flex items-center justify-center border border-brandBlue/20">
+                    <span class="w-8 h-8 rounded-lg bg-brandBlue/10 text-brandBlue flex items-center justify-center border border-brandBlue/20 shrink-0">
                         <i class="fa-solid fa-file-pdf"></i>
                     </span>
                     <div>
-                        <h2 class="font-display text-lg font-bold text-white uppercase tracking-wider">Official Circulars & Conference Documents</h2>
-                        <p class="text-[10px] text-slate-550 font-medium">Verified PDF Downloads & Academic Forms</p>
+                        <h2 class="font-display text-base md:text-lg font-bold text-white uppercase tracking-wider">Official Circulars &amp; Conference Documents</h2>
+                        <p class="text-[10px] text-slate-550 font-medium">Verified PDF Downloads &amp; Academic Forms</p>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider bg-slate-900 px-3 py-1 rounded-full border border-slate-800">9 Resources Available</span>
+                <span class="text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider bg-slate-900 px-3 py-1 rounded-full border border-slate-800 self-start sm:self-auto">9 Resources</span>
             </div>
 
             <!-- Shelf Grid -->
-            <div class="relative pb-10">
-                <!-- Bookshelf Base Grid -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-8 gap-y-12 pt-6 px-4" id="pdfs-shelf">
+            <div class="relative pb-8 md:pb-10">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 md:gap-y-12 pt-4 md:pt-6 px-2 md:px-4" id="pdfs-shelf">
                     <!-- PDF Books Rendered Dynamically -->
                 </div>
                 <!-- Shelf Wood-style Overlay Panel -->
-                <div class="h-4 w-full bg-slate-900 border-t border-slate-850 rounded-lg mt-4 shelf-glow relative">
+                <div class="h-3 md:h-4 w-full bg-slate-900 border-t border-slate-850 rounded-lg mt-3 md:mt-4 shelf-glow relative">
                     <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-black/30 pointer-events-none"></div>
                 </div>
             </div>
         </section>
 
         <!-- Shelf 2: Magazine Archive (Covers) -->
-        <section class="space-y-6">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <section class="space-y-5 md:space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20">
+                    <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20 shrink-0">
                         <i class="fa-solid fa-book-open"></i>
                     </span>
                     <div>
-                        <h2 class="font-display text-lg font-bold text-white uppercase tracking-wider">Print Magazine Cover Archive</h2>
+                        <h2 class="font-display text-base md:text-lg font-bold text-white uppercase tracking-wider">Print Magazine Cover Archive</h2>
                         <p class="text-[10px] text-slate-550 font-medium">Historical Monthly Magazine Publications (Paused)</p>
                     </div>
                 </div>
-                <span class="text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider bg-slate-900 px-3 py-1 rounded-full border border-slate-800">21 Issues Archived</span>
+                <span class="text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider bg-slate-900 px-3 py-1 rounded-full border border-slate-800 self-start sm:self-auto">21 Issues</span>
             </div>
 
             <!-- Shelf Grid -->
-            <div class="relative pb-10">
-                <!-- Bookshelf Base Grid -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-8 gap-y-12 pt-6 px-4" id="covers-shelf">
+            <div class="relative pb-8 md:pb-10">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 md:gap-y-12 pt-4 md:pt-6 px-2 md:px-4" id="covers-shelf">
                     <!-- Cover Magazines Rendered Dynamically -->
                 </div>
                 <!-- Shelf Wood-style Overlay Panel -->
-                <div class="h-4 w-full bg-slate-900 border-t border-slate-850 rounded-lg mt-4 shelf-glow relative">
+                <div class="h-3 md:h-4 w-full bg-slate-900 border-t border-slate-850 rounded-lg mt-3 md:mt-4 shelf-glow relative">
                     <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-black/30 pointer-events-none"></div>
                 </div>
             </div>
@@ -276,17 +274,18 @@
     <!-- Immersive Document Reader Overlay (Modal) -->
     <div id="reader-overlay" class="fixed inset-0 z-50 bg-slate-950/98 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 flex flex-col">
         <!-- Reader Header -->
-        <div class="bg-slate-950 border-b border-slate-900 px-6 py-4 flex items-center justify-between h-20">
-            <div class="flex items-center gap-3">
-                <span id="reader-badge" class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded tracking-wider">PDF DOCUMENT</span>
-                <h3 id="reader-title" class="font-display font-bold text-white text-sm md:text-base leading-tight truncate max-w-md">Selecting...</h3>
+        <div class="bg-slate-950 border-b border-slate-900 px-3 md:px-6 py-3 md:py-4 flex items-center justify-between gap-2 min-h-[4rem] md:h-20">
+            <div class="flex items-center gap-2 md:gap-3 overflow-hidden flex-1">
+                <span id="reader-badge" class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded tracking-wider shrink-0">PDF DOCUMENT</span>
+                <h3 id="reader-title" class="font-display font-bold text-white text-xs md:text-base leading-tight truncate">Selecting...</h3>
             </div>
             
-            <div class="flex items-center gap-4">
-                <a id="reader-download-btn" href="#" download class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-[10px] uppercase tracking-wider transition-colors shadow-md">
-                    <i class="fa-solid fa-download"></i> Download
+            <div class="flex items-center gap-2 md:gap-4 shrink-0">
+                <a id="reader-download-btn" href="#" download class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold px-3 md:px-4 py-2 md:py-2.5 rounded-xl text-[10px] uppercase tracking-wider transition-all shadow-md">
+                    <i class="fa-solid fa-download"></i>
+                    <span class="hidden sm:inline">Download</span>
                 </a>
-                <button onclick="closeReader()" class="w-10 h-10 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white hover:text-red-400 flex items-center justify-center text-base transition-colors" title="Close Reader">
+                <button onclick="closeReader()" class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-95 border border-slate-800 text-white hover:text-red-400 flex items-center justify-center text-base transition-all" title="Close Reader">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
