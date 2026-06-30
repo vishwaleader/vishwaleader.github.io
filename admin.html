@@ -81,31 +81,72 @@
         </div>
 
         <!-- Auth Login Screen (Hidden by default) -->
-        <div id="login-container" class="hidden fixed inset-0 z-[9999] w-full h-full bg-slate-50 flex flex-col items-center justify-center font-sans overflow-hidden">
-            <div class="w-full max-w-sm p-8 text-center space-y-8">
-                <!-- Branding / Title -->
-                <div class="space-y-2">
-                    <h1 class="text-3xl font-display font-black text-slate-900 tracking-tight">Admin Login</h1>
-                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Vishwa Leader Team Workspace</p>
-                </div>
+        <div id="login-container" class="hidden cp-login-wrapper">
+            <style>
+                @import url(https://fonts.googleapis.com/css?family=Open+Sans);
                 
-                <form method="post" onsubmit="handleAdminLogin(event)" class="space-y-4 text-left">
-                    <div class="space-y-3">
-                        <input type="text" id="admin-username-input" name="u" placeholder="Username" required="required" 
-                               class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 shadow-sm focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all" />
-                        <input type="password" id="admin-password-input" name="p" placeholder="Password" required="required" 
-                               class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-800 shadow-sm focus:outline-none focus:border-brandBlue focus:ring-1 focus:ring-brandBlue transition-all" />
-                    </div>
-                    <button type="submit" id="admin-login-btn" class="w-full bg-brandBlue hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-md text-sm uppercase tracking-wider">
-                        Let me in.
-                    </button>
-                </form>
+                .cp-login-wrapper {
+                    position: fixed; inset: 0; z-index: 9999; width: 100%; height: 100%; 
+                    font-family: 'Open Sans', sans-serif; overflow: hidden; 
+                    background: #f8fafc; /* Website light theme background */
+                }
 
-                <!-- Back to home -->
-                <div class="pt-4">
-                    <a href="/" class="inline-flex items-center justify-center gap-2 text-xs font-bold text-slate-500 hover:text-brandBlue transition-colors uppercase tracking-wide">
-                        <i class="fa-solid fa-arrow-left"></i> Back to Home
-                    </a>
+                .cp-btn { display: inline-block; *display: inline; *zoom: 1; padding: 4px 10px 4px; margin-bottom: 0; font-size: 13px; line-height: 18px; color: #333333; text-align: center;text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); vertical-align: middle; background-color: #f5f5f5; background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6); background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6)); background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6); background-image: -o-linear-gradient(top, #ffffff, #e6e6e6); background-image: linear-gradient(top, #ffffff, #e6e6e6); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#ffffff, endColorstr=#e6e6e6, GradientType=0); border-color: #e6e6e6 #e6e6e6 #e6e6e6; border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25); border: 1px solid #e6e6e6; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); cursor: pointer; *margin-left: .3em; }
+                .cp-btn:hover, .cp-btn:active, .cp-btn.active, .cp-btn.disabled, .cp-btn[disabled] { background-color: #e6e6e6; }
+                .cp-btn-large { padding: 9px 14px; font-size: 15px; line-height: normal; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+                .cp-btn:hover { color: #333333; text-decoration: none; background-color: #e6e6e6; background-position: 0 -15px; -webkit-transition: background-position 0.1s linear; -moz-transition: background-position 0.1s linear; -ms-transition: background-position 0.1s linear; -o-transition: background-position 0.1s linear; transition: background-position 0.1s linear; }
+                .cp-btn-primary, .cp-btn-primary:hover { text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); color: #ffffff; }
+                .cp-btn-primary.active { color: rgba(255, 255, 255, 0.75); }
+                
+                /* Adapted to Website Brand Blue (#2563eb / #0056CA) */
+                .cp-btn-primary { background-color: #2563eb; background-image: -moz-linear-gradient(top, #3b82f6, #1d4ed8); background-image: -ms-linear-gradient(top, #3b82f6, #1d4ed8); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#3b82f6), to(#1d4ed8)); background-image: -webkit-linear-gradient(top, #3b82f6, #1d4ed8); background-image: -o-linear-gradient(top, #3b82f6, #1d4ed8); background-image: linear-gradient(to bottom, #3b82f6, #1d4ed8); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#3b82f6, endColorstr=#1d4ed8, GradientType=0);  border: 1px solid #1e40af; text-shadow: 1px 1px 1px rgba(0,0,0,0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.5); }
+                .cp-btn-primary:hover, .cp-btn-primary:active, .cp-btn-primary.active, .cp-btn-primary.disabled, .cp-btn-primary[disabled] { filter: none; background-color: #1d4ed8; }
+                .cp-btn-block { width: 100%; display:block; }
+
+                .cp-login { 
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    margin: -150px 0 0 -150px;
+                    width:300px;
+                    height:300px;
+                }
+                .cp-login h1 { color: #0f172a; letter-spacing:1px; text-align:center; padding-bottom: 15px; font-weight: normal; margin: 0; }
+
+                .cp-input { 
+                    width: 100%; 
+                    margin-bottom: 10px; 
+                    background: #ffffff;
+                    border: none;
+                    outline: none;
+                    padding: 10px;
+                    font-size: 13px;
+                    color: #334155;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 4px;
+                    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+                    -webkit-transition: box-shadow .5s ease, border-color .5s ease;
+                    -moz-transition: box-shadow .5s ease, border-color .5s ease;
+                    -o-transition: box-shadow .5s ease, border-color .5s ease;
+                    -ms-transition: box-shadow .5s ease, border-color .5s ease;
+                    transition: box-shadow .5s ease, border-color .5s ease;
+                }
+                .cp-input:focus { box-shadow: inset 0 2px 4px rgba(0,0,0,0.05), 0 0 5px rgba(37, 99, 235, 0.3); border-color: #2563eb; }
+                
+                .cp-back { text-align: center; margin-top: 15px; }
+                .cp-back a { font-size: 11px; font-weight: bold; color: #64748b; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; }
+                .cp-back a:hover { color: #2563eb; }
+            </style>
+            
+            <div class="cp-login">
+                <h1>Login</h1>
+                <form method="post" onsubmit="handleAdminLogin(event)">
+                    <input type="text" id="admin-username-input" class="cp-input" name="u" placeholder="Username" required="required" />
+                    <input type="password" id="admin-password-input" class="cp-input" name="p" placeholder="Password" required="required" />
+                    <button type="submit" id="admin-login-btn" class="cp-btn cp-btn-primary cp-btn-block cp-btn-large">Let me in.</button>
+                </form>
+                <div class="cp-back">
+                    <a href="/"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
                 </div>
             </div>
         </div>
