@@ -125,13 +125,15 @@ export default function Page() {
                     <button className="hover:text-brandBlue transition-colors flex items-center gap-1">
                         Events 2026 <i className="fa-solid fa-chevron-down text-[10px]"></i>
                     </button>
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl p-2 hidden group-hover/nav:block z-50">
-                        <a href="/call-for-papers" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Call for Papers</a>
-                        <a href="/souvenir-articles" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Souvenir Articles</a>
-                        <a href="/awards" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Awards Nominations</a>
-                        <a href="/business-summit" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Business Summit</a>
-                        <a href="/tour-package" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">London Tour Package</a>
-                        <a href="/advertise" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Advertise with Us</a>
+                    <div className="absolute top-full left-0 pt-2 w-56 hidden group-hover/nav:block z-50">
+                        <div className="bg-white border border-slate-200 rounded-xl shadow-xl p-2">
+                            <a href="/call-for-papers" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Call for Papers</a>
+                            <a href="/souvenir-articles" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Souvenir Articles</a>
+                            <a href="/awards" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Awards Nominations</a>
+                            <a href="/business-summit" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Business Summit</a>
+                            <a href="/tour-package" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">London Tour Package</a>
+                            <a href="/advertise" className="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brandBlue rounded-lg transition-colors">Advertise with Us</a>
+                        </div>
                     </div>
                 </div>
                 <a href="gallery" className="hover:text-brandBlue transition-colors">Gallery</a>

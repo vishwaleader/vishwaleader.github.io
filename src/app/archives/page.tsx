@@ -178,7 +178,7 @@ export default function ArchivesPage() {
                         
                         <div className="flex items-center gap-4">
                             {modalState.type === 'pdf' && (
-                                <a href={`pdf-downloads/${modalState.item.file}`} download className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-[10px] uppercase tracking-wider transition-colors shadow-md">
+                                <a href={`/pdfs/${modalState.item.file}`} download className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-[10px] uppercase tracking-wider transition-colors shadow-md">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
                                     Download
                                 </a>
@@ -194,7 +194,7 @@ export default function ArchivesPage() {
                             <div className="space-y-6">
                                 <div className="aspect-[3/4] w-48 mx-auto rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shadow-2xl relative">
                                     {modalState.type === 'image' ? (
-                                        <img src={`magazine-covers/${modalState.item.src}`} alt="Cover Image" className="w-full h-full object-cover" />
+                                        <img src={`/magazine-covers/${modalState.item.src}`} alt="Cover Image" className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full bg-gradient-to-br from-slate-900 to-brandDark flex flex-col justify-between p-4">
                                             <div className="absolute top-0 left-0 w-2.5 h-full bg-black/25"></div>
@@ -223,9 +223,9 @@ export default function ArchivesPage() {
                         </div>
                         <div className="flex-grow p-4 md:p-8 bg-slate-900/50 relative flex justify-center items-center">
                             {modalState.type === 'pdf' ? (
-                                <iframe src={`pdf-downloads/${modalState.item.file}`} className="w-full h-full border-0 rounded-2xl shadow-2xl" style={{ minHeight: 'calc(100vh - 120px)' }}></iframe>
+                                <iframe src={`/pdfs/${modalState.item.file}`} className="w-full h-full border-0 rounded-2xl shadow-2xl" style={{ minHeight: 'calc(100vh - 120px)' }}></iframe>
                             ) : (
-                                <img src={`magazine-covers/${modalState.item.src}`} className="max-w-full max-h-[calc(100vh-140px)] object-contain rounded-xl shadow-2xl" />
+                                <img src={`/magazine-covers/${modalState.item.src}`} className="max-w-full max-h-[calc(100vh-140px)] object-contain rounded-xl shadow-2xl" />
                             )}
                         </div>
                     </div>
