@@ -1,7 +1,5 @@
 {
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/archives/pdfs/:title", "destination": "/archives.html" },
-    { "source": "/archives/covers/:title", "destination": "/archives.html" }
-  ]
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next"
 }
