@@ -340,25 +340,31 @@ export default function HomeClientPage() {
                     </div>
 
                     <div className="space-y-4 py-2 text-sm text-slate-200">
-                        <div className="flex items-center gap-3">
-                            <span className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-amber-400"><i className="fa-solid fa-calendar-days text-xs"></i></span>
+                        {/* Day 1 */}
+                        <div className="flex items-start gap-3 border-b border-slate-800/60 pb-3">
+                            <span className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-amber-400 shrink-0"><i className="fa-solid fa-graduation-cap text-xs"></i></span>
                             <div>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase">Dates of Events</p>
-                                <p className="font-semibold">September 18 - 20, 2026</p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase">Day 1 — Sept 18, 2026</p>
+                                <p className="font-semibold text-white">Academic Conference</p>
+                                <p className="text-xs text-slate-400">SOAS University of London</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <span className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-amber-400"><i className="fa-solid fa-graduation-cap text-xs"></i></span>
+                        {/* Day 2 */}
+                        <div className="flex items-start gap-3 border-b border-slate-800/60 pb-3">
+                            <span className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-amber-400 shrink-0"><i className="fa-solid fa-briefcase text-xs"></i></span>
                             <div>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase">Academic Venue</p>
-                                <p className="font-semibold">SOAS University of London</p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase">Day 2 — Sept 19, 2026</p>
+                                <p className="font-semibold text-white">Business Summit</p>
+                                <p className="text-xs text-slate-400">London Forums, London, UK</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <span className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-amber-400"><i className="fa-solid fa-trophy text-xs"></i></span>
+                        {/* Day 3 */}
+                        <div className="flex items-start gap-3">
+                            <span className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-amber-400 shrink-0"><i className="fa-solid fa-trophy text-xs"></i></span>
                             <div>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase">Awards Ceremony</p>
-                                <p className="font-semibold">Dr. B. R. Ambedkar International Awards</p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase">Day 3 — Sept 20, 2026</p>
+                                <p className="font-semibold text-white">Awards & Cultural Ceremony</p>
+                                <p className="text-xs text-slate-400">Greenwood Theatre, London</p>
                             </div>
                         </div>
                     </div>
