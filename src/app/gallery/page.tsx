@@ -12,11 +12,11 @@ export default function Page() {
     {/* Top Alert Banner (styled to fit the dark theme) */}
     <div className="bg-black/40 backdrop-blur text-slate-300 py-2.5 px-4 text-center border-b border-borderDark text-[11px] tracking-wider font-semibold relative z-50">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <a id="nav-abstract-strip" data-field="announcements.abstractLink" href="/#conference" className="hover:text-brandBlue transition-colors flex items-center gap-1.5"><i className="fa-solid fa-graduation-cap text-brandBlue"></i> Call for Abstracts</a>
+            <a id="nav-abstract-strip" data-field="announcements.abstractLink" href="/call-for-papers" className="hover:text-brandBlue transition-colors flex items-center gap-1.5"><i className="fa-solid fa-graduation-cap text-brandBlue"></i> Call for Abstracts</a>
             <span className="hidden sm:inline text-slate-700">|</span>
-            <a id="nav-award-strip" data-field="announcements.awardLink" href="/#contact" className="hover:text-brandBlue transition-colors flex items-center gap-1.5"><i className="fa-solid fa-trophy text-brandBlue"></i> Call for Award Nominations</a>
+            <a id="nav-business-strip" data-field="announcements.businessLink" href="/business-summit" className="hover:text-brandBlue transition-colors flex items-center gap-1.5"><i className="fa-solid fa-briefcase text-brandBlue"></i> Call for Business Participation</a>
             <span className="hidden sm:inline text-slate-700">|</span>
-            <a id="nav-business-strip" data-field="announcements.businessLink" href="/#contact" className="hover:text-brandBlue transition-colors flex items-center gap-1.5"><i className="fa-solid fa-briefcase text-brandBlue"></i> Call for Business Participation</a>
+            <a id="nav-award-strip" data-field="announcements.awardLink" href="/awards" className="hover:text-brandBlue transition-colors flex items-center gap-1.5"><i className="fa-solid fa-trophy text-brandBlue"></i> Call for Award Nominations</a>
         </div>
     </div>
 

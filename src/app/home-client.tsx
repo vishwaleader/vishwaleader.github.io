@@ -90,11 +90,11 @@ export default function HomeClientPage() {
 
     <div className="bg-brandBlue text-white py-3 px-4 text-center border-b border-white/10 text-xs tracking-wide font-semibold relative z-50">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <a id="nav-abstract-strip" data-field="announcements.abstractLink" href="#conference" className="hover:text-amber-300 transition-colors flex items-center gap-1.5"><i className="fa-solid fa-graduation-cap"></i> Call for Abstracts</a>
+            <a id="nav-abstract-strip" data-field="announcements.abstractLink" href="/call-for-papers" className="hover:text-amber-300 transition-colors flex items-center gap-1.5"><i className="fa-solid fa-graduation-cap"></i> Call for Abstracts</a>
             <span className="hidden sm:inline text-white/30">|</span>
-            <a id="nav-award-strip" data-field="announcements.awardLink" href="#contact" className="hover:text-amber-300 transition-colors flex items-center gap-1.5"><i className="fa-solid fa-trophy"></i> Call for Award Nominations</a>
+            <a id="nav-business-strip" data-field="announcements.businessLink" href="/business-summit" className="hover:text-amber-300 transition-colors flex items-center gap-1.5"><i className="fa-solid fa-briefcase"></i> Call for Business Participation</a>
             <span className="hidden sm:inline text-white/30">|</span>
-            <a id="nav-business-strip" data-field="announcements.businessLink" href="#contact" className="hover:text-amber-300 transition-colors flex items-center gap-1.5"><i className="fa-solid fa-briefcase"></i> Call for Business Participation</a>
+            <a id="nav-award-strip" data-field="announcements.awardLink" href="/awards" className="hover:text-amber-300 transition-colors flex items-center gap-1.5"><i className="fa-solid fa-trophy"></i> Call for Award Nominations</a>
         </div>
     </div>
 
