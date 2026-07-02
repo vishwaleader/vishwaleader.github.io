@@ -346,7 +346,7 @@ export default function HomeClientPage() {
                             <div>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase">Day 1 — Sept 18, 2026</p>
                                 <p className="font-semibold text-white">Academic Conference</p>
-                                <p className="text-xs text-slate-400">SOAS University of London</p>
+                                <p className="text-xs text-slate-400">Brunei Gallery Lecture Theatre, SOAS University of London</p>
                             </div>
                         </div>
                         {/* Day 2 */}
@@ -355,7 +355,7 @@ export default function HomeClientPage() {
                             <div>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase">Day 2 — Sept 19, 2026</p>
                                 <p className="font-semibold text-white">Business Summit</p>
-                                <p className="text-xs text-slate-400">London Forums, London, UK</p>
+                                <p className="text-xs text-slate-400">Atrium Hotel Banquet Suite LHR, London</p>
                             </div>
                         </div>
                         {/* Day 3 */}
@@ -364,7 +364,7 @@ export default function HomeClientPage() {
                             <div>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase">Day 3 — Sept 20, 2026</p>
                                 <p className="font-semibold text-white">Awards & Cultural Ceremony</p>
-                                <p className="text-xs text-slate-400">Greenwood Theatre, London</p>
+                                <p className="text-xs text-slate-400">Greenwood Theatre, Guys Campus, King's College, London</p>
                             </div>
                         </div>
                     </div>
