@@ -123,7 +123,7 @@ export default function HomeClientPage() {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
                 <a href="#about" className="hover:text-brandBlue transition-colors">Corporate</a>
-                <a href="#conference" className="hover:text-brandBlue transition-colors">SOAS Conference</a>
+                <a href="/pricing" className="hover:text-brandBlue transition-colors">Pricing</a>
                 <div className="relative group/nav">
                     <button className="hover:text-brandBlue transition-colors flex items-center gap-1">
                         Events 2026 <i className="fa-solid fa-chevron-down text-[10px]"></i>
@@ -212,9 +212,9 @@ export default function HomeClientPage() {
                     <span>Corporate</span>
                     <i className="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
                 </a>
-                <a href="#conference" className="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
-                    <i className="fa-solid fa-graduation-cap text-slate-400 mr-3 w-5 text-center text-xs"></i>
-                    <span>SOAS Conference</span>
+                <a href="/pricing" className="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
+                    <i className="fa-solid fa-tag text-slate-400 mr-3 w-5 text-center text-xs"></i>
+                    <span>Pricing</span>
                     <i className="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
                 </a>
                 <div className="py-2.5 px-3 border-b border-slate-50">
