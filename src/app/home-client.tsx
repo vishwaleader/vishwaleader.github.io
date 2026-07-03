@@ -152,11 +152,14 @@ export default function HomeClientPage() {
                     </a>
                 </div>
                 ) : (
-                <div id="nav-user-status" className="relative">
-                    <button id="nav-status-btn" onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border transition-all focus:outline-none bg-white hover:bg-slate-50" aria-expanded={isDropdownOpen}>
-                        <span id="nav-status-dot" className="w-2 h-2 rounded-full animate-pulse bg-emerald-500"></span>
-                        <span id="nav-status-label">Logged in</span>
-                        <i className={`fa-solid fa-chevron-down text-[9px] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} id="nav-status-chevron"></i>
+                <div id="nav-user-status" className="relative flex items-center">
+                    <button id="nav-status-btn" onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="flex items-center gap-1.5 focus:outline-none rounded-full p-0.5 border border-slate-200 hover:border-brandBlue transition-all bg-white" aria-expanded={isDropdownOpen}>
+                        <img 
+                            src={user.photoURL || "https://placehold.co/100x100/0a1e4b/ffffff?text=User"} 
+                            alt="Profile" 
+                            className="w-8 h-8 rounded-full object-cover shrink-0" 
+                        />
+                        <i className={`fa-solid fa-chevron-down text-[8px] text-slate-500 mr-2 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} id="nav-status-chevron"></i>
                     </button>
 
                     {/* Dropdown card */}
@@ -266,9 +269,11 @@ export default function HomeClientPage() {
                 ) : (
                 <div id="mobile-user-status" className="pt-3 border-t border-slate-100 flex flex-col gap-2">
                     <div className="flex items-center gap-3 px-3 py-2 bg-slate-50 rounded-xl">
-                        <div id="mobile-avatar" className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white bg-brandBlue shrink-0">
-                            {user.displayName ? user.displayName.charAt(0) : 'U'}
-                        </div>
+                        <img 
+                            src={user.photoURL || "https://placehold.co/100x100/0a1e4b/ffffff?text=User"} 
+                            alt="Profile" 
+                            className="w-8 h-8 rounded-full object-cover shrink-0 border border-slate-200" 
+                        />
                         <div className="overflow-hidden flex-1">
                             <p id="mobile-display-name" className="text-xs font-bold text-slate-900 truncate">{user.displayName || 'User'}</p>
                             <p id="mobile-status-label" className="text-[9px] font-extrabold uppercase tracking-wider text-brandBlue">Logged in</p>
