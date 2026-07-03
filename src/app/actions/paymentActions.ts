@@ -6,7 +6,7 @@ import { db } from "@/lib/firebase";
 import { doc, updateDoc, addDoc, collection, arrayUnion } from "firebase/firestore";
 
 // Price Dictionary mapping item IDs to their INR prices (including GST where applicable)
-export const PRICE_DICTIONARY: Record<string, number> = {
+const PRICE_DICTIONARY: Record<string, number> = {
     // A La Carte Options
     "day_1": 5900,
     "day_2": 11800,
