@@ -30,8 +30,6 @@ export default function PricingClientPage() {
           </a>
           <div className="flex gap-6 text-sm font-medium text-slate-500 hidden md:flex">
             <a href="/" className="hover:text-slate-900 transition-colors">Home</a>
-            <a href="/awards" className="hover:text-slate-900 transition-colors">Awards</a>
-            <a href="/pricing" className="text-slate-900">Pricing</a>
           </div>
           <button onClick={handleProceed} className="bg-slate-900 text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-800 transition-all">
             Get Started
