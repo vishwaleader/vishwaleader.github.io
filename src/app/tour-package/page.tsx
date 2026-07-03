@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Map, Plane, CheckCircle2, XCircle, CreditCard, Building2, CalendarDays } from 'lucide-react';
+import { Map, Plane, Check, X, CreditCard, CalendarDays, Building } from 'lucide-react';
 
 const itinerary = [
   {
@@ -10,8 +10,8 @@ const itinerary = [
     events: [
       "Arrive London LHR Airport & freshen up",
       "Transfer to restaurant for Indian lunch",
-      "Drive to Atrium Hotel LHR (4 Star) & Check-in (Post 15:00 hrs)",
-      "Banquet Hall reserved at Hotel (17:00 - 20:00 hrs) for Inaugural Function & Indian dinner"
+      "Drive to Atrium Hotel LHR (4 Star) & Check-in",
+      "Banquet Hall reserved at Hotel for Inaugural Function & Indian dinner"
     ]
   },
   {
@@ -20,9 +20,9 @@ const itinerary = [
     title: "SOAS Conference & London Eye",
     events: [
       "Breakfast at the hotel",
-      "Transfer to CENTRAL LONDON for Event @ Brunei Gallery Lecture Theatre, SOAS University of London (International Conference: 10:00 - 15:30 hrs)",
+      "Transfer to Central London for Event @ Brunei Gallery Lecture Theatre, SOAS University of London",
       "Lunch at University",
-      "Transfer to London Eye, Ride on the London Eye & Cruise on River Thames",
+      "Ride on the London Eye & Cruise on River Thames",
       "Dinner at Indian restaurant & transfer to hotel"
     ]
   },
@@ -34,7 +34,7 @@ const itinerary = [
       "Breakfast at the hotel",
       "Transfer to and entrance to Windsor Castle",
       "Lunch at Indian restaurant and return to hotel",
-      "International Business Summit @ Atrium Suite (17:00 - 22:00 hrs)",
+      "International Business Summit @ Atrium Suite",
       "Dinner post summit & Overnight at hotel"
     ]
   },
@@ -45,8 +45,8 @@ const itinerary = [
     events: [
       "Breakfast at the hotel and morning at leisure",
       "Indian lunch at hotel",
-      "Depart for CENTRAL LONDON - Arrive at Greenwood Theatre, Guys Campus, King's College",
-      "International Awards and Cultural Ceremony (16:00 - 19:00 hrs)",
+      "Depart for Central London - Arrive at Greenwood Theatre, Guys Campus",
+      "International Awards and Cultural Ceremony",
       "Dinner at Indian restaurant & return to hotel"
     ]
   },
@@ -98,61 +98,65 @@ const itinerary = [
 
 export default function TourPackagePage() {
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-20">
-      {/* Navbar Minimal */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-brandBlue flex items-center gap-2 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to Home
-          </Link>
-          <img src="/assets/images/vishwaleader-logo-hd.png" alt="VishwaLeader" className="h-8 object-contain" />
+    <div className="min-h-screen bg-white font-sans pb-32">
+      {/* Navbar */}
+      <header className="fixed w-full top-0 z-50 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-2">
+            <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" className="h-7 w-auto object-contain" />
+            <span className="font-sans font-bold tracking-tight text-sm text-slate-900">Vishwa Leader</span>
+          </a>
+          <div className="flex gap-6 text-sm font-medium text-slate-500 hidden md:flex">
+            <a href="/" className="hover:text-slate-900 transition-colors">Home</a>
+          </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Hero Section */}
-      <div className="bg-slate-900 relative overflow-hidden h-[50vh] min-h-[400px] flex items-center justify-center">
-        {/* Placeholder for London background image */}
-        <div className="absolute inset-0 bg-cover bg-center opacity-40 bg-[url('https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=2070&auto=format&fit=crop')]"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
+      <main className="pt-32 pb-16 md:pt-40 md:pb-20 px-6 max-w-7xl mx-auto">
         
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10 mt-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest border border-white/20 mb-6 backdrop-blur-md">
-            <Plane className="w-4 h-4 text-blue-400" />
+        {/* Header Section */}
+        <section className="text-center mb-24 max-w-3xl mx-auto">
+          <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-widest border border-slate-200 mb-6">
+            <Plane className="w-4 h-4 text-slate-900" />
             7 Nights / 8 Days
           </div>
-          <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-4 drop-shadow-lg">
-            London Tour 2026
+          <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mb-4 leading-tight">
+            London Tour Package 2026
           </h1>
-          <p className="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto font-medium drop-shadow-md">
-            17th Sept. to 24th Sept. 2026
+          <p className="text-slate-500 text-base md:text-lg">
+            Join the ultimate delegation experience from 17th Sept. to 24th Sept. 2026.
           </p>
-        </div>
-      </div>
+        </section>
 
-      <div className="max-w-6xl mx-auto px-4 -mt-10 relative z-20">
-        <div className="grid md:grid-cols-3 gap-8">
+        {/* Content Grids */}
+        <div className="grid md:grid-cols-3 gap-8 items-start">
           
-          {/* Main Content - Itinerary */}
+          {/* Main Content (Left) */}
           <div className="md:col-span-2 space-y-8">
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-slate-100">
-              <h2 className="text-2xl font-bold text-slate-800 mb-8 flex items-center gap-2">
-                <Map className="text-brandBlue w-6 h-6" /> Detailed Itinerary
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h2 className="text-xl font-semibold text-slate-900 mb-8 flex items-center gap-2">
+                <Map className="w-5 h-5 text-slate-400" /> Detailed Itinerary
               </h2>
               
-              <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+              <div className="space-y-6">
                 {itinerary.map((day, index) => (
-                  <div key={index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-brandBlue text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 font-bold text-sm">
-                      {day.day}
+                  <div key={index} className="flex gap-6">
+                    <div className="flex flex-col items-center">
+                      <div className="w-10 h-10 rounded-full border border-slate-200 bg-slate-50 text-slate-900 flex items-center justify-center font-bold text-sm shrink-0">
+                        {day.day}
+                      </div>
+                      {index !== itinerary.length - 1 && (
+                        <div className="w-px h-full bg-slate-200 mt-2 mb-2"></div>
+                      )}
                     </div>
-                    <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-slate-50 p-5 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                      <p className="text-xs font-bold text-brandBlue uppercase tracking-wider mb-1">{day.date}</p>
-                      <h3 className="font-bold text-slate-800 text-lg mb-3">{day.title}</h3>
-                      <ul className="space-y-2">
+                    <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm flex-1 mb-4">
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">{day.date}</p>
+                      <h3 className="font-semibold text-slate-900 text-base mb-4">{day.title}</h3>
+                      <ul className="space-y-3">
                         {day.events.map((event, i) => (
-                          <li key={i} className="text-sm text-slate-600 flex items-start gap-2">
+                          <li key={i} className="text-sm text-slate-600 flex items-start gap-3">
                             <span className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0"></span>
-                            {event}
+                            <span>{event}</span>
                           </li>
                         ))}
                       </ul>
@@ -163,75 +167,97 @@ export default function TourPackagePage() {
             </div>
           </div>
 
-          {/* Sidebar - Pricing & Details */}
-          <div className="space-y-6">
+          {/* Sidebar (Right) */}
+          <div className="space-y-8">
             
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
-              <h3 className="font-bold text-xl text-slate-800 mb-6 flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-brandBlue" /> Payment Schedule
+            {/* Pricing block */}
+            <div className="bg-[#111111] border border-[#222222] rounded-xl p-8 shadow-xl">
+              <h3 className="font-bold text-lg text-white mb-6 flex items-center gap-2">
+                <CreditCard className="w-5 h-5 text-slate-400" /> Payment Schedule
               </h3>
               
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-                  <span className="text-slate-600 text-sm">Tour Cost (Inc. GST/TCS)</span>
-                  <span className="font-bold text-slate-800">₹ 2,86,400</span>
+                <div className="flex justify-between items-center pb-4 border-b border-[#333333]">
+                  <span className="text-slate-400 text-sm">Tour Cost (Inc. GST/TCS)</span>
+                  <span className="font-semibold text-white">₹ 2,86,400</span>
                 </div>
-                <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-                  <span className="text-slate-600 text-sm">Registration</span>
-                  <span className="font-bold text-slate-800">₹ 23,600</span>
+                <div className="flex justify-between items-center pb-4 border-b border-[#333333]">
+                  <span className="text-slate-400 text-sm">Event Registration</span>
+                  <span className="font-semibold text-white">₹ 23,600</span>
                 </div>
-                <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg">
-                  <span className="font-bold text-slate-800 text-sm uppercase">Total Final Cost</span>
-                  <span className="font-black text-brandBlue text-lg">₹ 3,10,000</span>
+                <div className="flex justify-between items-center bg-[#222222] p-4 rounded-lg">
+                  <span className="font-bold text-white text-sm uppercase tracking-wider">Total Package</span>
+                  <span className="font-semibold text-white text-lg">₹ 3,10,000</span>
                 </div>
               </div>
 
-              <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 text-sm text-blue-900 mb-6">
-                <p className="font-bold mb-1">1st Installment: ₹ 1,50,000</p>
-                <p className="text-blue-700/80 text-xs">(₹ 25,000 booking amount is Non-Refundable once confirmed)</p>
+              <div className="bg-white/5 p-5 rounded-xl border border-white/10 text-sm text-slate-300 mb-8">
+                <p className="font-semibold text-white mb-1">1st Installment: ₹ 1,50,000</p>
+                <p className="text-xs text-slate-500">(₹ 25,000 booking amount is Non-Refundable)</p>
               </div>
 
-              <h4 className="font-bold text-slate-800 text-sm mb-3">Bank Details (Union Bank of India)</h4>
-              <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                <p><span className="font-semibold text-slate-800">A/c no:</span> 023811100002652</p>
-                <p><span className="font-semibold text-slate-800">IFSC Code:</span> UBIN0802387</p>
-                <p><span className="font-semibold text-slate-800">Branch:</span> Damodar Park, Ghatkopar West</p>
-                <p><span className="font-semibold text-slate-800">Company:</span> M/s. VISHWA LEADER TECHMEDIA PRIVATE LIMITED</p>
+              <h4 className="font-semibold text-white text-sm mb-4">Bank Details</h4>
+              <div className="space-y-2 text-xs text-slate-400 bg-white/5 p-5 rounded-xl border border-white/10">
+                <p><span className="font-medium text-white">A/c no:</span> 023811100002652</p>
+                <p><span className="font-medium text-white">IFSC Code:</span> UBIN0802387</p>
+                <p><span className="font-medium text-white">Bank:</span> Union Bank of India</p>
+                <p><span className="font-medium text-white">Company:</span> M/s. VISHWA LEADER TECHMEDIA PRIVATE LIMITED</p>
               </div>
             </div>
 
             {/* Inclusions */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl">
-              <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500" /> Inclusions
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h3 className="font-semibold text-slate-900 mb-5 flex items-center gap-2">
+                <Check className="w-5 h-5 text-slate-900" /> Inclusions
               </h3>
-              <ul className="space-y-2 text-sm text-slate-600">
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Return Economy class Airfare (BOM-LHR-BOM)</li>
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Hotel Atrium (or similar) Accommodation on Twin Sharing</li>
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Continental Breakfast, Indian Lunch & Dinner</li>
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Entire road journey & sightseeing by 49 Seater Coach</li>
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>VISA + Travel Insurance Up to 59 years</li>
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500"></div>Entry Tickets & Tour Manager Service</li>
+              <ul className="space-y-3 text-sm text-slate-600">
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-1.5 shrink-0"></span>
+                  <span>Return Economy class Airfare (BOM-LHR-BOM)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-1.5 shrink-0"></span>
+                  <span>Hotel Atrium Accommodation (Twin Sharing)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-1.5 shrink-0"></span>
+                  <span>Continental Breakfast, Indian Lunch & Dinner</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-1.5 shrink-0"></span>
+                  <span>Entire road journey by 49 Seater Coach</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-1.5 shrink-0"></span>
+                  <span>VISA + Travel Insurance (Up to 59 years)</span>
+                </li>
               </ul>
             </div>
 
             {/* Exclusions */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl">
-              <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
-                <XCircle className="w-5 h-5 text-rose-500" /> Exclusions
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h3 className="font-semibold text-slate-900 mb-5 flex items-center gap-2">
+                <X className="w-5 h-5 text-slate-400" /> Exclusions
               </h3>
-              <ul className="space-y-2 text-sm text-slate-600">
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-rose-400"></div>Cost of pre/post tour hotel accommodation</li>
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-rose-400"></div>To and fro Air fare to join/leave the group</li>
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-rose-400"></div>Porterage, laundry, wines & alcoholic beverages</li>
-                <li className="flex items-start gap-2"><div className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-rose-400"></div>Any increase in Fuel Surcharges / Government taxes</li>
+              <ul className="space-y-3 text-sm text-slate-600">
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0"></span>
+                  <span>Cost of pre/post tour hotel accommodation</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0"></span>
+                  <span>To and fro Air fare to join/leave the group</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 shrink-0"></span>
+                  <span>Porterage, laundry, wines & alcoholic beverages</span>
+                </li>
               </ul>
             </div>
 
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

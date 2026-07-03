@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { ArrowLeft, ExternalLink, Calendar, MapPin, Mail, Award } from 'lucide-react';
+import { Calendar, MapPin, Mail, Trophy, Info, Users, Check } from 'lucide-react';
+import Preloader from '@/components/Preloader';
 
 export default function AwardsPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -38,53 +38,60 @@ export default function AwardsPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      {/* Navbar Minimal */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-brandBlue flex items-center gap-2 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to Home
-          </Link>
-          <img src="/assets/images/vishwaleader-logo-hd.png" alt="VishwaLeader" className="h-8 object-contain" />
-        </div>
-      </nav>
+  if (loadingAuth) return <Preloader />;
 
-      {/* Hero Section */}
-      <div className="bg-brandBlue relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
-        <div className="max-w-4xl mx-auto px-4 py-20 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest border border-white/20 mb-6">
-            <Award className="w-4 h-4 text-amber-400" />
+  return (
+    <div className="min-h-screen bg-white font-sans pb-32">
+      {/* Navbar */}
+      <header className="fixed w-full top-0 z-50 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-2">
+            <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" className="h-7 w-auto object-contain" />
+            <span className="font-sans font-bold tracking-tight text-sm text-slate-900">Vishwa Leader</span>
+          </a>
+          <div className="flex gap-6 text-sm font-medium text-slate-500 hidden md:flex">
+            <a href="/" className="hover:text-slate-900 transition-colors">Home</a>
+          </div>
+          <button onClick={handleActionClick} className="bg-slate-900 text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-800 transition-all">
+            Get Started
+          </button>
+        </div>
+      </header>
+
+      <main className="pt-32 pb-16 md:pt-40 md:pb-20 px-6 max-w-7xl mx-auto">
+        
+        {/* Header Section */}
+        <section className="text-center mb-24 max-w-3xl mx-auto">
+          <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-widest border border-slate-200 mb-6">
+            <Trophy className="w-4 h-4 text-slate-900" />
             Applications Now Open
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-6">
+          <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mb-4 leading-tight">
             Vishwa Leader Dr. B. R. Ambedkar International Awards 2026
           </h1>
-          <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto font-medium">
+          <p className="text-slate-500 text-base md:text-lg">
             Honoring individuals and organizations making exceptional contributions to social justice, equality, and human rights.
           </p>
-        </div>
-      </div>
+        </section>
 
-      <div className="max-w-5xl mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-3 gap-8">
+        {/* Content Grids */}
+        <div className="grid md:grid-cols-3 gap-8 items-start">
           
-          {/* Main Content */}
-          <div className="md:col-span-2 space-y-12">
+          {/* Main Content (Left) */}
+          <div className="md:col-span-2 space-y-8">
             
-            <section>
-              <h2 className="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i className="fa-solid fa-circle-info text-brandBlue"></i> About the Awards
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                <Info className="w-5 h-5 text-slate-400" /> About the Awards
               </h2>
-              <p className="text-slate-600 leading-relaxed mb-4 text-justify">
+              <p className="text-slate-600 text-sm leading-relaxed text-justify">
                 We are delighted to announce the Vishwa Leader Dr. B. R. Ambedkar International Awards 2026, scheduled to be held in London. This prestigious global event aims to honour individuals and organizations making exceptional contributions to social justice, equality, human rights, education, economic empowerment, and community development, inspired by the timeless principles of Dr. B. R. Ambedkar.
               </p>
-            </section>
+            </div>
 
-            <section>
-              <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <i className="fa-solid fa-trophy text-brandBlue"></i> Award Categories
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-slate-400" /> Award Categories
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
@@ -94,109 +101,94 @@ export default function AwardsPage() {
                   "Human Rights Advocacy",
                   "Innovative Community Service"
                 ].map((category, i) => (
-                  <div key={i} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-start gap-3 hover:shadow-md transition-shadow">
-                    <div className="bg-amber-100 text-amber-600 w-8 h-8 rounded-lg flex items-center justify-center font-black shrink-0">
+                  <div key={i} className="bg-slate-50 p-4 rounded-lg border border-slate-100 flex items-start gap-3">
+                    <div className="bg-white border border-slate-200 text-slate-900 w-8 h-8 rounded flex items-center justify-center font-bold text-sm shrink-0">
                       {i + 1}
                     </div>
-                    <span className="font-semibold text-slate-800 mt-1">{category}</span>
+                    <span className="font-medium text-slate-700 text-sm mt-1">{category}</span>
                   </div>
                 ))}
               </div>
-            </section>
+            </div>
 
-            <section>
-              <h2 className="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i className="fa-solid fa-users text-brandBlue"></i> Eligibility Criteria
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                <Users className="w-5 h-5 text-slate-400" /> Eligibility Criteria
               </h2>
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-slate-600 space-y-3">
-                <p>Open to individuals, organizations, and institutions worldwide.</p>
-                <p>Nominees must demonstrate significant impact aligned with Dr. Ambedkar's vision.</p>
-                <p>Applications are welcome from academia, civil society, government, business, and private sectors.</p>
-              </div>
-            </section>
+              <ul className="space-y-4 text-sm text-slate-600">
+                <li className="flex gap-3">
+                  <Check className="w-5 h-5 text-slate-900 shrink-0" />
+                  <span>Open to individuals, organizations, and institutions worldwide.</span>
+                </li>
+                <li className="flex gap-3">
+                  <Check className="w-5 h-5 text-slate-900 shrink-0" />
+                  <span>Nominees must demonstrate significant impact aligned with Dr. Ambedkar's vision.</span>
+                </li>
+                <li className="flex gap-3">
+                  <Check className="w-5 h-5 text-slate-900 shrink-0" />
+                  <span>Applications are welcome from academia, civil society, government, business, and private sectors.</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
+          {/* Sidebar (Right) */}
+          <div className="space-y-8">
             
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brandBlue to-indigo-500"></div>
-              <h3 className="font-bold text-lg text-slate-800 mb-4">Event Details</h3>
-              <ul className="space-y-4">
-                <li className="flex gap-3 text-slate-600">
-                  <Calendar className="w-5 h-5 text-brandBlue shrink-0" />
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h3 className="text-lg font-semibold text-slate-900 mb-6">Event Details</h3>
+              <ul className="space-y-5 text-sm">
+                <li className="flex gap-4 items-start">
+                  <Calendar className="w-5 h-5 text-slate-400 shrink-0" />
                   <div>
-                    <p className="font-semibold text-sm text-slate-800">Date</p>
-                    <p className="text-sm">20th September 2026</p>
+                    <p className="font-semibold text-slate-900">Date</p>
+                    <p className="text-slate-500 mt-1">20th September 2026</p>
                   </div>
                 </li>
-                <li className="flex gap-3 text-slate-600">
-                  <MapPin className="w-5 h-5 text-brandBlue shrink-0" />
+                <li className="flex gap-4 items-start">
+                  <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
                   <div>
-                    <p className="font-semibold text-sm text-slate-800">Venue</p>
-                    <p className="text-sm">Greenwood Theatre, Guys Campus, King's College, London, United Kingdom.</p>
+                    <p className="font-semibold text-slate-900">Venue</p>
+                    <p className="text-slate-500 mt-1">Greenwood Theatre, Guys Campus, King's College, London.</p>
                   </div>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-slate-900 p-6 rounded-2xl text-white shadow-xl">
-              <h3 className="font-bold text-lg mb-2">Registration Portal</h3>
-              <p className="text-slate-300 text-sm mb-6">Deadline: <strong className="text-amber-400">31st May 2026</strong></p>
-              
-              <div className="space-y-3 mb-6 text-sm text-slate-300">
-                <p className="flex items-center gap-2"><i className="fa-solid fa-check text-emerald-400"></i> A detailed description of achievements</p>
-                <p className="flex items-center gap-2"><i className="fa-solid fa-check text-emerald-400"></i> Supporting documents</p>
-                <p className="flex items-center gap-2"><i className="fa-solid fa-check text-emerald-400"></i> References or testimonials</p>
-              </div>
+            <div className="bg-[#111111] border border-[#222222] rounded-xl p-8 shadow-xl">
+              <h3 className="text-lg font-semibold text-white mb-2">Registration Portal</h3>
+              <p className="text-slate-400 text-sm mb-6 pb-6 border-b border-[#333333]">
+                Deadline: <strong className="text-white">31st May 2026</strong>
+              </p>
 
-              {loadingAuth ? (
-                <div className="w-full py-3 bg-brandBlue/70 text-white text-center font-bold rounded-xl text-sm">
-                  Checking Account...
-                </div>
-              ) : user ? (
-                <button onClick={handleActionClick} className="block w-full py-3 bg-brandBlue hover:bg-blue-600 text-white text-center font-bold rounded-xl transition-colors mb-3 flex items-center justify-center gap-2 text-sm">
-                  Go to Dashboard & Register <ExternalLink className="w-4 h-4" />
-                </button>
-              ) : (
-                <button onClick={handleActionClick} className="block w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 text-center font-bold rounded-xl transition-colors mb-3 flex items-center justify-center gap-2 text-sm">
-                  Login with Google to Register <ExternalLink className="w-4 h-4" />
-                </button>
-              )}
+              <div className="space-y-3 mb-8 text-sm text-slate-300">
+                <p className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Detailed description of achievements
+                </p>
+                <p className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Supporting documents
+                </p>
+                <p className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-500"></span> References or testimonials
+                </p>
+              </div>
               
-              <div className="text-center text-xs text-slate-400 border-t border-white/10 pt-4 mt-2">
+              <button onClick={handleActionClick} className="w-full bg-white text-slate-900 hover:bg-slate-100 font-semibold py-3 rounded-lg text-sm transition-colors mb-6">
+                Register & Nominate
+              </button>
+              
+              <div className="text-center text-xs text-slate-500">
                 <p>Or email nomination to:</p>
-                <a href="mailto:vishwaleaderawards@gmail.com" className="text-blue-300 hover:text-white font-semibold flex items-center justify-center gap-1 mt-1">
-                  <Mail className="w-3 h-3" /> vishwaleaderawards@gmail.com
+                <a href="mailto:vishwaleaderawards@gmail.com" className="text-slate-300 hover:text-white font-medium flex items-center justify-center gap-1.5 mt-2">
+                  <Mail className="w-3.5 h-3.5" /> vishwaleaderawards@gmail.com
                 </a>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50">
-              <h3 className="font-bold text-xs text-brandBlue mb-3 uppercase tracking-widest">Delegation Registry Fee</h3>
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span>Base Ceremony Fee:</span>
-                  <span className="font-semibold text-slate-700">₹5,000</span>
-                </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span>18% GST:</span>
-                  <span className="font-semibold text-slate-700">₹900</span>
-                </div>
-                <div className="border-t border-slate-150 pt-2 flex justify-between text-sm font-bold text-slate-800">
-                  <span>Total Payable:</span>
-                  <span className="text-brandBlue font-mono text-base">₹5,900</span>
-                </div>
-              </div>
-              <p className="text-[10px] text-slate-400 bg-slate-50 p-3.5 rounded-xl border border-slate-100 leading-normal">
-                Note: Payable securely online via UPI, Cards, or Netbanking inside the Member Portal. International cards are supported (estimated in USD/GBP on checkout).
-              </p>
-            </div>
-
           </div>
-
         </div>
-      </div>
+      </main>
     </div>
   );
 }

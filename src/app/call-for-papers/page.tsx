@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { ArrowLeft, BookOpen, MapPin, Calendar, Mail, FileText, ExternalLink, GraduationCap, CheckCircle2 } from 'lucide-react';
+import { Check, Calendar, MapPin, Mail, BookOpen, FileText } from 'lucide-react';
+import Preloader from '@/components/Preloader';
 
 const subThemes = [
   "Social Justice and Human Rights",
@@ -51,182 +52,151 @@ export default function CallForPapersPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-20">
-      {/* Navbar Minimal */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-brandBlue flex items-center gap-2 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to Home
-          </Link>
-          <img src="/assets/images/vishwaleader-logo-hd.png" alt="VishwaLeader" className="h-8 object-contain" />
-        </div>
-      </nav>
+  if (loadingAuth) return <Preloader />;
 
-      {/* Hero Section */}
-      <div className="bg-brandBlue relative overflow-hidden py-16 md:py-24">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
-        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest border border-white/20 mb-6">
-            <GraduationCap className="w-4 h-4 text-amber-400" />
-            International Academic Conference
+  return (
+    <div className="min-h-screen bg-white font-sans pb-32">
+      {/* Navbar */}
+      <header className="fixed w-full top-0 z-50 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-2">
+            <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" className="h-7 w-auto object-contain" />
+            <span className="font-sans font-bold tracking-tight text-sm text-slate-900">Vishwa Leader</span>
+          </a>
+          <div className="flex gap-6 text-sm font-medium text-slate-500 hidden md:flex">
+            <a href="/" className="hover:text-slate-900 transition-colors">Home</a>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
-            Call for Abstracts and Papers
+          <button onClick={handleActionClick} className="bg-slate-900 text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-800 transition-all">
+            Get Started
+          </button>
+        </div>
+      </header>
+
+      <main className="pt-32 pb-16 md:pt-40 md:pb-20 px-6 max-w-7xl mx-auto">
+        
+        {/* Header Section */}
+        <section className="text-center mb-24 max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mb-4">
+            Call for Papers
           </h1>
-          <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto font-medium mb-8">
-            Submit your research for the International Conference at London.
+          <p className="text-slate-500 text-base md:text-lg mb-10">
+            Submit your research for the International Conference in London.
           </p>
-          
-          <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 md:p-6 text-left max-w-3xl mx-auto shadow-2xl">
-            <p className="text-amber-400 font-bold text-sm uppercase tracking-widest mb-1 text-center">Conference Theme</p>
-            <p className="text-white text-xl md:text-2xl font-serif text-center italic">
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-8 shadow-sm">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Conference Theme</p>
+            <p className="text-lg md:text-xl font-serif text-slate-900 italic">
               "Reimagining Equality and Justice: Dr. B. R. Ambedkar's Vision in the 21st Century"
             </p>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <div className="max-w-6xl mx-auto px-4 -mt-10 relative z-20">
-        <div className="grid md:grid-cols-3 gap-8">
+        {/* Content Grids */}
+        <div className="grid md:grid-cols-3 gap-8 items-start">
           
-          {/* Main Content */}
+          {/* Main Content (Left) */}
           <div className="md:col-span-2 space-y-8">
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-slate-100">
-              <h2 className="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <BookOpen className="text-brandBlue w-6 h-6" /> Suggested Sub-Themes
+            
+            {/* Sub-Themes */}
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-slate-400" /> Suggested Sub-Themes
               </h2>
-              <p className="text-slate-600 mb-6 text-sm">
-                Submissions may address, but are not limited to, the following themes:
-              </p>
-              
-              <div className="grid sm:grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-4">
                 {subThemes.map((theme, i) => (
-                  <div key={i} className="bg-slate-50 p-3 rounded-lg border border-slate-100 flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-brandBlue shrink-0 mt-0.5" />
-                    <span className="text-sm font-semibold text-slate-700">{theme}</span>
+                  <div key={i} className="flex items-start gap-3">
+                    <Check className="w-4 h-4 text-slate-900 mt-0.5 shrink-0" />
+                    <span className="text-sm text-slate-600">{theme}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-slate-100">
-              <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <FileText className="text-brandBlue w-6 h-6" /> Submission Guidelines
+            {/* Submission Guidelines */}
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-slate-400" /> Submission Guidelines
               </h2>
               
-              <div className="space-y-6">
-                <div className="p-5 border border-slate-200 rounded-xl bg-slate-50">
-                  <h3 className="font-bold text-slate-800 mb-3 uppercase tracking-wider text-sm">Abstract Submission</h3>
-                  <ul className="space-y-2 text-sm text-slate-600 list-disc list-inside">
-                    <li><strong>Length:</strong> Up to 300 words</li>
-                    <li><strong>Format:</strong> Title (Bold, Centered), Author(s) Name, Affiliation, Email ID, ORCID ID</li>
-                    <li><strong>Keywords:</strong> 3–5</li>
-                    <li><strong>Font:</strong> Times New Roman, 12 pt, 1.5 spacing</li>
-                    <li><strong>File Type:</strong> Word Document (.doc/.docx)</li>
+              <div className="space-y-8">
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-3 text-sm">Abstract Submission</h3>
+                  <ul className="space-y-2 text-sm text-slate-500 list-disc list-inside">
+                    <li><strong className="text-slate-700 font-medium">Length:</strong> Up to 300 words</li>
+                    <li><strong className="text-slate-700 font-medium">Format:</strong> Title (Bold, Centered), Author(s) Name, Affiliation, Email ID, ORCID ID</li>
+                    <li><strong className="text-slate-700 font-medium">Keywords:</strong> 3–5</li>
+                    <li><strong className="text-slate-700 font-medium">File Type:</strong> Word Document (.doc/.docx)</li>
                   </ul>
                 </div>
 
-                <div className="p-5 border border-slate-200 rounded-xl bg-slate-50">
-                  <h3 className="font-bold text-slate-800 mb-3 uppercase tracking-wider text-sm">Full Paper Submission</h3>
-                  <ul className="space-y-2 text-sm text-slate-600 list-disc list-inside">
-                    <li><strong>Length:</strong> 3,000–5,000 words (including references)</li>
-                    <li><strong>Structure:</strong> Title | Abstract | Introduction | Literature Review | Methodology | Results & Discussion | Conclusion | References (APA 7th Edition)</li>
-                    <li><strong>Originality:</strong> Unpublished work only (Similarity Index ≤10%, including AI content)</li>
+                <div>
+                  <h3 className="font-semibold text-slate-900 mb-3 text-sm">Full Paper Submission</h3>
+                  <ul className="space-y-2 text-sm text-slate-500 list-disc list-inside">
+                    <li><strong className="text-slate-700 font-medium">Length:</strong> 3,000–5,000 words (including references)</li>
+                    <li><strong className="text-slate-700 font-medium">Structure:</strong> Title | Abstract | Introduction | Literature Review | Methodology | Results & Discussion | Conclusion | References</li>
+                    <li><strong className="text-slate-700 font-medium">Originality:</strong> Unpublished work only (Similarity Index ≤10%)</li>
                   </ul>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
+          {/* Sidebar (Right) */}
+          <div className="space-y-8">
             
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brandBlue to-indigo-500"></div>
-              <h3 className="font-bold text-xl text-slate-800 mb-6">Conference Details</h3>
-              
-              <ul className="space-y-4 text-sm text-slate-600 mb-6">
-                <li className="flex gap-3">
-                  <Calendar className="w-5 h-5 text-brandBlue shrink-0" />
+            {/* Conference Details */}
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h3 className="text-lg font-semibold text-slate-900 mb-6">Conference Details</h3>
+              <ul className="space-y-5 text-sm">
+                <li className="flex gap-4 items-start">
+                  <Calendar className="w-5 h-5 text-slate-400 shrink-0" />
                   <div>
-                    <p className="font-semibold text-slate-800">Date</p>
-                    <p>18th September 2026</p>
+                    <p className="font-semibold text-slate-900">Date</p>
+                    <p className="text-slate-500 mt-1">18th September 2026</p>
                   </div>
                 </li>
-                <li className="flex gap-3">
-                  <MapPin className="w-5 h-5 text-brandBlue shrink-0" />
+                <li className="flex gap-4 items-start">
+                  <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
                   <div>
-                    <p className="font-semibold text-slate-800">Venue</p>
-                    <p>Brunei Gallery Lecture Theatre, SOAS University of London, United Kingdom.</p>
+                    <p className="font-semibold text-slate-900">Venue</p>
+                    <p className="text-slate-500 mt-1">Brunei Gallery Lecture Theatre, SOAS University of London</p>
                   </div>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-slate-900 p-6 rounded-2xl text-white shadow-xl">
-              <h3 className="font-bold text-lg mb-4">Important Dates</h3>
-              <div className="space-y-3 text-sm text-slate-300 mb-6">
-                <div className="flex justify-between border-b border-white/10 pb-2">
+            {/* Premium Dark CTA Card */}
+            <div className="bg-[#111111] border border-[#222222] rounded-xl p-8 shadow-xl">
+              <h3 className="text-lg font-semibold text-white mb-6">Important Dates</h3>
+              <div className="space-y-4 text-sm text-slate-400 mb-8 pb-8 border-b border-[#333333]">
+                <div className="flex justify-between">
                   <span>Abstract Submission</span>
-                  <span className="font-bold text-amber-400">31st May 2026</span>
+                  <span className="font-semibold text-white">31st May 2026</span>
                 </div>
-                <div className="flex justify-between border-b border-white/10 pb-2">
+                <div className="flex justify-between">
                   <span>Acceptance</span>
-                  <span className="font-bold text-amber-400">15th June 2026</span>
+                  <span className="font-semibold text-white">15th June 2026</span>
                 </div>
-                <div className="flex justify-between pb-2">
+                <div className="flex justify-between">
                   <span>Full Paper</span>
-                  <span className="font-bold text-amber-400">15th July 2026</span>
+                  <span className="font-semibold text-white">15th July 2026</span>
                 </div>
               </div>
 
-              {loadingAuth ? (
-                <div className="w-full py-3 bg-brandBlue/70 text-white text-center font-bold rounded-xl text-sm">
-                  Checking Account...
-                </div>
-              ) : user ? (
-                <button onClick={handleActionClick} className="block w-full py-3 bg-brandBlue hover:bg-blue-600 text-white text-center font-bold rounded-xl transition-colors mb-3 flex items-center justify-center gap-2 text-sm">
-                  Go to Dashboard & Register <ExternalLink className="w-4 h-4" />
-                </button>
-              ) : (
-                <button onClick={handleActionClick} className="block w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 text-center font-bold rounded-xl transition-colors mb-3 flex items-center justify-center gap-2 text-sm">
-                  Login with Google to Register <ExternalLink className="w-4 h-4" />
-                </button>
-              )}
+              <button onClick={handleActionClick} className="w-full bg-white text-slate-900 hover:bg-slate-100 font-semibold py-3 rounded-lg text-sm transition-colors mb-6">
+                Register & Submit Paper
+              </button>
               
-              <div className="text-center text-xs text-slate-400 border-t border-white/10 pt-4 mt-2">
+              <div className="text-center text-xs text-slate-500">
                 <p>Email abstracts & papers to:</p>
-                <a href="mailto:vishwaleaderconference@gmail.com" className="text-blue-300 hover:text-white font-semibold flex items-center justify-center gap-1 mt-1">
-                  <Mail className="w-3 h-3" /> vishwaleaderconference@gmail.com
+                <a href="mailto:vishwaleaderconference@gmail.com" className="text-slate-300 hover:text-white font-medium flex items-center justify-center gap-1.5 mt-2">
+                  <Mail className="w-3.5 h-3.5" /> vishwaleaderconference@gmail.com
                 </a>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl">
-              <h3 className="font-bold text-xs text-brandBlue mb-3 uppercase tracking-widest">Delegation Registry Fee</h3>
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span>Base Conference Fee:</span>
-                  <span className="font-semibold text-slate-700">₹5,000</span>
-                </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span>18% GST:</span>
-                  <span className="font-semibold text-slate-700">₹900</span>
-                </div>
-                <div className="border-t border-slate-150 pt-2 flex justify-between text-sm font-bold text-slate-800">
-                  <span>Total Payable:</span>
-                  <span className="text-brandBlue font-mono text-base">₹5,900</span>
-                </div>
-              </div>
-              <p className="text-[10px] text-slate-400 bg-slate-50 p-3.5 rounded-xl border border-slate-100 leading-normal">
-                Note: Payable securely online via UPI, Cards, or Netbanking inside the Member Portal. International cards are supported (estimated in USD/GBP on checkout).
-              </p>
-            </div>
-
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

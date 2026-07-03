@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { ArrowLeft, ExternalLink, Calendar, MapPin, Mail, Briefcase, Users, Handshake } from 'lucide-react';
+import { MapPin, Calendar, Mail, Users, Handshake, Globe } from 'lucide-react';
+import Preloader from '@/components/Preloader';
 
 export default function BusinessSummitPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -38,53 +38,55 @@ export default function BusinessSummitPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      {/* Navbar Minimal */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-brandBlue flex items-center gap-2 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to Home
-          </Link>
-          <img src="/assets/images/vishwaleader-logo-hd.png" alt="VishwaLeader" className="h-8 object-contain" />
-        </div>
-      </nav>
+  if (loadingAuth) return <Preloader />;
 
-      {/* Hero Section */}
-      <div className="bg-slate-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
-        <div className="max-w-4xl mx-auto px-4 py-20 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest border border-white/20 mb-6">
-            <Briefcase className="w-4 h-4 text-emerald-400" />
-            Call for Participation
+  return (
+    <div className="min-h-screen bg-white font-sans pb-32">
+      {/* Navbar */}
+      <header className="fixed w-full top-0 z-50 bg-white border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-2">
+            <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" className="h-7 w-auto object-contain" />
+            <span className="font-sans font-bold tracking-tight text-sm text-slate-900">Vishwa Leader</span>
+          </a>
+          <div className="flex gap-6 text-sm font-medium text-slate-500 hidden md:flex">
+            <a href="/" className="hover:text-slate-900 transition-colors">Home</a>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4">
-            International Business Summit at London
+          <button onClick={handleActionClick} className="bg-slate-900 text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-800 transition-all">
+            Get Started
+          </button>
+        </div>
+      </header>
+
+      <main className="pt-32 pb-16 md:pt-40 md:pb-20 px-6 max-w-7xl mx-auto">
+        
+        {/* Header Section */}
+        <section className="text-center mb-24 max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mb-4">
+            International Business Summit
           </h1>
-          <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-medium mb-8">
+          <p className="text-slate-500 text-base md:text-lg mb-10">
             On the Eve of the Vishwa Leader Dr. B. R. Ambedkar International Awards 2026
           </p>
-          
-          <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 md:p-6 text-left max-w-3xl mx-auto shadow-2xl">
-            <p className="text-amber-400 font-bold text-sm uppercase tracking-widest mb-1 text-center">Summit Theme</p>
-            <p className="text-white text-xl md:text-2xl font-serif text-center italic">
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-8 shadow-sm">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Summit Theme</p>
+            <p className="text-lg md:text-xl font-serif text-slate-900 italic">
               "Business as a Driver of Social Change: Realizing Dr. Ambedkar's Vision in Today's Economy"
             </p>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <div className="max-w-5xl mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-3 gap-8">
+        {/* Content Grids */}
+        <div className="grid md:grid-cols-3 gap-8 items-start">
           
-          {/* Main Content */}
-          <div className="md:col-span-2 space-y-12">
+          {/* Main Content (Left) */}
+          <div className="md:col-span-2 space-y-8">
             
-            <section>
-              <h2 className="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i className="fa-solid fa-earth-americas text-brandBlue"></i> About the Summit
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                <Globe className="w-5 h-5 text-slate-400" /> About the Summit
               </h2>
-              <div className="text-slate-600 leading-relaxed space-y-4 text-justify">
+              <div className="text-slate-600 text-sm leading-relaxed space-y-4">
                 <p>
                   The Organising Committee of the Vishwa Leader Dr. B. R. Ambedkar International Awards 2026 cordially invites business leaders, entrepreneurs, investors, corporate executives, startup founders, industry professionals, and social enterprises from across the world to participate in the Vishwa Leader Dr. B. R. Ambedkar International Business Summit, to be held in London, UK on 19th September 2026.
                 </p>
@@ -95,114 +97,80 @@ export default function BusinessSummitPage() {
                   The Summit aims to bring together visionary business leaders, policymakers, investors, innovators, MSMEs, startups, and global enterprises to exchange ideas, explore partnerships, identify investment opportunities, and collectively work towards building a more inclusive, equitable, and socially transformative global business ecosystem rooted in Ambedkarite values.
                 </p>
               </div>
-            </section>
+            </div>
 
-            <section>
-              <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <Handshake className="text-brandBlue w-6 h-6" /> In Association With
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h2 className="text-xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                <Handshake className="w-5 h-5 text-slate-400" /> In Association With
               </h2>
               <div className="grid sm:grid-cols-3 gap-4">
-                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center">
-                  <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Users className="w-6 h-6 text-slate-400" />
+                <div className="bg-slate-50 p-6 rounded-lg border border-slate-100 text-center">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-200">
+                    <Users className="w-4 h-4 text-slate-600" />
                   </div>
-                  <p className="font-semibold text-slate-800 text-sm">Global Bahujan Business Council (GBBC)</p>
+                  <p className="font-semibold text-slate-900 text-xs">Global Bahujan Business Council (GBBC)</p>
                 </div>
-                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center">
-                  <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Users className="w-6 h-6 text-slate-400" />
+                <div className="bg-slate-50 p-6 rounded-lg border border-slate-100 text-center">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-200">
+                    <Users className="w-4 h-4 text-slate-600" />
                   </div>
-                  <p className="font-semibold text-slate-800 text-sm">Dr. Ambedkar Chamber of Commerce (DACC)</p>
+                  <p className="font-semibold text-slate-900 text-xs">Dr. Ambedkar Chamber of Commerce (DACC)</p>
                 </div>
-                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center">
-                  <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Users className="w-6 h-6 text-slate-400" />
+                <div className="bg-slate-50 p-6 rounded-lg border border-slate-100 text-center">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-200">
+                    <Users className="w-4 h-4 text-slate-600" />
                   </div>
-                  <p className="font-semibold text-slate-800 text-sm">WLCC (West London Chamber of Commerce)</p>
+                  <p className="font-semibold text-slate-900 text-xs">West London Chamber of Commerce (WLCC)</p>
                 </div>
               </div>
-            </section>
+            </div>
+
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
+          {/* Sidebar (Right) */}
+          <div className="space-y-8">
             
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
-              <h3 className="font-bold text-lg text-slate-800 mb-4">Summit Details</h3>
-              <ul className="space-y-4">
-                <li className="flex gap-3 text-slate-600">
-                  <Calendar className="w-5 h-5 text-emerald-500 shrink-0" />
+            <div className="bg-white border border-slate-200 rounded-xl p-8">
+              <h3 className="text-lg font-semibold text-slate-900 mb-6">Summit Details</h3>
+              <ul className="space-y-5 text-sm">
+                <li className="flex gap-4 items-start">
+                  <Calendar className="w-5 h-5 text-slate-400 shrink-0" />
                   <div>
-                    <p className="font-semibold text-sm text-slate-800">Date</p>
-                    <p className="text-sm">19th September 2026</p>
+                    <p className="font-semibold text-slate-900">Date</p>
+                    <p className="text-slate-500 mt-1">19th September 2026</p>
                   </div>
                 </li>
-                <li className="flex gap-3 text-slate-600">
-                  <MapPin className="w-5 h-5 text-emerald-500 shrink-0" />
+                <li className="flex gap-4 items-start">
+                  <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
                   <div>
-                    <p className="font-semibold text-sm text-slate-800">Venue</p>
-                    <p className="text-sm">Hotel Banquet Suite, London, United Kingdom.</p>
+                    <p className="font-semibold text-slate-900">Venue</p>
+                    <p className="text-slate-500 mt-1">Hotel Banquet Suite, London, United Kingdom.</p>
                   </div>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-slate-900 p-6 rounded-2xl text-white shadow-xl">
-              <h3 className="font-bold text-lg mb-2">Registration Portal</h3>
-              <p className="text-slate-300 text-sm mb-6">Deadline: <strong className="text-emerald-400">31st May 2026</strong></p>
-              
-              <p className="text-sm text-slate-300 mb-4">
-                Register as a business delegate and secure your ticket through the portal.
+            <div className="bg-[#111111] border border-[#222222] rounded-xl p-8 shadow-xl">
+              <h3 className="text-lg font-semibold text-white mb-2">Registration Portal</h3>
+              <p className="text-slate-400 text-sm mb-6 pb-6 border-b border-[#333333]">
+                Deadline: <strong className="text-white">31st May 2026</strong>
               </p>
-
-              {loadingAuth ? (
-                <div className="w-full py-3 bg-emerald-500/70 text-white text-center font-bold rounded-xl text-sm">
-                  Checking Account...
-                </div>
-              ) : user ? (
-                <button onClick={handleActionClick} className="block w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white text-center font-bold rounded-xl transition-colors mb-3 flex items-center justify-center gap-2 text-sm">
-                  Go to Dashboard & Register <ExternalLink className="w-4 h-4" />
-                </button>
-              ) : (
-                <button onClick={handleActionClick} className="block w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 text-center font-bold rounded-xl transition-colors mb-3 flex items-center justify-center gap-2 text-sm">
-                  Login with Google to Register <ExternalLink className="w-4 h-4" />
-                </button>
-              )}
               
-              <div className="text-center text-xs text-slate-400 border-t border-white/10 pt-4 mt-2">
+              <button onClick={handleActionClick} className="w-full bg-white text-slate-900 hover:bg-slate-100 font-semibold py-3 rounded-lg text-sm transition-colors mb-6">
+                Register as Delegate
+              </button>
+              
+              <div className="text-center text-xs text-slate-500">
                 <p>Or mail your application to:</p>
-                <a href="mailto:vishwaleaderbusiness@gmail.com" className="text-emerald-300 hover:text-white font-semibold flex items-center justify-center gap-1 mt-1">
-                  <Mail className="w-3 h-3" /> vishwaleaderbusiness@gmail.com
+                <a href="mailto:vishwaleaderbusiness@gmail.com" className="text-slate-300 hover:text-white font-medium flex items-center justify-center gap-1.5 mt-2">
+                  <Mail className="w-3.5 h-3.5" /> vishwaleaderbusiness@gmail.com
                 </a>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50">
-              <h3 className="font-bold text-xs text-emerald-600 mb-3 uppercase tracking-widest">Delegation Registry Fee</h3>
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span>Base Summit Fee:</span>
-                  <span className="font-semibold text-slate-700">₹10,000</span>
-                </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span>18% GST:</span>
-                  <span className="font-semibold text-slate-700">₹1,800</span>
-                </div>
-                <div className="border-t border-slate-150 pt-2 flex justify-between text-sm font-bold text-slate-800">
-                  <span>Total Payable:</span>
-                  <span className="text-emerald-600 font-mono text-base">₹11,800</span>
-                </div>
-              </div>
-              <p className="text-[10px] text-slate-400 bg-slate-50 p-3.5 rounded-xl border border-slate-100 leading-normal">
-                Note: Payable securely online via UPI, Cards, or Netbanking inside the Member Portal. International cards are supported (estimated in USD/GBP on checkout).
-              </p>
-            </div>
-
           </div>
-
         </div>
-      </div>
+      </main>
     </div>
   );
 }
