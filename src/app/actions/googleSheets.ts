@@ -1,8 +1,7 @@
 "use server";
 
 import { google } from "googleapis";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { getAdminDb } from "@/lib/firebaseAdmin";
 import { checkAdminSession } from "./adminAuth";
 
 export async function exportToGoogleSheets() {
@@ -59,9 +58,9 @@ export async function exportToGoogleSheets() {
 
     const sheets = google.sheets({ version: "v4", auth });
 
-    // 4. Fetch users from Firestore
-    const usersCol = collection(db, "users");
-    const userSnapshot = await getDocs(usersCol);
+    // 4. Fetch users from Firestore using Admin SDK (bypasses security rules)
+    const adminDb = getAdminDb();
+    const userSnapshot = await adminDb.collection("users").get();
     const users = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
 
     // 5. Prepare data rows

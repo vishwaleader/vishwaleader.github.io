@@ -1,8 +1,7 @@
 "use server";
 
-import { collection, getDocs, orderBy, limit, query } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { cookies } from "next/headers";
+import { getAdminDb } from "@/lib/firebaseAdmin";
 
 export async function loginAsAdmin(username: string, password: string) {
   if (
@@ -14,7 +13,7 @@ export async function loginAsAdmin(username: string, password: string) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
-      maxAge: 60 * 60 * 24, // 1 day
+      maxAge: 60 * 60 * 24,
     });
     return { success: true };
   }
@@ -31,34 +30,21 @@ export async function checkAdminSession() {
   return cookieStore.get("vl_admin_session")?.value === "authenticated";
 }
 
-export async function getAllUsers() {
-  const isAdmin = await checkAdminSession();
-  if (!isAdmin) return { success: false, error: "Unauthorized" };
-
-  try {
-    const usersCol = collection(db, "users");
-    const userSnapshot = await getDocs(usersCol);
-    const userList = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return { success: true, users: JSON.parse(JSON.stringify(userList)) };
-  } catch (e: any) {
-    return { success: false, error: e.message };
-  }
-}
-
 /**
- * Master server action for admin dashboard — fetches users, inquiries, and
- * activity feed in a single round-trip. Runs with server credentials, so
- * Firestore security rules that require auth.uid do NOT block these reads.
+ * Fetches all dashboard data using Firebase Admin SDK.
+ * Runs server-side — bypasses Firestore security rules entirely.
  */
 export async function getAdminDashboardData() {
   const isAdmin = await checkAdminSession();
   if (!isAdmin) return { success: false, error: "Unauthorized" };
 
   try {
+    const db = getAdminDb();
+
     // ── Users ──────────────────────────────────────────────────────────────────
-    const usersSnap = await getDocs(collection(db, "users"));
+    const usersSnap = await db.collection("users").get();
     const users = usersSnap.docs.map(d => {
-      const data = d.data() as any;
+      const data = d.data();
       return {
         id: d.id,
         name: data.name || "",
@@ -78,26 +64,27 @@ export async function getAdminDashboardData() {
         visaSupport: data.visaSupport || false,
         accommodationSupport: data.accommodationSupport || false,
         paymentStatus: data.paymentStatus || "Unpaid",
+        paymentId: data.paymentId || "",
         role: data.role || "member",
         joinedAt: data.joinedAt || "",
         isOnline: data.isOnline || false,
-        lastSeen: data.lastSeen ? data.lastSeen.toDate?.()?.toISOString() ?? data.lastSeen : null,
+        lastSeen: data.lastSeen
+          ? (data.lastSeen.toDate ? data.lastSeen.toDate().toISOString() : String(data.lastSeen))
+          : null,
         photoURL: data.photoURL || "",
         headshotUrl: data.headshotUrl || "",
         passportScanUrl: data.passportScanUrl || "",
         evidenceUrl: data.evidenceUrl || "",
         passportNumber: data.passportNumber || "",
         bio: data.bio || "",
-        fullAddress: data.fullAddress || "",
         legalConsent: data.legalConsent || false,
-        paymentId: data.paymentId || "",
       };
     });
 
     // ── Inquiries ─────────────────────────────────────────────────────────────
-    const inqSnap = await getDocs(collection(db, "inquiries"));
+    const inqSnap = await db.collection("inquiries").get();
     const inquiries = inqSnap.docs.map(d => {
-      const data = d.data() as any;
+      const data = d.data();
       return {
         id: d.id,
         name: data.name || "",
@@ -105,32 +92,36 @@ export async function getAdminDashboardData() {
         phone: data.phone || "",
         category: data.category || "",
         message: data.message || "",
-        createdAt: data.createdAt?.toDate?.()?.toISOString() ?? data.createdAt ?? "",
+        createdAt: data.createdAt
+          ? (data.createdAt.toDate ? data.createdAt.toDate().toISOString() : String(data.createdAt))
+          : "",
       };
     });
 
     // ── Activity Feed ─────────────────────────────────────────────────────────
     let activity: any[] = [];
     try {
-      const actQ = query(
-        collection(db, "adminActivity"),
-        orderBy("timestamp", "desc"),
-        limit(30)
-      );
-      const actSnap = await getDocs(actQ);
+      const actSnap = await db
+        .collection("adminActivity")
+        .orderBy("timestamp", "desc")
+        .limit(30)
+        .get();
       activity = actSnap.docs.map(d => {
-        const data = d.data() as any;
+        const data = d.data();
         return {
           id: d.id,
           type: data.type || "",
           userId: data.userId || "",
           userName: data.userName || "",
           userEmail: data.userEmail || "",
-          timestamp: data.timestamp?.toDate?.()?.toISOString() ?? null,
+          fileType: data.fileType || "",
+          timestamp: data.timestamp
+            ? (data.timestamp.toDate ? data.timestamp.toDate().toISOString() : String(data.timestamp))
+            : null,
         };
       });
     } catch (_) {
-      // adminActivity collection may not exist yet — not a fatal error
+      // adminActivity collection may not exist yet
     }
 
     return {
@@ -139,7 +130,14 @@ export async function getAdminDashboardData() {
       fetchedAt: new Date().toISOString(),
     };
   } catch (e: any) {
-    console.error("getAdminDashboardData error:", e);
+    console.error("getAdminDashboardData error:", e.message);
     return { success: false, error: e.message || "Failed to fetch dashboard data" };
   }
+}
+
+/** Legacy — kept for Google Sheets export compat */
+export async function getAllUsers() {
+  const res = await getAdminDashboardData();
+  if (!res.success || !res.data) return { success: false, error: res.error };
+  return { success: true, users: res.data.users };
 }
