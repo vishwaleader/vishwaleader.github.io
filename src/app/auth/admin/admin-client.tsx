@@ -18,15 +18,17 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { LayoutDashboard, Users, MessageSquare, LogOut, Search, Command, ChevronDown, ChartBar, Banknote, Gauge, Mail } from "lucide-react";
+import { LayoutDashboard, Users, MessageSquare, LogOut, Search, Command, ChevronDown, ChartBar, Banknote, Gauge, Mail, FileSpreadsheet, Database } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
 // Firebase imports
 import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, query, doc, updateDoc } from "firebase/firestore";
 import { loginAsAdmin, logoutAdmin, checkAdminSession } from "@/app/actions/adminAuth";
+import * as XLSX from "xlsx";
+import { exportToGoogleSheets } from "@/app/actions/googleSheets";
 
 const chartData = [
   { month: "January", visitors: 186, inquiries: 80 },
@@ -61,6 +63,13 @@ export default function AdminClientPage() {
   const [inquiries, setInquiries] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
 
+  // Editing User States
+  const [editingUser, setEditingUser] = useState<any>(null);
+
+  useEffect(() => {
+    setEditingUser(null);
+  }, [activeTab]);
+
   useEffect(() => {
     // Check custom server session first
     const initSession = async () => {
@@ -82,6 +91,52 @@ export default function AdminClientPage() {
       setUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     }, (error) => {
       console.warn("Firestore offline error (safely ignored):", error.message);
+      setUsers([
+        {
+          id: "test-uid-123",
+          name: "Yash Ramteke",
+          email: "iamyash.creator@gmail.com",
+          phone: "+91 98765 43210",
+          designation: "Academic Delegate",
+          organization: "SOAS London University",
+          sector: "Academic/Research",
+          country: "United Kingdom",
+          gender: "Male",
+          age: "34",
+          nationality: "British",
+          city: "London",
+          delegateType: "conference",
+          nominationCategory: "ambedkar-awards",
+          packageTour: "Tour Package A",
+          visaSupport: true,
+          accommodationSupport: true,
+          paymentStatus: "Paid",
+          role: "member",
+          joinedAt: "2026-07-04T08:00:00Z"
+        },
+        {
+          id: "test-uid-456",
+          name: "Yash ramteke",
+          email: "yashramteke55555@gmail.com",
+          phone: "+1 234 567 8900",
+          designation: "Corporate Participant",
+          organization: "TechMedia Corp",
+          sector: "Corporate/Business",
+          country: "United States",
+          gender: "Female",
+          age: "28",
+          nationality: "American",
+          city: "New York",
+          delegateType: "business",
+          nominationCategory: "business-summit",
+          packageTour: "None",
+          visaSupport: false,
+          accommodationSupport: false,
+          paymentStatus: "Unpaid",
+          role: "member",
+          joinedAt: "2026-07-03T12:00:00Z"
+        }
+      ]);
     });
 
     // Listen to inquiries
@@ -90,6 +145,24 @@ export default function AdminClientPage() {
       setInquiries(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     }, (error) => {
       console.warn("Firestore offline error (safely ignored):", error.message);
+      setInquiries([
+        {
+          id: "inq-1",
+          name: "John Doe",
+          email: "johndoe@example.com",
+          category: "General Information Inquiry",
+          message: "Could you please provide details about the venue of the SOAS 2026 Conference?",
+          createdAt: "2026-07-04T05:00:00Z"
+        },
+        {
+          id: "inq-2",
+          name: "Jane Smith",
+          email: "janesmith@example.com",
+          category: "Dr. Ambedkar Awards - Attendee Registration",
+          message: "I would like to nominate our director for the Dr. Ambedkar International Award.",
+          createdAt: "2026-07-04T06:00:00Z"
+        }
+      ]);
     });
 
     return () => {
@@ -97,6 +170,63 @@ export default function AdminClientPage() {
       unsubInq();
     };
   }, [user]);
+
+  const [exportingSheets, setExportingSheets] = useState(false);
+
+  const handleExportExcel = () => {
+    if (users.length === 0) {
+      alert("No user data to export.");
+      return;
+    }
+    const formattedData = users.map(u => ({
+      "User UID": u.id || "",
+      "Full Name": u.name || "",
+      "Email Address": u.email || "",
+      "Phone Number": u.phone || "",
+      "Designation": u.designation || "",
+      "Organization": u.organization || "",
+      "Sector": u.sector || "",
+      "Country": u.country || "",
+      "Gender": u.gender || "",
+      "Age": u.age || "",
+      "Nationality": u.nationality || "",
+      "City": u.city || "",
+      "Delegate Type": u.delegateType || "",
+      "Nomination Category": u.nominationCategory || "",
+      "Package/Tour Selected": u.packageTour || "",
+      "Visa Support Required": u.visaSupport ? "Yes" : "No",
+      "Accommodation Support": u.accommodationSupport ? "Yes" : "No",
+      "Payment Status": u.paymentStatus || "Unpaid",
+      "Role": u.role || "member",
+      "Registered At": u.joinedAt || ""
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+    XLSX.writeFile(workbook, "VishwaLeader_Users.xlsx");
+  };
+
+  const handleExportGoogleSheets = async () => {
+    if (users.length === 0) {
+      alert("No user data to sync.");
+      return;
+    }
+    setExportingSheets(true);
+    try {
+      const res = await exportToGoogleSheets();
+      if (res.success) {
+        alert(`Successfully synced ${res.count} users to Google Sheets!`);
+      } else {
+        alert(`Failed to sync to Google Sheets: ${res.error}`);
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("Error syncing to Google Sheets: " + (err.message || err));
+    } finally {
+      setExportingSheets(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -333,7 +463,18 @@ export default function AdminClientPage() {
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">{activeTab}</h2>
             <div className="flex items-center space-x-2">
-              <Button>Download Report</Button>
+              {activeTab === "Users" ? (
+                <>
+                  <Button onClick={handleExportExcel} variant="outline" className="flex items-center gap-1.5 text-xs">
+                    <FileSpreadsheet className="w-4 h-4 text-emerald-600" /> Export to Excel
+                  </Button>
+                  <Button onClick={handleExportGoogleSheets} disabled={exportingSheets} className="flex items-center gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-700">
+                    <Database className="w-4 h-4" /> {exportingSheets ? "Syncing..." : "Sync to Google Sheets"}
+                  </Button>
+                </>
+              ) : (
+                <Button>Download Report</Button>
+              )}
             </div>
           </div>
 
@@ -511,33 +652,207 @@ export default function AdminClientPage() {
           )}
 
           {activeTab === "Users" && (
-            <Card>
-              <CardHeader>
-                <CardTitle>User Management</CardTitle>
-                <CardDescription>Manage registered platform members</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {users.map((u, i) => (
-                    <div key={i} className="flex items-center justify-between border-b pb-4 last:border-0">
-                      <div className="flex items-center">
-                        <Avatar className="h-9 w-9">
-                          <AvatarFallback>{u.name?.charAt(0) || 'U'}</AvatarFallback>
-                        </Avatar>
-                        <div className="ml-4 space-y-1">
-                          <p className="text-sm font-medium leading-none">{u.name || "Anonymous User"}</p>
-                          <p className="text-sm text-muted-foreground">{u.email}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <div className={editingUser ? "lg:col-span-7" : "lg:col-span-12"}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>User Management</CardTitle>
+                    <CardDescription>Manage registered platform members</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {users.map((u, i) => (
+                        <div key={i} className="flex items-center justify-between border-b pb-4 last:border-0">
+                          <div className="flex items-center">
+                            <Avatar className="h-9 w-9">
+                              <AvatarFallback>{u.name?.charAt(0) || 'U'}</AvatarFallback>
+                            </Avatar>
+                            <div className="ml-4 space-y-1">
+                              <p className="text-sm font-medium leading-none">{u.name || "Anonymous User"}</p>
+                              <p className="text-sm text-muted-foreground">{u.email}</p>
+                            </div>
+                          </div>
+                          <Button 
+                            onClick={() => setEditingUser(u)} 
+                            variant={editingUser?.id === u.id ? "default" : "outline"} 
+                            size="sm"
+                          >
+                            Edit User
+                          </Button>
+                        </div>
+                      ))}
+                      {users.length === 0 && (
+                        <p className="text-sm text-muted-foreground">No users found.</p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {editingUser && (
+                <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden flex flex-col font-sans animate-fade-in">
+                  {/* Sheet Header Toolbar */}
+                  <div className="bg-slate-50 border-b border-slate-200 p-2.5 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded bg-emerald-700 flex items-center justify-center text-white text-[10px] font-bold">田</div>
+                        <span className="text-xs font-bold text-slate-800 truncate max-w-[200px]">
+                          VishwaLeader_User_DB
+                        </span>
+                      </div>
+                      <Button variant="ghost" size="icon" className="h-5 w-5 hover:bg-slate-200 text-slate-500" onClick={() => setEditingUser(null)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-3 w-3"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                      </Button>
+                    </div>
+                    
+                    {/* Mock Menu Bar */}
+                    <div className="flex gap-2.5 text-[10px] text-slate-500 font-medium overflow-x-auto pb-0.5">
+                      <span className="hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer">File</span>
+                      <span className="hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer">Edit</span>
+                      <span className="hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer">View</span>
+                      <span className="hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer">Insert</span>
+                      <span className="hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer">Format</span>
+                      <span className="hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer">Data</span>
+                      <span className="hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer">Tools</span>
+                      <span className="hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer">Extensions</span>
+                      <span className="hover:bg-slate-200 px-1.5 py-0.5 rounded cursor-pointer">Help</span>
+                    </div>
+                  </div>
+
+                  {/* Actual Live Google Sheet Embed */}
+                  <div className="flex-1 min-h-[450px] relative bg-slate-100 border-b border-slate-200">
+                    <iframe
+                      src="https://docs.google.com/spreadsheets/d/1pgCCDMM3UK6Shi4tmoa6k2rzmYhlhhNqly7YVB4T98Y/edit?rm=minimal"
+                      className="w-full h-[450px] border-none"
+                      allow="clipboard-write"
+                      title="Google Sheet Database"
+                    />
+                    <div className="absolute top-2 right-2">
+                      <a 
+                        href="https://docs.google.com/spreadsheets/d/1pgCCDMM3UK6Shi4tmoa6k2rzmYhlhhNqly7YVB4T98Y/edit?usp=sharing" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[9px] uppercase tracking-wider px-2 py-1 rounded shadow flex items-center gap-1 transition-all hover:scale-[1.02]"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-2.5 w-2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        Open in Sheets
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Document Previews Container */}
+                  <div className="p-4 bg-slate-50/50 border-b border-slate-200 space-y-4 max-h-[300px] overflow-y-auto">
+                    <h3 className="text-xs font-bold text-slate-700 border-b border-slate-200 pb-1 flex items-center gap-1.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                      Document Previews & Media Files
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 gap-3 text-[10px]">
+                      {/* Photo / Avatar */}
+                      <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex-shrink-0 border">
+                          <img src={editingUser.photoURL || `https://placehold.co/100x100/0a1e4b/ffffff?text=${editingUser.name?.charAt(0) || 'U'}`} alt="Google Photo" className="w-full h-full object-cover" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-slate-800">Google Profile Picture</p>
+                          <p className="text-slate-400 text-[9px] truncate max-w-[200px]">{editingUser.photoURL || "No Google profile photo link"}</p>
                         </div>
                       </div>
-                      <Button variant="outline" size="sm">Edit User</Button>
+
+                      {/* Headshot Photo */}
+                      <div className="bg-white border border-slate-200 p-3 rounded-xl space-y-2">
+                        <div className="flex items-center justify-between border-b pb-1.5">
+                          <span className="font-bold text-slate-700">1. Headshot Photograph</span>
+                          <span className={`px-2 py-0.5 rounded-full font-bold uppercase tracking-wider text-[8px] ${editingUser.headshotUrl ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
+                            {editingUser.headshotUrl ? "Uploaded" : "Pending"}
+                          </span>
+                        </div>
+                        {editingUser.headshotUrl ? (
+                          <div className="space-y-2">
+                            <div className="w-full h-32 bg-slate-100 rounded-lg overflow-hidden border flex items-center justify-center">
+                              <img src={editingUser.headshotUrl} alt="Headshot Preview" className="h-full w-auto object-contain p-1" />
+                            </div>
+                            <a href={editingUser.headshotUrl} target="_blank" className="block text-center font-bold text-blue-600 hover:underline uppercase text-[9px]">
+                              View Full Size Headshot
+                            </a>
+                          </div>
+                        ) : (
+                          <p className="text-slate-400 italic text-[9.5px] py-2 text-center">No headshot photograph uploaded yet.</p>
+                        )}
+                      </div>
+
+                      {/* Passport Scan */}
+                      <div className="bg-white border border-slate-200 p-3 rounded-xl space-y-2">
+                        <div className="flex items-center justify-between border-b pb-1.5">
+                          <span className="font-bold text-slate-700">2. Passport Scan Copy</span>
+                          <span className={`px-2 py-0.5 rounded-full font-bold uppercase tracking-wider text-[8px] ${editingUser.passportScanUrl ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
+                            {editingUser.passportScanUrl ? "Uploaded" : "Pending"}
+                          </span>
+                        </div>
+                        {editingUser.passportScanUrl ? (
+                          <div className="space-y-2">
+                            <div className="w-full h-32 bg-slate-100 rounded-lg overflow-hidden border flex items-center justify-center">
+                              {editingUser.passportScanUrl.toLowerCase().includes('.pdf') ? (
+                                <div className="text-center py-8">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mx-auto text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                                  <span className="text-[9px] block text-slate-500 font-mono mt-2">Passport Document (PDF)</span>
+                                </div>
+                              ) : (
+                                <img src={editingUser.passportScanUrl} alt="Passport Scan" className="h-full w-auto object-contain p-1" />
+                              )}
+                            </div>
+                            <div className="flex justify-between items-center text-[9px] text-slate-500 font-semibold px-0.5">
+                              <span>Number: {editingUser.passportNumber || "Not Provided"}</span>
+                              <a href={editingUser.passportScanUrl} target="_blank" className="font-bold text-blue-600 hover:underline uppercase">
+                                Open Passport File
+                              </a>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-slate-400 italic text-[9.5px] py-2 text-center">No passport scan uploaded yet.</p>
+                        )}
+                      </div>
+
+                      {/* Visa support evidence */}
+                      <div className="bg-white border border-slate-200 p-3 rounded-xl space-y-2">
+                        <div className="flex items-center justify-between border-b pb-1.5">
+                          <span className="font-bold text-slate-700">3. Supporting Evidence Document</span>
+                          <span className={`px-2 py-0.5 rounded-full font-bold uppercase tracking-wider text-[8px] ${editingUser.evidenceUrl ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
+                            {editingUser.evidenceUrl ? "Uploaded" : "Pending"}
+                          </span>
+                        </div>
+                        {editingUser.evidenceUrl ? (
+                          <div className="space-y-2">
+                            <div className="w-full h-32 bg-slate-100 rounded-lg overflow-hidden border flex items-center justify-center">
+                              {editingUser.evidenceUrl.toLowerCase().includes('.pdf') ? (
+                                <div className="text-center py-8">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mx-auto text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                                  <span className="text-[9px] block text-slate-500 font-mono mt-2">Evidence Document (PDF)</span>
+                                </div>
+                              ) : (
+                                <img src={editingUser.evidenceUrl} alt="Evidence Preview" className="h-full w-auto object-contain p-1" />
+                              )}
+                            </div>
+                            <a href={editingUser.evidenceUrl} target="_blank" className="block text-center font-bold text-blue-600 hover:underline uppercase text-[9px]">
+                              Open Evidence Document
+                            </a>
+                          </div>
+                        ) : (
+                          <p className="text-slate-400 italic text-[9.5px] py-2 text-center">No supporting evidence document uploaded yet.</p>
+                        )}
+                      </div>
                     </div>
-                  ))}
-                  {users.length === 0 && (
-                    <p className="text-sm text-muted-foreground">No users found.</p>
-                  )}
+                  </div>
+
+                  {/* Panel Footer Actions */}
+                  <div className="bg-slate-100 p-3.5 flex justify-end gap-2.5 border-t border-slate-200">
+                    <Button variant="outline" size="sm" onClick={() => setEditingUser(null)} className="text-xs px-4">
+                      Close Panel
+                    </Button>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+              )}
+            </div>
           )}
 
         </main>

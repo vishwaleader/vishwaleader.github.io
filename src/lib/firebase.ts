@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -19,5 +20,14 @@ const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app, "default");
 const storage = getStorage(app);
+
+// Initialize Analytics only in the browser
+if (typeof window !== "undefined") {
+  isSupported().then(supported => {
+    if (supported) {
+      getAnalytics(app);
+    }
+  });
+}
 
 export { app, auth, db, storage };
