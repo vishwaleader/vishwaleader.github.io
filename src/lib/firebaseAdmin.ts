@@ -14,9 +14,15 @@ function getAdminApp(): App {
     return getApps()[0];
   }
 
-  const credJson = process.env.GOOGLE_CREDENTIALS_JSON;
+  let credJson;
+  if (process.env.FIREBASE_ADMIN_CREDENTIALS_BASE64) {
+    credJson = Buffer.from(process.env.FIREBASE_ADMIN_CREDENTIALS_BASE64, 'base64').toString('utf8');
+  } else {
+    credJson = process.env.FIREBASE_ADMIN_CREDENTIALS_JSON || process.env.GOOGLE_CREDENTIALS_JSON;
+  }
+  
   if (!credJson) {
-    throw new Error("GOOGLE_CREDENTIALS_JSON env variable is not set");
+    throw new Error("FIREBASE_ADMIN_CREDENTIALS_BASE64 or GOOGLE_CREDENTIALS_JSON env variable is not set");
   }
 
   const cred = JSON.parse(credJson);
@@ -33,9 +39,7 @@ function getAdminApp(): App {
   return adminApp;
 }
 
-export function getAdminDb(): Firestore {
-  if (!adminDb) {
-    adminDb = getFirestore(getAdminApp());
-  }
-  return adminDb;
+export function getAdminDb() {
+  const app = getAdminApp();
+  return getFirestore(app, "default");
 }

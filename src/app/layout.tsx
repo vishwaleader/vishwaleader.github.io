@@ -3,6 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ViewTransition } from "react";
 import GlobalPreloader from "@/components/GlobalPreloader";
+import GoogleTranslate from "@/components/GoogleTranslate";
 import "./globals.css";
 
 const inter = Inter({
@@ -34,11 +35,12 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col relative">
         <GlobalPreloader />
         <TooltipProvider>
           <ViewTransition>
             {children}
+            <GoogleTranslate />
           </ViewTransition>
         </TooltipProvider>
       </body>

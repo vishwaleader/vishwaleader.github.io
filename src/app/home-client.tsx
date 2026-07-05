@@ -122,6 +122,7 @@ export default function HomeClientPage() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                <a href="/mission" className="hover:text-brandBlue transition-colors font-bold text-slate-800">Mission</a>
                 <a href="#about" className="hover:text-brandBlue transition-colors">Corporate</a>
                 <a href="/pricing" className="hover:text-brandBlue transition-colors">Pricing</a>
                 <div className="relative group/nav">
@@ -207,6 +208,11 @@ export default function HomeClientPage() {
         {/* Mobile Navigation Menu */}
         <div id="mobileMenu" className={`md:hidden absolute top-full left-0 right-0 overflow-y-auto transition-all duration-300 ease-in-out bg-white border-t border-slate-200 px-4 space-y-1 shadow-2xl z-50 ${isMobileMenuOpen ? 'max-h-[calc(100vh-4rem)] opacity-100 py-4' : 'max-h-0 opacity-0 pointer-events-none'}`}>
             <div className="py-3 space-y-1.5">
+                <a href="/mission" className="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
+                    <i className="fa-solid fa-bullseye text-slate-400 mr-3 w-5 text-center text-xs"></i>
+                    <span>Mission</span>
+                    <i className="fa-solid fa-chevron-right text-slate-300 ml-auto text-[9px]"></i>
+                </a>
                 <a href="#about" className="flex items-center py-2.5 px-3 text-sm font-semibold text-slate-700 hover:text-brandBlue active:bg-slate-50 rounded-xl transition-all border-b border-slate-50 last:border-0">
                     <i className="fa-solid fa-building text-slate-400 mr-3 w-5 text-center text-xs"></i>
                     <span>Corporate</span>
