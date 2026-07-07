@@ -19,6 +19,9 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Vishwa Leader",
   description: "Vishwa Leader Techmedia Private Limited",
+  alternates: {
+    canonical: "https://vishwaleader.com",
+  },
 };
 
 export default function RootLayout({
