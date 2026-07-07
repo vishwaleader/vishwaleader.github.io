@@ -92,7 +92,7 @@ export default function GalleryPage() {
           <div className="max-w-[1960px] mx-auto px-6 h-20 flex items-center justify-between">
             <a href="/" className="flex items-center gap-3">
               <img src="/assets/images/vishwaleader-logo-globe.png" alt="Vishwa Leader" className="h-8 w-auto object-contain" />
-              <span className="text-white font-bold tracking-tight text-md uppercase font-display">VISHWA LEADER</span>
+              <span translate="no" className="notranslate text-white font-bold tracking-tight text-md uppercase font-display">VISHWA LEADER</span>
               <span className="hidden sm:inline-block text-[9px] font-black tracking-widest text-brandBlue uppercase border border-brandBlue/30 px-2 py-0.5 rounded bg-brandBlue/10">
                 Media Library
               </span>
@@ -146,7 +146,7 @@ export default function GalleryPage() {
 
         {/* Clean Minimalist Footer */}
         <footer className="border-t border-slate-900 py-6 text-center text-[10px] text-slate-600 bg-black mt-10">
-          <p>© 2026 Vishwa Leader Techmedia Private Limited. All Rights Reserved.</p>
+          <p>© 2026 <span translate="no" className="notranslate">Vishwa Leader</span> Techmedia Private Limited. All Rights Reserved.</p>
         </footer>
       </div>
 
@@ -172,7 +172,7 @@ export default function GalleryPage() {
           </div>
 
           {/* Middle Panel: Main active image with side arrows */}
-          <div className="flex-grow w-full flex items-center justify-between px-4 md:px-10 max-h-[60vh] md:max-h-[65vh]">
+          <div className="flex-grow w-full flex items-center justify-center relative px-2 md:px-10 max-h-[60vh] md:max-h-[70vh]">
             
             {/* Previous trigger */}
             <button 
@@ -180,14 +180,14 @@ export default function GalleryPage() {
                 setLightboxIndex((prev) => (prev !== null ? (prev - 1 + galleryItems.length) % galleryItems.length : null));
                 setSlideshowActive(false);
               }}
-              className="text-slate-400 hover:text-white p-3.5 rounded-full bg-slate-950/40 border border-slate-900 hover:bg-slate-900 transition-colors shrink-0 mr-4" 
+              className="absolute left-1 md:left-10 z-10 text-slate-400 hover:text-white p-2 md:p-3.5 rounded-full bg-slate-950/60 md:bg-slate-950/40 border border-slate-900 hover:bg-slate-900 transition-colors shrink-0" 
               aria-label="Previous Image"
             >
               <ChevronLeft className="size-6" />
             </button>
 
             {/* Main Landscape Fitted Widescreen Image */}
-            <div className="flex flex-col items-center justify-center max-w-4xl max-h-full">
+            <div className="flex flex-col items-center justify-center w-full max-w-4xl max-h-full px-8 md:px-16">
               <div className="relative aspect-video w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-900 shadow-2xl bg-black">
                 <img 
                   id="lightbox-img" 
@@ -197,7 +197,7 @@ export default function GalleryPage() {
                 />
               </div>
               
-              <div className="mt-4 max-w-xl text-center px-4">
+              <div className="mt-4 max-w-xl text-center px-2 md:px-4">
                 <h4 className="font-bold text-white text-sm md:text-base leading-snug">{galleryItems[lightboxIndex].title}</h4>
                 <p className="text-[11px] text-slate-400 font-light mt-1 leading-relaxed">{galleryItems[lightboxIndex].desc}</p>
                 <div className="flex gap-1.5 justify-center mt-2.5">
@@ -219,7 +219,7 @@ export default function GalleryPage() {
                 setLightboxIndex((prev) => (prev !== null ? (prev + 1) % galleryItems.length : null));
                 setSlideshowActive(false);
               }}
-              className="text-slate-400 hover:text-white p-3.5 rounded-full bg-slate-950/40 border border-slate-900 hover:bg-slate-900 transition-colors shrink-0 ml-4" 
+              className="absolute right-1 md:right-10 z-10 text-slate-400 hover:text-white p-2 md:p-3.5 rounded-full bg-slate-950/60 md:bg-slate-950/40 border border-slate-900 hover:bg-slate-900 transition-colors shrink-0" 
               aria-label="Next Image"
             >
               <ChevronRight className="size-6" />
@@ -252,7 +252,7 @@ export default function GalleryPage() {
             </div>
 
             {/* Bottom thumbnail navigator strip */}
-            <div className="w-full overflow-x-auto py-2 scrollbar-none flex justify-center gap-2 select-none">
+            <div className="w-full overflow-x-auto py-2 scrollbar-none flex md:justify-center justify-start gap-2 select-none px-4">
               {getAdjacentThumbnails().map(({ item, index }) => (
                 <div 
                   key={`thumb-${item.src}-${index}`}

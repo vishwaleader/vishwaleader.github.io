@@ -20,11 +20,12 @@ import {
 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import * as XLSX from "xlsx";
+import * as XLSX from "@e965/xlsx";
 
 // Server Actions — run on server, bypass Firestore security rules entirely
 import { loginAsAdmin, logoutAdmin, checkAdminSession, getAdminDashboardData } from "@/app/actions/adminAuth";
 import { exportToGoogleSheets } from "@/app/actions/googleSheets";
+import { getWebTrafficData } from "@/app/actions/analytics";
 
 // ─── Admin Toast ────────────────────────────────────────────────────────────────
 type ToastType = 'info' | 'success' | 'activity' | 'error';
@@ -79,6 +80,10 @@ export default function AdminClientPage() {
   const [lastSync, setLastSync] = useState<string>("");
   const [dataLoading, setDataLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // GA4 Data
+  const [ga4Data, setGa4Data] = useState<any>(null);
+  const [ga4Loading, setGa4Loading] = useState(false);
 
   // Editing
   const [editingUser, setEditingUser] = useState<any>(null);
@@ -158,6 +163,14 @@ export default function AdminClientPage() {
     if (!user) return;
     fetchData();
     const interval = setInterval(() => fetchData(true), 8000);
+
+    // Fetch GA4 once on load
+    setGa4Loading(true);
+    getWebTrafficData().then(res => {
+      if (res.data || res.error) setGa4Data(res);
+      setGa4Loading(false);
+    });
+
     return () => clearInterval(interval);
   }, [user, fetchData]);
 
@@ -244,11 +257,16 @@ export default function AdminClientPage() {
         counts[key].inquiries++;
       }
     });
-    // Show last 6 months with at least one entry
-    const result = Object.entries(counts).map(([month, vals]) => ({ month, ...vals }));
-    if (result.length === 0) {
-      // If no data yet, show placeholder shape
-      return months.slice(0, 6).map(month => ({ month, members: 0, inquiries: 0 }));
+    
+    // Ensure we always show the last 6 months to create a beautiful trend curve
+    const currentMonthIndex = new Date().getMonth();
+    const result: { month: string; members: number; inquiries: number }[] = [];
+    for (let i = 5; i >= 0; i--) {
+      let mIndex = currentMonthIndex - i;
+      if (mIndex < 0) mIndex += 12;
+      const monthKey = months[mIndex];
+      const data = counts[monthKey] || { members: 0, inquiries: 0 };
+      result.push({ month: monthKey, ...data });
     }
     return result;
   }, [users, inquiries]);
@@ -303,15 +321,13 @@ export default function AdminClientPage() {
       <div className="animate-fade-in-slow w-full flex min-h-screen">
         <SidebarProvider>
           {/* ── Sidebar ── */}
-          <Sidebar variant="inset" collapsible="icon" className="border-r border-border">
+          <Sidebar variant="inset" collapsible="icon" className="border-r border-border sticky top-0 h-screen">
             <SidebarHeader>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton size="lg" render={<div />}>
-                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg overflow-hidden bg-slate-50 border">
-                      <img src="/assets/images/vishwaleader-logo-hd.png" alt="VL" className="w-full h-full object-contain p-0.5" />
-                    </div>
-                    <div className="flex flex-col gap-0.5">
+                    <img src="/assets/images/vishwaleader-logo-hd.png" alt="VL" className="size-10 group-data-[collapsible=icon]:size-8 object-contain shrink-0" />
+                    <div className="flex flex-col gap-0.5 group-data-[collapsible=icon]:hidden">
                       <span className="font-bold text-sm text-slate-800">VishwaLeader Admin</span>
                       <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
@@ -349,45 +365,20 @@ export default function AdminClientPage() {
                   </SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>
-              <SidebarGroup>
-                <SidebarGroupLabel>Actions</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton onClick={() => window.location.href = "/"}>
-                        <LogOut className="rotate-180" />
-                        <span>Return to Website</span>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="w-full">
-                      <SidebarMenuButton size="lg" render={<div />} className="w-full">
-                        <div>
-                          <Avatar className="h-8 w-8 rounded-lg">
-                            <AvatarFallback className="rounded-lg bg-slate-800 text-white text-xs">AD</AvatarFallback>
-                          </Avatar>
-                          <div className="grid flex-1 text-left text-sm leading-tight">
-                            <span className="truncate font-semibold">Admin</span>
-                            <span className="truncate text-xs text-slate-500">{user.email}</span>
-                          </div>
-                          <ChevronDown className="ml-auto size-4" />
-                        </div>
-                      </SidebarMenuButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56 rounded-lg" side="bottom" align="end" sideOffset={4}>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleLogout}>
-                        <LogOut className="mr-2 h-4 w-4" /> Log out
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <SidebarMenuButton onClick={() => window.location.href = "/"}>
+                    <LogOut className="rotate-180" />
+                    <span>Return to Website</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={handleLogout} className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                    <LogOut />
+                    <span>Log out</span>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarFooter>
@@ -528,8 +519,8 @@ export default function AdminClientPage() {
                                 <stop offset="95%" stopColor="hsl(35 92% 50%)" stopOpacity={0} />
                               </linearGradient>
                             </defs>
-                            <Area dataKey="members" type="monotone" fill="url(#gMembers)" stroke="hsl(220 90% 56%)" strokeWidth={2} />
-                            <Area dataKey="inquiries" type="monotone" fill="url(#gInquiries)" stroke="hsl(35 92% 50%)" strokeWidth={2} />
+                            <Area dataKey="members" type="natural" fill="url(#gMembers)" stroke="hsl(220 90% 56%)" strokeWidth={3} />
+                            <Area dataKey="inquiries" type="natural" fill="url(#gInquiries)" stroke="hsl(35 92% 50%)" strokeWidth={3} />
                           </AreaChart>
                         </ChartContainer>
                       </CardContent>
@@ -654,14 +645,63 @@ export default function AdminClientPage() {
                   </div>
                   <Card>
                     <CardHeader>
-                      <CardTitle>Analytics Notice</CardTitle>
-                      <CardDescription>Real data from Firestore · Google Analytics requires GA4 API integration</CardDescription>
+                      <CardTitle className="flex items-center justify-between">
+                        Web Traffic (Last 30 Days)
+                        {ga4Loading && <span className="text-sm font-normal text-slate-500 flex items-center gap-2"><RefreshCw className="h-3 w-3 animate-spin"/> Fetching GA4...</span>}
+                      </CardTitle>
+                      <CardDescription>Real web analytics pulled directly from Google Analytics 4 API</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 space-y-2">
-                        <p className="text-sm font-semibold text-blue-800">Firebase Analytics is tracking your visitors</p>
-                        <p className="text-xs text-blue-600">Web traffic data (page views, sessions, bounce rate) is collected by Firebase Analytics. To display it here, connect a GA4 Data API service account. The stats above (Members, Online, Paid, Inquiries) are 100% real from your Firestore database.</p>
-                      </div>
+                      {ga4Data?.error ? (
+                        <div className="bg-red-50 border border-red-100 rounded-xl p-5 space-y-2 text-red-800">
+                          <p className="text-sm font-semibold">GA4 API Error</p>
+                          <p className="text-xs">{ga4Data.error}</p>
+                        </div>
+                      ) : ga4Data?.data ? (
+                        <div className="space-y-6">
+                          <div className="grid grid-cols-3 gap-4 border-b pb-6">
+                            <div>
+                              <p className="text-sm font-medium text-slate-500">Page Views</p>
+                              <p className="text-3xl font-bold text-slate-900">{ga4Data.totals.pageViews.toLocaleString()}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-slate-500">Sessions</p>
+                              <p className="text-3xl font-bold text-slate-900">{ga4Data.totals.sessions.toLocaleString()}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-slate-500">Active Users</p>
+                              <p className="text-3xl font-bold text-slate-900">{ga4Data.totals.activeUsers.toLocaleString()}</p>
+                            </div>
+                          </div>
+                          
+                          <ChartContainer config={{ 
+                            pageViews: { label: "Page Views", color: "hsl(220 90% 56%)" },
+                            sessions: { label: "Sessions", color: "hsl(280 80% 60%)" }
+                          }} className="min-h-[250px] w-full mt-4">
+                            <AreaChart data={ga4Data.data} margin={{ left: 0, right: 0, top: 4 }}>
+                              <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#f0f0f0" />
+                              <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} tick={{ fontSize: 11 }} />
+                              <ChartTooltip content={<ChartTooltipContent />} />
+                              <defs>
+                                <linearGradient id="gGa4Views" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="5%" stopColor="hsl(220 90% 56%)" stopOpacity={0.3} />
+                                  <stop offset="95%" stopColor="hsl(220 90% 56%)" stopOpacity={0} />
+                                </linearGradient>
+                                <linearGradient id="gGa4Sessions" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="5%" stopColor="hsl(280 80% 60%)" stopOpacity={0.3} />
+                                  <stop offset="95%" stopColor="hsl(280 80% 60%)" stopOpacity={0} />
+                                </linearGradient>
+                              </defs>
+                              <Area dataKey="pageViews" type="natural" fill="url(#gGa4Views)" stroke="hsl(220 90% 56%)" strokeWidth={3} />
+                              <Area dataKey="sessions" type="natural" fill="url(#gGa4Sessions)" stroke="hsl(280 80% 60%)" strokeWidth={3} />
+                            </AreaChart>
+                          </ChartContainer>
+                        </div>
+                      ) : (
+                        <div className="bg-slate-50 border border-slate-100 rounded-xl p-8 flex items-center justify-center text-slate-400">
+                          Waiting for analytics data...
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
