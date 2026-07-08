@@ -1,10 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import GlobalPreloader from "@/components/GlobalPreloader";
 
 export default function MissionPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       <GlobalPreloader />
