@@ -1192,8 +1192,12 @@ export default function HomeClientPage() {
                         <div className="flex w-full items-center justify-center relative h-[360px]">
                             {/* Left Card */}
                             <div className="absolute left-0 w-[30%] lg:w-[28%] h-[300px] bg-[#1a1a1a] rounded-xl shadow-lg opacity-40 scale-90 transition-all duration-500 ease-in-out p-6 flex flex-col justify-between hidden md:flex items-center text-center cursor-pointer" onClick={() => setActiveTestimonialIndex(leftIndex)}>
-                                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#333] mb-4">
-                                    <img src={displayData[leftIndex]?.photoURL} alt="Avatar" className="w-full h-full object-cover" />
+                                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#333] mb-4 shrink-0">
+                                    {displayData[leftIndex]?.photoURL ? (
+                                        <img src={displayData[leftIndex].photoURL} alt="Avatar" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full bg-slate-700 text-white flex items-center justify-center font-bold text-lg">{displayData[leftIndex]?.name?.charAt(0) || "U"}</div>
+                                    )}
                                 </div>
                                 <p className="text-sm text-slate-400 italic line-clamp-4">"{displayData[leftIndex]?.text}"</p>
                                 <div className="mt-4">
@@ -1218,8 +1222,12 @@ export default function HomeClientPage() {
 
                             {/* Right Card */}
                             <div className="absolute right-0 w-[30%] lg:w-[28%] h-[300px] bg-[#1a1a1a] rounded-xl shadow-lg opacity-40 scale-90 transition-all duration-500 ease-in-out p-6 flex flex-col justify-between hidden md:flex items-center text-center cursor-pointer" onClick={() => setActiveTestimonialIndex(rightIndex)}>
-                                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#333] mb-4">
-                                    <img src={displayData[rightIndex]?.photoURL} alt="Avatar" className="w-full h-full object-cover" />
+                                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#333] mb-4 shrink-0">
+                                    {displayData[rightIndex]?.photoURL ? (
+                                        <img src={displayData[rightIndex].photoURL} alt="Avatar" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full bg-slate-700 text-white flex items-center justify-center font-bold text-lg">{displayData[rightIndex]?.name?.charAt(0) || "U"}</div>
+                                    )}
                                 </div>
                                 <p className="text-sm text-slate-400 italic line-clamp-4">"{displayData[rightIndex]?.text}"</p>
                                 <div className="mt-4">
