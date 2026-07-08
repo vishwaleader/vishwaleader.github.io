@@ -1420,7 +1420,7 @@ export default function MemberClientPage() {
                                   required
                                 />
                                 <span className="text-xs text-slate-700 leading-snug">
-                                  <strong>Legal Declaration:</strong> I have read and agree to the Terms and Conditions and the Event Legal Note. I confirm that all information provided is accurate and I accept full responsibility for my registration.
+                                  <strong>Legal Declaration:</strong> I have read and agree to the Terms and Conditions and the Event Legal Note. I confirm that all information provided is accurate and I accept full responsibility for my registration. <a href="/terms" className="font-bold text-brandBlue hover:underline">Read.</a>
                                 </span>
                               </label>
                             </div>
