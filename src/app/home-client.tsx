@@ -1049,55 +1049,6 @@ export default function HomeClientPage() {
         </div>
     </section>
 
-    {/* Legal Compliance Desk */}
-    <section id="compliance" className="py-20 md:py-24 bg-white border-b border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl mx-auto text-center mb-12 space-y-4">
-                <span className="text-xs font-bold tracking-widest text-brandBlue uppercase">Compliance Registry</span>
-                <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-slate-900">Verified Leadership & Corporate Profiles</h2>
-                <p className="text-slate-500 leading-relaxed text-sm">
-                    Administrative details, credentials, and regulatory identification indices related to the directorate of Vishwa Leader.
-                </p>
-            </div>
-
-            <div className="border border-slate-200 bg-slate-50/50 rounded-2xl p-6 md:p-10 shadow-sm relative max-w-4xl mx-auto">
-                <div className="inline-flex mb-4 bg-brandBlue text-white text-[9px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded">
-                    Verified Director &amp; Publisher
-                </div>
-
-                <div className="space-y-6">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-brandBlue/10 text-brandBlue flex items-center justify-center border border-brandBlue/20">
-                            <i className="fa-solid fa-user-check text-lg"></i>
-                        </div>
-                        <div>
-                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Legal Identity</span>
-                            <h4 className="font-display text-xl md:text-2xl font-bold text-slate-900 uppercase">Shirish Bhageshwar Ramteke</h4>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-y border-slate-200/60 py-6 text-xs">
-                        <div>
-                            <span className="text-slate-400 font-bold uppercase tracking-wider block mb-1">Region</span>
-                            <p className="font-bold text-slate-800 text-sm">Mumbai, Maharashtra, India</p>
-                        </div>
-                        <div>
-                            <span className="text-slate-400 font-bold uppercase tracking-wider block mb-1">Affiliations</span>
-                            <p className="font-bold text-slate-800 text-sm">Vishwa Leader Techmedia Pvt. Ltd. (DIN: 07427260)</p>
-                        </div>
-                    </div>
-
-                    <div>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Administrative Scope</span>
-                        <p className="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">
-                            Authorizes events, publishing schedules, and coordinates national and international representations (such as the SOAS Academic Conferences and Dr. Ambedkar Awards).
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     {/* Supported Organizations */}
     <section id="organizations" className="py-20 md:py-24 bg-slate-50 border-b border-slate-200/60">
         <div className="max-w-7xl mx-auto px-6">
@@ -1153,6 +1104,55 @@ export default function HomeClientPage() {
                     <p className="text-xs text-slate-500 leading-relaxed">
                         They provide resources, business training, financial inclusion guidance, and market linkages, pointing to a strong focus on inclusive business development and converting job seekers into job creators.
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {/* Legal Compliance Desk */}
+    <section id="compliance" className="py-20 md:py-24 bg-white border-b border-slate-200/60">
+        <div className="max-w-7xl mx-auto px-6">
+            <div className="max-w-3xl mx-auto text-center mb-12 space-y-4">
+                <span className="text-xs font-bold tracking-widest text-brandBlue uppercase">Compliance Registry</span>
+                <h2 className="font-display text-3xl md:text-4xl font-black tracking-tight text-slate-900">Verified Leadership & Corporate Profiles</h2>
+                <p className="text-slate-500 leading-relaxed text-sm">
+                    Administrative details, credentials, and regulatory identification indices related to the directorate of Vishwa Leader.
+                </p>
+            </div>
+
+            <div className="border border-slate-200 bg-slate-50/50 rounded-2xl p-6 md:p-10 shadow-sm relative max-w-4xl mx-auto">
+                <div className="inline-flex mb-4 bg-brandBlue text-white text-[9px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded">
+                    Verified Director &amp; Publisher
+                </div>
+
+                <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-brandBlue/10 text-brandBlue flex items-center justify-center border border-brandBlue/20">
+                            <i className="fa-solid fa-user-check text-lg"></i>
+                        </div>
+                        <div>
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Legal Identity</span>
+                            <h4 className="font-display text-xl md:text-2xl font-bold text-slate-900 uppercase">Shirish Bhageshwar Ramteke</h4>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-y border-slate-200/60 py-6 text-xs">
+                        <div>
+                            <span className="text-slate-400 font-bold uppercase tracking-wider block mb-1">Region</span>
+                            <p className="font-bold text-slate-800 text-sm">Mumbai, Maharashtra, India</p>
+                        </div>
+                        <div>
+                            <span className="text-slate-400 font-bold uppercase tracking-wider block mb-1">Affiliations</span>
+                            <p className="font-bold text-slate-800 text-sm">Vishwa Leader Techmedia Pvt. Ltd. (DIN: 07427260)</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Administrative Scope</span>
+                        <p className="text-xs md:text-sm text-slate-600 leading-relaxed font-normal">
+                            Authorizes events, publishing schedules, and coordinates national and international representations (such as the SOAS Academic Conferences and Dr. Ambedkar Awards).
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
