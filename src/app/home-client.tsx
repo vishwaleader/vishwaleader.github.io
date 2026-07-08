@@ -976,8 +976,8 @@ export default function HomeClientPage() {
             </div>
 
             <div className="max-w-5xl mx-auto mt-6 text-center">
-                <a href="https://vishwaleader.vercel.app/tour-package" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-3 px-8 rounded-md text-sm transition-colors shadow-lg">
-                    Read Full Tour Details <i className="fa-solid fa-arrow-right text-xs"></i>
+                <a href="https://vishwaleader.vercel.app/tour-package" className="inline-block bg-brandBlue text-white font-bold px-6 py-3 rounded hover:bg-brandBlue/90 text-xs uppercase tracking-wider transition-all shadow-sm">
+                    Read Full Tour Details
                 </a>
             </div>
         </div>
