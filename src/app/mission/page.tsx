@@ -31,8 +31,7 @@ export default function MissionPage() {
         <div className="text-white py-24 md:py-32 border-b border-slate-900 relative overflow-hidden flex items-center justify-center">
           {/* Background Image */}
           <div 
-            className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: 'url(/assets/images/Ambedkar_at_the_Round_Table_Conference.jpg)' }}
+            className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat bg-[url('/assets/images/Ambedkar_at_the_Round_Table_Conference.jpg')]"
           ></div>
           {/* Neutral Overlay to ensure text readability without altering image color */}
           <div className="absolute inset-0 bg-black/60 z-0"></div>
