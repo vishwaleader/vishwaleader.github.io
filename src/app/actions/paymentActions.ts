@@ -7,6 +7,12 @@ import { doc, updateDoc, addDoc, collection, arrayUnion } from "firebase/firesto
 
 // Price Dictionary mapping item IDs to their INR prices (including GST where applicable)
 const PRICE_DICTIONARY: Record<string, number> = {
+    // New Dynamic Unified Onboarding
+    "reg_conference": 5900,
+    "reg_business": 11800,
+    "reg_award": 5900,
+    "reg_presenter": 5900,
+    
     // A La Carte Options
     "day_1": 5900,
     "day_2": 11800,
@@ -22,6 +28,8 @@ const PRICE_DICTIONARY: Record<string, number> = {
     "ad_quarter_page": 15000,
 
     // Tour Packages (Prices are inclusive of Registration Fee 23600)
+    "pkg_india": 131000, // Replacing pkg_4 for clarity
+    "pkg_intl": 200501,  // Replacing pkg_3 for clarity
     "pkg_1": 310000,
     "pkg_2": 235000,
     "pkg_3": 200501,

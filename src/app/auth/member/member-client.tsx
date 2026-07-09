@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
-  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarHeader, SidebarFooter, SidebarRail, SidebarInset, SidebarTrigger
+  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarHeader, SidebarFooter, SidebarRail, SidebarInset, SidebarTrigger, useSidebar
 } from "@/components/ui/sidebar";
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/table";
 import { 
   LayoutDashboard, User as UserIcon, FileText, LogOut, 
-  MapPin, Plus, Trash2, CheckCircle, Clock, Upload, ShieldAlert, CreditCard, Camera, FileCheck 
+  MapPin, Plus, Trash2, CheckCircle, Clock, Upload, ShieldAlert, CreditCard, Camera, FileCheck, Settings, Wifi, Check
 } from "lucide-react";
 
 declare global {
@@ -34,6 +34,21 @@ declare global {
     Razorpay: any;
   }
 }
+
+const MobileCloseSidebarMenuButton = ({ onClick, children, ...props }: any) => {
+  const { setOpenMobile, isMobile } = useSidebar();
+  return (
+    <SidebarMenuButton 
+      onClick={(e) => {
+        if (onClick) onClick(e);
+        if (isMobile) setOpenMobile(false);
+      }} 
+      {...props}
+    >
+      {children}
+    </SidebarMenuButton>
+  );
+};
 
 
 const COUNTRIES_LIST = [
@@ -107,7 +122,7 @@ const AutocompleteInput = ({ value, onChange, options, placeholder, required, cl
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 const finalValue = opt.split(' (')[0];
-                onChange({ target: { value: finalValue } });
+                onChange({ target: { value: finalValue + (opt.includes('(') ? ' ' : '') } });
                 setShowDropdown(false);
               }}
             >
@@ -122,7 +137,7 @@ const AutocompleteInput = ({ value, onChange, options, placeholder, required, cl
 
 export default function MemberClientPage() {
   const searchParams = useSearchParams();
-  const defaultTab = searchParams.get('tab') as 'dashboard' | 'registration' | 'uploads' | 'payment' | 'submissions' || 'dashboard';
+  const defaultTab = searchParams.get('tab') as 'dashboard' | 'registration' | 'uploads' | 'payment' | 'submissions' | 'settings' || 'dashboard';
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -158,10 +173,12 @@ export default function MemberClientPage() {
     legalConsent: false,
     headshotUrl: "",
     passportFrontUrl: "", passportBackUrl: "",
-    evidenceUrl: ""
+    evidenceUrl: "",
+    businessDeckUrl: "",
+    wizardIntents: []
   });
   
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'registration' | 'uploads' | 'payment' | 'submissions'>(defaultTab);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'registration' | 'uploads' | 'payment' | 'submissions' | 'settings'>('dashboard');
 
   // Dynamic Payment States
   const [selectedAlaCarte, setSelectedAlaCarte] = useState<string[]>([]);
@@ -201,6 +218,9 @@ export default function MemberClientPage() {
     return total;
   };
 
+  // Wizard Intents (What brings you here)
+  const [wizardIntents, setWizardIntents] = useState<string[]>([]);
+  
   // Registration form field states
   const [profileName, setProfileName] = useState("");
   const [profileGender, setProfileGender] = useState("");
@@ -216,17 +236,16 @@ export default function MemberClientPage() {
   const [profileBio, setProfileBio] = useState("");
   const [profilePassport, setProfilePassport] = useState("");
   const [profileAddress, setProfileAddress] = useState("");
-  const [profileCategory, setProfileCategory] = useState("ambedkar-awards");
-  const [profileDelegateType, setProfileDelegateType] = useState("conference");
-  const [profileParticipationCategories, setProfileParticipationCategories] = useState<string[]>([]);
-  const [profileEventDays, setProfileEventDays] = useState<string[]>([]);
-  const [profilePurpose, setProfilePurpose] = useState("");
+  const [profileCategory, setProfileCategory] = useState("social-justice-leadership");
   const [profileVisaSupport, setProfileVisaSupport] = useState(false);
   const [profileAccommodation, setProfileAccommodation] = useState(false);
   const [profilePackageTour, setProfilePackageTour] = useState("None");
   const [profileDietary, setProfileDietary] = useState("");
   const [profileCountry, setProfileCountry] = useState("India");
   const [profileLegalConsent, setProfileLegalConsent] = useState(false);
+
+  // Wizard state
+  const [wizardStep, setWizardStep] = useState(0); // 0 is the Intent selection step
 
   // File Upload statuses
   const [headshotUploading, setHeadshotUploading] = useState(false);
@@ -240,13 +259,23 @@ export default function MemberClientPage() {
   const [evidenceUploading, setEvidenceUploading] = useState(false);
   const [evidenceProgress, setEvidenceProgress] = useState(0);
 
-  // Submissions lists states
-  const [submissions, setSubmissions] = useState<any[]>([]);
-  const [showSubForm, setShowSubForm] = useState(true);
+  const [businessDeckUploading, setBusinessDeckUploading] = useState(false);
+  const [businessDeckProgress, setBusinessDeckProgress] = useState(0);
+
+  // Submissions states
   const [subTitle, setSubTitle] = useState("");
   const [subAuthors, setSubAuthors] = useState("");
   const [subTheme, setSubTheme] = useState("primary");
   const [subAbstract, setSubAbstract] = useState("");
+  const [businessProposalText, setBusinessProposalText] = useState("");
+  
+  // Legacy states to appease compiler
+  const [profileDelegateType, setProfileDelegateType] = useState("conference");
+  const [profileParticipationCategories, setProfileParticipationCategories] = useState<string[]>([]);
+  const [profileEventDays, setProfileEventDays] = useState<string[]>([]);
+  const [profilePurpose, setProfilePurpose] = useState("");
+  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [showSubForm, setShowSubForm] = useState(true);
   const [subFileName, setSubFileName] = useState("");
 
   // Toast status alert
@@ -292,14 +321,11 @@ export default function MemberClientPage() {
               sector: "Academic/Research",
               country: "India",
               phone: "",
-              bio: "Delegate participating in Vishwa Leader research panels.",
+              bio: "",
               passportNumber: "",
               fullAddress: "",
-              nominationCategory: "ambedkar-awards",
-              delegateType: "conference",
-              participationCategories: [],
-              eventDays: [],
-              purpose: "",
+              wizardIntents: [],
+              nominationCategory: "social-justice-leadership",
               visaSupport: false,
               accommodationSupport: false,
               packageTour: "None",
@@ -349,14 +375,11 @@ export default function MemberClientPage() {
             sector: "Academic/Research",
             country: "India",
             phone: "",
-            bio: "Delegate participating in Vishwa Leader research panels.",
+            bio: "",
             passportNumber: "",
             fullAddress: "",
-            nominationCategory: "ambedkar-awards",
-            delegateType: "conference",
-            participationCategories: [],
-            eventDays: [],
-            purpose: "",
+            wizardIntents: [],
+            nominationCategory: "social-justice-leadership",
             visaSupport: false,
             accommodationSupport: false,
             packageTour: "None",
@@ -379,31 +402,35 @@ export default function MemberClientPage() {
   // Sync state variables once memberData is loaded
   useEffect(() => {
     if (memberData) {
-      setProfileName(memberData.name || "");
-      setProfileGender(memberData.gender || "");
-      setProfileAge(memberData.age || "");
-      setProfileNationality(memberData.nationality || "");
-      setProfileCity(memberData.city || "");
-      setProfileState(memberData.state || "");
-      setProfileWheelchair(memberData.wheelchairSupport || false);
-      setProfileDesignation(memberData.designation || "Member Delegate");
-      setProfileOrganization(memberData.organization || "Independent Scholar");
-      setProfileSector(memberData.sector || "Academic/Research");
-      setProfilePhone(memberData.phone || "");
-      setProfileBio(memberData.bio || "");
-      setProfilePassport(memberData.passportNumber || "");
-      setProfileAddress(memberData.fullAddress || "");
-      setProfileCategory(memberData.nominationCategory || "ambedkar-awards");
-      setProfileDelegateType(memberData.delegateType || "conference");
-      setProfileParticipationCategories(memberData.participationCategories || []);
-      setProfileEventDays(memberData.eventDays || []);
-      setProfilePurpose(memberData.purpose || "");
-      setProfileVisaSupport(memberData.visaSupport || false);
-      setProfileAccommodation(memberData.accommodationSupport || false);
-      setProfilePackageTour(memberData.packageTour || "None");
-      setProfileDietary(memberData.dietaryNotes || "");
-      setProfileCountry(memberData.country || "India");
-      setProfileLegalConsent(memberData.legalConsent || false);
+      const data = memberData;
+      setProfileName(data.name || "");
+      setProfileGender(data.gender || "");
+      setProfileAge(data.age || "");
+      setProfileNationality(data.nationality || "");
+      setProfileCity(data.city || "");
+      setProfileState(data.state || "");
+      setProfileWheelchair(data.wheelchairSupport || false);
+      setProfileDesignation(data.designation || "");
+      setProfileOrganization(data.organization || "");
+      setProfileSector(data.sector || "Academic/Research");
+      setProfilePhone(data.phone || "");
+      setProfileBio(data.bio || "");
+      setProfilePassport(data.passportNumber || "");
+      setProfileAddress(data.fullAddress || "");
+      setWizardIntents(data.wizardIntents || []);
+      setProfileCategory(data.nominationCategory || "social-justice-leadership");
+      setProfileVisaSupport(data.visaSupport || false);
+      setProfileAccommodation(data.accommodationSupport || false);
+      setProfilePackageTour(data.packageTour || "None");
+      setProfileDietary(data.dietaryNotes || "");
+      setProfileCountry(data.country || "India");
+      setProfileLegalConsent(data.legalConsent || false);
+      
+      // Load pre-existing submission drafts if any
+      setBusinessProposalText(data.businessProposalText || "");
+      setSubTitle(data.subTitle || "");
+      setSubAuthors(data.subAuthors || "");
+      setSubAbstract(data.subAbstract || "");
     }
   }, [memberData]);
 
@@ -440,9 +467,19 @@ export default function MemberClientPage() {
   // Launch secure payment gateway checkout
   const handlePayment = async () => {
     if (!user) return;
-    const selectedItems = selectedPackage ? [selectedPackage] : selectedAlaCarte;
+    
+    // Auto-calculate selections from wizard state
+    const selectedItems: string[] = [];
+    if (wizardIntents.includes('Conference Delegate')) selectedItems.push('reg_conference');
+    if (wizardIntents.includes('Business Summit Delegate')) selectedItems.push('reg_business');
+    if (wizardIntents.includes('Award Nominee')) selectedItems.push('reg_award');
+    if (wizardIntents.includes('Research Paper Presenter')) selectedItems.push('reg_presenter');
+
+    if (profilePackageTour === 'From India') selectedItems.push('pkg_india');
+    if (profilePackageTour === 'From Outside India') selectedItems.push('pkg_intl');
+
     if (selectedItems.length === 0) {
-      showToast("Please select at least one item to purchase.");
+      showToast("Please select your event intent in the wizard to calculate total.");
       return;
     }
 
@@ -515,7 +552,7 @@ export default function MemberClientPage() {
   };
 
   // Firebase Storage upload helper
-  const uploadFileToStorage = (file: File, type: 'headshot' | 'passportFront' | 'passportBack' | 'evidence') => {
+  const uploadFileToStorage = (file: File, type: 'headshot' | 'passportFront' | 'passportBack' | 'evidence' | 'businessDeck') => {
     if (!user) return;
     
     // Set status
@@ -523,6 +560,7 @@ export default function MemberClientPage() {
     if (type === 'passportFront') { setPassportFrontUploading(true); setPassportFrontProgress(0); }
     if (type === 'passportBack') { setPassportBackUploading(true); setPassportBackProgress(0); }
     if (type === 'evidence') { setEvidenceUploading(true); setEvidenceProgress(0); }
+    if (type === 'businessDeck') { setBusinessDeckUploading(true); setBusinessDeckProgress(0); }
 
     const storagePath = `users/${user.uid}/${type}_${Date.now()}_${file.name}`;
     const storageRef = ref(storage, storagePath);
@@ -535,6 +573,7 @@ export default function MemberClientPage() {
         if (type === 'passportFront') setPassportFrontProgress(progress);
         if (type === 'passportBack') setPassportBackProgress(progress);
         if (type === 'evidence') setEvidenceProgress(progress);
+        if (type === 'businessDeck') setBusinessDeckProgress(progress);
       }, 
       (error) => {
         console.error("Storage upload error:", error);
@@ -543,6 +582,7 @@ export default function MemberClientPage() {
         if (type === 'passportFront') setPassportFrontUploading(false);
         if (type === 'passportBack') setPassportBackUploading(false);
         if (type === 'evidence') setEvidenceUploading(false);
+        if (type === 'businessDeck') setBusinessDeckUploading(false);
       }, 
       async () => {
         try {
@@ -553,7 +593,8 @@ export default function MemberClientPage() {
           const updateField = type === 'headshot' ? 'headshotUrl' : 
                           type === 'passportFront' ? 'passportFrontUrl' : 
                           type === 'passportBack' ? 'passportBackUrl' : 
-                          'evidenceUrl';
+                          type === 'evidence' ? 'evidenceUrl' :
+                          'businessDeckUrl';
           
           await updateDoc(userRef, { [updateField]: downloadURL });
           setMemberData((prev: any) => ({ ...prev, [updateField]: downloadURL }));
@@ -574,16 +615,17 @@ export default function MemberClientPage() {
         } finally {
           if (type === 'headshot') setHeadshotUploading(false);
           if (type === 'passportFront') setPassportFrontUploading(false);
-        if (type === 'passportBack') setPassportBackUploading(false);
+          if (type === 'passportBack') setPassportBackUploading(false);
           if (type === 'evidence') setEvidenceUploading(false);
+          if (type === 'businessDeck') setBusinessDeckUploading(false);
         }
       }
     );
   };
 
   // Save delegate details form
-  const handleSaveRegistration = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveRegistration = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!user) return;
     
     if (!profileLegalConsent) {
@@ -609,17 +651,19 @@ export default function MemberClientPage() {
         passportNumber: profilePassport,
         fullAddress: profileAddress,
         nominationCategory: profileCategory,
-        delegateType: profileDelegateType,
-        participationCategories: profileParticipationCategories,
-        eventDays: profileEventDays,
-        purpose: profilePurpose,
+        wizardIntents: wizardIntents,
         visaSupport: profileVisaSupport,
         accommodationSupport: profileAccommodation,
         packageTour: profilePackageTour,
         dietaryNotes: profileDietary,
         country: profileCountry,
-        legalConsent: profileLegalConsent
+        legalConsent: profileLegalConsent,
+        businessProposalText: businessProposalText,
+        subTitle: subTitle,
+        subAuthors: subAuthors,
+        subAbstract: subAbstract
       };
+
       await updateDoc(userRef, updatedData);
       setMemberData((prev: any) => ({ ...prev, ...updatedData }));
       // Log profile update to admin activity feed
@@ -633,6 +677,7 @@ export default function MemberClientPage() {
         });
       } catch (_) {}
       showToast("Delegate registration updated successfully!");
+      setActiveTab('payment');
     } catch (err) {
       console.error("Error saving delegate form:", err);
       showToast("Failed to save registration.");
@@ -759,6 +804,348 @@ export default function MemberClientPage() {
   const gstConverted = (pricing.gst / currency.rate).toFixed(2);
   const totalConverted = (pricing.total / currency.rate).toFixed(2);
 
+  const isRegistrationComplete = memberData?.legalConsent === true;
+
+    // Generate dynamic slides array
+  const visibleSlides = [
+    { 
+      id: 'intent', 
+      type: 'intent', 
+      title: 'What brings you to Vishwa Leader?', 
+      subtitle: 'Select all that apply to tailor your registration experience.'
+    },
+    { id: 'name', type: 'text', title: "What is your full name?", subtitle: "This will be printed on your official certificate.", state: profileName, setState: setProfileName, required: true },
+    { id: 'gender', type: 'select', title: 'What is your gender?', options: ['Male', 'Female', 'Prefer not to say'], state: profileGender, setState: setProfileGender, required: true },
+    { id: 'age', type: 'number', title: 'How old are you?', state: profileAge, setState: setProfileAge, required: true },
+    { id: 'nationality', type: 'autocomplete', title: 'What is your nationality?', options: COUNTRIES_LIST, state: profileNationality, setState: setProfileNationality, required: true },
+    { id: 'passport', type: 'text', title: 'What is your passport number?', subtitle: "Required for Visa invitation letters.", state: profilePassport, setState: setProfilePassport, required: false },
+    { id: 'designation', type: 'text', title: 'What is your current designation or job title?', state: profileDesignation, setState: setProfileDesignation, required: true },
+    { id: 'organization', type: 'text', title: 'Which organization or university are you affiliated with?', state: profileOrganization, setState: setProfileOrganization, required: true },
+    { id: 'phone', type: 'autocomplete', title: 'What is your contact number? (WhatsApp enabled)', subtitle: "Include country code e.g., +91 9876543210", options: PHONE_CODES_LIST, state: profilePhone, setState: setProfilePhone, required: true },
+    { id: 'country', type: 'autocomplete', title: 'What is your current country of residence?', options: COUNTRIES_LIST, state: profileCountry, setState: setProfileCountry, required: true },
+    
+    // Documents
+    { id: 'headshot', type: 'upload', title: 'Please upload a professional headshot.', subtitle: "This will be used for your Delegate ID Card.", field: 'headshot', url: memberData?.headshotUrl, uploading: headshotUploading, progress: headshotProgress },
+    { id: 'passportFront', type: 'upload', title: 'Please upload the front page of your passport.', field: 'passportFront', url: memberData?.passportFrontUrl, uploading: passportFrontUploading, progress: passportFrontProgress },
+    { id: 'passportBack', type: 'upload', title: 'Please upload the back page of your passport.', field: 'passportBack', url: memberData?.passportBackUrl, uploading: passportBackUploading, progress: passportBackProgress },
+    
+    // Conditional: Award
+    ...(wizardIntents.includes('Award Nominee') ? [
+      { id: 'award_category', type: 'select', title: 'Which award category are you nominating for?', options: ['Social Justice Leadership', 'Education and Empowerment', 'Economic Development', 'Human Rights Advocacy', 'Innovative Community Service'], state: profileCategory, setState: setProfileCategory, required: true },
+      { id: 'evidence', type: 'upload', title: 'Please upload your nomination evidence document.', subtitle: "Accepted formats: .pdf, .doc, .docx", field: 'evidence', url: memberData?.evidenceUrl, uploading: evidenceUploading, progress: evidenceProgress, accept: ".pdf,.doc,.docx" }
+    ] : []),
+    
+    // Conditional: Presenter
+    ...(wizardIntents.includes('Research Paper Presenter') ? [
+      { id: 'paper_title', type: 'text', title: 'What is the title of your research paper?', state: subTitle, setState: setSubTitle, required: true },
+      { id: 'paper_authors', type: 'text', title: 'Who are the co-authors? (If any)', state: subAuthors, setState: setSubAuthors, required: false },
+      { id: 'paper_abstract', type: 'textarea', title: 'Please provide a short abstract.', subtitle: "Maximum 300 words.", state: subAbstract, setState: setSubAbstract, required: true }
+    ] : []),
+
+    // Conditional: Business
+    ...(wizardIntents.includes('Business Summit Delegate') ? [
+      { id: 'business_proposal', type: 'textarea', title: 'What is your primary business objective or proposal?', state: businessProposalText, setState: setBusinessProposalText, required: true },
+      { id: 'businessDeck', type: 'upload', title: 'Please upload your pitch deck or company profile.', subtitle: "Accepted formats: .pdf, .ppt", field: 'businessDeck', url: memberData?.businessDeckUrl, uploading: businessDeckUploading, progress: businessDeckProgress, accept: ".pdf,.ppt,.pptx" }
+    ] : []),
+
+    // Logistics
+    { id: 'package_tour', type: 'tour_select', title: 'Are you interested in our VIP Package Tours?' },
+    { id: 'logistics', type: 'logistics', title: 'Do you require any logistics support?' },
+    { id: 'dietary', type: 'text', title: 'Do you have any specific dietary requirements?', subtitle: "e.g. Vegetarian, Halal, Kosher. Leave blank if none.", state: profileDietary, setState: setProfileDietary, required: false },
+
+    // Final Review
+    { id: 'review', type: 'review', title: 'Review & Secure Checkout' }
+  ];
+
+  const currentSlide = visibleSlides[wizardStep] || visibleSlides[0];
+  const progressPercentage = ((wizardStep) / (visibleSlides.length - 1)) * 100;
+
+  const goNext = () => {
+    if (currentSlide.type === 'intent' && wizardIntents.length === 0) {
+      showToast("Please select at least one intent to proceed.");
+      return;
+    }
+    if (currentSlide.required && !currentSlide.state) {
+      showToast("This field is required.");
+      return;
+    }
+    if (wizardStep < visibleSlides.length - 1) {
+      setWizardStep(prev => prev + 1);
+    }
+  };
+
+  const goPrev = () => {
+    if (wizardStep > 0) {
+      setWizardStep(prev => prev - 1);
+    }
+  };
+
+  // Listen for Enter key to proceed
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && currentSlide.type !== 'textarea') {
+        // Prevent default form submission
+        e.preventDefault();
+        if (wizardStep < visibleSlides.length - 1 && activeTab === 'registration' && !isRegistrationComplete) {
+          goNext();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [wizardStep, currentSlide, wizardIntents, activeTab, isRegistrationComplete]);
+
+  const wizardFormContent = (
+    <form onSubmit={(e) => e.preventDefault()} className="flex flex-col min-h-[50vh] relative">
+      
+      {/* Dynamic Slide Content */}
+      <div key={currentSlide.id} className="flex-grow flex flex-col justify-center py-10 px-4 max-w-3xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <h2 className="text-3xl md:text-5xl font-semibold text-slate-900 tracking-tight mb-3 font-display">
+          {currentSlide.title}
+        </h2>
+        {currentSlide.subtitle && (
+          <p className="text-slate-500 text-lg mb-8">{currentSlide.subtitle}</p>
+        )}
+
+        {/* Input Renders */}
+        <div className="mt-8">
+          {currentSlide.type === 'text' || currentSlide.type === 'number' ? (
+            <input 
+              type={currentSlide.type} 
+              value={currentSlide.state}
+              onChange={(e) => currentSlide.setState?.(e.target.value)}
+              className="w-full text-3xl md:text-4xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300"
+              placeholder="Type your answer here..."
+              autoFocus
+            />
+          ) : currentSlide.type === 'textarea' ? (
+            <textarea 
+              value={currentSlide.state}
+              onChange={(e) => currentSlide.setState?.(e.target.value)}
+              className="w-full text-xl md:text-2xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300 min-h-[150px] resize-none"
+              placeholder="Type your answer here..."
+              autoFocus
+            ></textarea>
+          ) : currentSlide.type === 'autocomplete' ? (
+            <AutocompleteInput
+              value={currentSlide.state}
+              onChange={(e: any) => currentSlide.setState?.(e.target.value)}
+              options={currentSlide.options || []}
+              placeholder="Type or select..."
+              className="w-full text-2xl md:text-3xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300"
+            />
+          ) : currentSlide.type === 'select' ? (
+            <div className="flex flex-col gap-3">
+              {(currentSlide.options || []).map((opt: string, idx: number) => (
+                <button 
+                  key={opt}
+                  onClick={() => {
+                    currentSlide.setState?.(opt);
+                    setTimeout(goNext, 300);
+                  }}
+                  className={`w-full text-left px-6 py-4 text-xl md:text-2xl rounded-2xl border-2 transition-all ${currentSlide.state === opt ? 'border-brandBlue bg-blue-50/50 text-brandBlue shadow-sm' : 'border-slate-100 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'}`}
+                >
+                  <span className="inline-block w-8 font-bold text-slate-300 text-sm mr-2">{String.fromCharCode(65 + idx)}</span>
+                  {opt}
+                </button>
+              ))}
+            </div>
+          ) : currentSlide.type === 'intent' ? (
+            <div className="grid grid-cols-1 gap-4">
+              {[
+                { id: "Conference Delegate", label: "I want to attend the conference", price: "₹5,000 + GST" },
+                { id: "Business Summit Delegate", label: "I want to join the business summit", price: "₹10,000 + GST" },
+                { id: "Award Nominee", label: "I want to add my name for the nomination", price: "₹5,000 + GST" },
+                { id: "Research Paper Presenter", label: "I want to submit abstract papers", price: "₹5,000 + GST" }
+              ].map(item => (
+                <label key={item.id} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-sm text-slate-800 mb-0.5">{item.label}</h4>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{item.price}</p>
+                  </div>
+                  <div>
+                    <input 
+                      type="checkbox" 
+                      className="w-5 h-5 text-brandBlue focus:ring-brandBlue border-slate-300 rounded"
+                      checked={wizardIntents.includes(item.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) setWizardIntents([...wizardIntents, item.id]);
+                        else setWizardIntents(wizardIntents.filter(i => i !== item.id));
+                      }}
+                    />
+                  </div>
+                </label>
+              ))}
+            </div>
+          ) : currentSlide.type === 'upload' ? (
+            <div className="border-2 border-dashed border-slate-200 rounded-3xl p-10 flex flex-col items-center justify-center text-center bg-slate-50/50 hover:bg-slate-50 transition-colors">
+              {currentSlide.url ? (
+                <div className="space-y-4">
+                  <div className="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mx-auto text-emerald-600">
+                    <CheckCircle className="size-10" />
+                  </div>
+                  <p className="text-emerald-700 font-bold text-lg">Document Uploaded Successfully</p>
+                  <Button variant="outline" onClick={goNext} className="mt-2 rounded-full px-8">Continue</Button>
+                </div>
+              ) : currentSlide.uploading ? (
+                <div className="w-full max-w-xs space-y-4">
+                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                    <div className="bg-brandBlue h-full transition-all" style={{ width: `${currentSlide.progress}%` }}></div>
+                  </div>
+                  <p className="text-brandBlue font-bold text-sm">Uploading... {currentSlide.progress}%</p>
+                </div>
+              ) : (
+                <div className="relative w-full max-w-sm flex flex-col items-center">
+                  <Upload className="size-12 text-slate-400 mb-4" />
+                  <input type="file" accept={currentSlide.accept || "image/*"} onChange={(e) => { if (e.target.files && e.target.files[0]) uploadFileToStorage(e.target.files[0], currentSlide.field as any); }} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                  <Button type="button" className="bg-brandBlue hover:bg-brandBlue/90 text-white font-bold h-12 px-8 rounded-full shadow-lg pointer-events-none">Choose File to Upload</Button>
+                  <p className="text-xs text-slate-400 mt-4">Max file size: 5MB</p>
+                </div>
+              )}
+            </div>
+          ) : currentSlide.type === 'tour_select' ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { val: 'None', label: 'Not Interested', price: 'I will manage my own' },
+                { val: 'From India', label: 'From India', price: '₹1,31,000' },
+                { val: 'From Outside India', label: 'From Outside India', price: '₹2,00,501' }
+              ].map(opt => (
+                <label key={opt.val} className={`flex flex-col gap-2 p-6 rounded-3xl border-2 cursor-pointer transition-all ${profilePackageTour === opt.val ? 'border-brandBlue bg-blue-50/50 shadow-md' : 'border-slate-100 hover:border-slate-200 bg-white'}`}>
+                  <input type="radio" name="tour" value={opt.val} checked={profilePackageTour === opt.val} onChange={(e) => { setProfilePackageTour(e.target.value); setTimeout(goNext, 300); }} className="sr-only" />
+                  <span className="text-xl font-bold text-slate-800">{opt.label}</span>
+                  <span className="text-sm font-bold text-brandBlue">{opt.price}</span>
+                </label>
+              ))}
+            </div>
+          ) : currentSlide.type === 'logistics' ? (
+            <div className="space-y-4">
+              <label className="flex items-center space-x-4 p-5 bg-white border border-slate-200 rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+                <input type="checkbox" checked={profileVisaSupport} onChange={(e) => setProfileVisaSupport(e.target.checked)} className="size-6 rounded text-brandBlue focus:ring-brandBlue" />
+                <span className="text-lg font-medium text-slate-700">Official Invitation Letter for Visa</span>
+              </label>
+              <label className="flex items-center space-x-4 p-5 bg-white border border-slate-200 rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+                <input type="checkbox" checked={profileAccommodation} onChange={(e) => setProfileAccommodation(e.target.checked)} className="size-6 rounded text-brandBlue focus:ring-brandBlue" />
+                <span className="text-lg font-medium text-slate-700">Accommodation Assistance</span>
+              </label>
+              <label className="flex items-center space-x-4 p-5 bg-white border border-slate-200 rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+                <input type="checkbox" checked={profileWheelchair} onChange={(e) => setProfileWheelchair(e.target.checked)} className="size-6 rounded text-brandBlue focus:ring-brandBlue" />
+                <span className="text-lg font-medium text-slate-700">Wheelchair Support Needed</span>
+              </label>
+            </div>
+          ) : currentSlide.type === 'review' ? (
+            <div className="bg-white border border-slate-200 rounded-xl p-8 flex flex-col shadow-sm hover:border-slate-300 transition-colors max-w-2xl mx-auto w-full relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-slate-900"></div>
+              
+              <div className="mb-6 pb-6 border-b border-slate-100">
+                <h3 className="text-xl font-semibold text-slate-900 leading-tight">Registration Summary</h3>
+                <p className="text-sm text-slate-500 mt-1">Review your selected packages before proceeding to payment.</p>
+              </div>
+
+              <div className="space-y-4 flex-grow mb-6">
+                {wizardIntents.map(intent => {
+                  const base = intent === 'Business Summit Delegate' ? 10000 : 5000;
+                  return (
+                    <div key={intent} className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                      <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>{intent} Registration</span></span>
+                      <span className="font-semibold text-slate-900">₹{base.toLocaleString('en-IN')}</span>
+                    </div>
+                  );
+                })}
+                {profilePackageTour !== 'None' && (
+                  <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                    <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>Tour Package: {profilePackageTour}</span></span>
+                    <span className="font-semibold text-slate-900">
+                      ₹{profilePackageTour === 'From India' ? (131000).toLocaleString('en-IN') : (200501).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="pt-6 pb-6 flex justify-between items-center border-t border-b border-slate-100 mb-6">
+                <span className="text-sm font-semibold text-slate-900">GST (18%)</span>
+                <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full uppercase tracking-wider">Calculated Automatically</span>
+              </div>
+
+              <div className="bg-slate-900 p-6 rounded-xl flex items-center justify-between mb-8 shadow-md">
+                <span className="text-sm font-bold uppercase tracking-wider text-slate-400">Total Due Today</span>
+                <span className="text-3xl font-semibold text-white">
+                  {(() => {
+                    let total = 0;
+                    if (wizardIntents.includes('Conference Delegate')) total += 5900;
+                    if (wizardIntents.includes('Business Summit Delegate')) total += 11800;
+                    if (wizardIntents.includes('Award Nominee')) total += 5900;
+                    if (wizardIntents.includes('Research Paper Presenter')) total += 5900;
+                    if (profilePackageTour === 'From India') total += 131000;
+                    if (profilePackageTour === 'From Outside India') total += 200501;
+                    return `₹${total.toLocaleString('en-IN')}`;
+                  })()}
+                </span>
+              </div>
+
+              <div>
+                <label className="flex items-start space-x-3 p-4 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer hover:border-slate-300 transition-colors">
+                  <input type="checkbox" checked={profileLegalConsent} onChange={(e) => setProfileLegalConsent(e.target.checked)} className="mt-0.5 size-4 rounded text-slate-900 focus:ring-slate-900 shrink-0" required />
+                  <span className="text-sm text-slate-600 leading-tight">
+                    I confirm that all information provided is accurate and I agree to the <a href="/terms" className="font-semibold text-slate-900 hover:underline">Terms and Conditions</a> to finalize this transaction.
+                  </span>
+                </label>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      {/* Persistent Bottom Bar */}
+      <div className="sticky bottom-0 w-full bg-white/90 backdrop-blur-xl border-t border-slate-200 p-4 z-20 mt-auto">
+        <div className="w-full flex items-center justify-between gap-4 px-2 sm:px-8">
+          
+          <div className="flex-grow hidden sm:block">
+            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+              <div className="h-full bg-slate-900 transition-all duration-500 ease-out" style={{ width: `${progressPercentage}%` }}></div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0 ml-auto w-full sm:w-auto justify-between sm:justify-end">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={goPrev}
+              disabled={wizardStep === 0}
+              className={`rounded-lg font-semibold h-12 px-6 border-slate-200 transition-all ${wizardStep === 0 ? 'opacity-0 pointer-events-none' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
+            >
+              Back
+            </Button>
+            
+            {wizardStep < visibleSlides.length - 1 ? (
+              <Button 
+                type="button" 
+                onClick={goNext}
+                className="bg-slate-900 text-white text-sm font-semibold px-8 h-12 rounded-lg hover:bg-slate-800 transition-colors shadow-sm"
+              >
+                <span>Next Step</span>
+              </Button>
+            ) : (
+              <Button 
+                type="button" 
+                onClick={async () => {
+                  if (!profileLegalConsent) {
+                    showToast("You must accept the Terms & Conditions to proceed.");
+                    return;
+                  }
+                  await handleSaveRegistration();
+                  handlePayment();
+                }}
+                className="bg-slate-900 text-white hover:bg-slate-800 font-semibold h-12 px-8 rounded-lg shadow-sm transition-colors text-sm"
+              >
+                Pay & Finalize
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+
   return (
     <>
       <Preloader loading={loading} />
@@ -812,27 +1199,67 @@ export default function MemberClientPage() {
         </div>
       )}
 
-      {/* Authenticated View: Collapsible Sidebar + Shadcn layout panels in Admin White Theme */}
-      {!loading && user && (
+      {/* Authenticated View: Onboarding Wizard (Fullscreen) */}
+      {!loading && user && !isRegistrationComplete && (
+        <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+          {/* Standalone Wizard Header */}
+          <header className="h-16 flex items-center justify-between px-4 sm:px-8 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 relative">
+            <a href="/" className="flex items-center">
+              <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" className="h-8 w-auto object-contain" />
+            </a>
+            <div className="flex items-center gap-4">
+              <div className="text-right hidden sm:block">
+                <p className="text-xs font-bold text-slate-800">{user.displayName || "Delegate"}</p>
+                <p className="text-[9px] text-slate-400 font-mono">Member ID: VL-2026-{(user.uid.substring(0, 4)).toUpperCase()}</p>
+              </div>
+              <img src={memberData?.headshotUrl || user.photoURL || "https://placehold.co/100x100"} referrerPolicy="no-referrer" className="w-8 h-8 rounded-full border border-slate-200 object-cover ml-2" alt="Profile" />
+              <Button variant="ghost" size="sm" onClick={handleLogout} className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 ml-2 rounded-xl h-9">
+                <LogOut className="size-4 shrink-0 sm:mr-2" />
+                <span className="hidden sm:inline text-xs font-bold uppercase">Sign Out</span>
+              </Button>
+            </div>
+          </header>
+
+          {/* Wizard Content */}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center py-10 relative">
+            {/* Minimal ambient background */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-64 bg-brandBlue/5 blur-3xl rounded-full pointer-events-none -z-10"></div>
+            
+            <div className="w-full max-w-3xl animate-fade-in-up">
+              <div className="mb-8 text-center space-y-2">
+                <h1 className="text-3xl font-black font-display text-slate-900 uppercase tracking-tight">Delegate Onboarding</h1>
+                <p className="text-sm text-slate-500 font-medium max-w-lg mx-auto">Please complete your registration profile to unlock the member portal and proceed to the payment checkpoint.</p>
+              </div>
+
+              <Card className="border-slate-200/60 bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl overflow-hidden p-6 sm:p-10 ring-1 ring-slate-900/5">
+                {wizardFormContent}
+              </Card>
+            </div>
+          </main>
+        </div>
+      )}
+
+      {/* Authenticated View: Collapsible Sidebar Dashboard */}
+      {!loading && user && isRegistrationComplete && (
         <div className="w-full flex h-screen overflow-hidden bg-slate-50 text-slate-900 font-sans">
           <SidebarProvider>
             
             {/* Sidebar wrapper */}
-            <Sidebar variant="inset" collapsible="icon" className="border-r border-slate-200 bg-white">
-              <SidebarHeader className="border-b border-slate-100 px-4 py-4 flex items-center justify-start shrink-0">
+            <Sidebar collapsible="icon" className="!border-r-0 bg-white">
+              <SidebarHeader className="h-16 border-b border-slate-200 px-6 flex items-center justify-start shrink-0">
                 <a href="/" className="flex items-center">
-                  <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" className="h-9 w-auto object-contain" />
+                  <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" className="h-8 w-auto object-contain" />
                 </a>
               </SidebarHeader>
 
-              <SidebarContent className="bg-white">
+              <SidebarContent className="bg-white border-r border-slate-200">
                 {/* Operations tabs selectors */}
                 <SidebarGroup>
                   <SidebarGroupLabel className="text-slate-500 font-bold uppercase tracking-wider text-[10px] px-3 mb-1">Navigation</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
                       <SidebarMenuItem>
-                        <SidebarMenuButton 
+                        <MobileCloseSidebarMenuButton 
                           isActive={activeTab === 'dashboard'} 
                           onClick={() => setActiveTab('dashboard')}
                           className={`w-full justify-start text-xs font-medium py-2 px-3 rounded-lg transition-all ${
@@ -843,10 +1270,10 @@ export default function MemberClientPage() {
                         >
                           <LayoutDashboard className="size-4 shrink-0 mr-2 text-brandBlue" />
                           <span>Overview Dashboard</span>
-                        </SidebarMenuButton>
+                        </MobileCloseSidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton 
+                        <MobileCloseSidebarMenuButton 
                           isActive={activeTab === 'registration'} 
                           onClick={() => setActiveTab('registration')}
                           className={`w-full justify-start text-xs font-medium py-2 px-3 rounded-lg transition-all ${
@@ -856,75 +1283,50 @@ export default function MemberClientPage() {
                           }`}
                         >
                           <UserIcon className="size-4 shrink-0 mr-2 text-brandBlue" />
-                          <span>Delegate Registration</span>
-                        </SidebarMenuButton>
+                          <span>User Profile</span>
+                        </MobileCloseSidebarMenuButton>
                       </SidebarMenuItem>
                       <SidebarMenuItem>
-                        <SidebarMenuButton 
-                          isActive={activeTab === 'uploads'} 
-                          onClick={() => setActiveTab('uploads')}
+                        <MobileCloseSidebarMenuButton 
+                          isActive={activeTab === 'settings'} 
+                          onClick={() => setActiveTab('settings')}
                           className={`w-full justify-start text-xs font-medium py-2 px-3 rounded-lg transition-all ${
-                            activeTab === 'uploads' 
+                            activeTab === 'settings' 
                               ? 'bg-slate-100 text-slate-900 font-semibold' 
                               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                           }`}
                         >
-                          <Upload className="size-4 shrink-0 mr-2 text-brandBlue" />
-                          <span>Document Uploads</span>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton 
-                          isActive={activeTab === 'payment'} 
-                          onClick={() => setActiveTab('payment')}
-                          className={`w-full justify-start text-xs font-medium py-2 px-3 rounded-lg transition-all ${
-                            activeTab === 'payment' 
-                              ? 'bg-slate-100 text-slate-900 font-semibold' 
-                              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                          }`}
-                        >
-                          <CreditCard className="size-4 shrink-0 mr-2 text-brandBlue" />
-                          <span>Registration Payment</span>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton 
-                          isActive={activeTab === 'submissions'} 
-                          onClick={() => setActiveTab('submissions')}
-                          className={`w-full justify-start text-xs font-medium py-2 px-3 rounded-lg transition-all ${
-                            activeTab === 'submissions' 
-                              ? 'bg-slate-100 text-slate-900 font-semibold' 
-                              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                          }`}
-                        >
-                          <FileText className="size-4 shrink-0 mr-2 text-brandBlue" />
-                          <span>Abstract Submissions</span>
-                        </SidebarMenuButton>
+                          <Settings className="size-4 shrink-0 mr-2 text-brandBlue" />
+                          <span>Settings</span>
+                        </MobileCloseSidebarMenuButton>
                       </SidebarMenuItem>
                     </SidebarMenu>
                   </SidebarGroupContent>
                 </SidebarGroup>
               </SidebarContent>
 
-              <SidebarFooter className="border-t border-slate-100 p-3 bg-white">
+              <SidebarFooter className="border-t border-slate-100 p-3 bg-white border-r border-slate-200">
                 <SidebarMenu>
+                  <SidebarMenuItem className="mb-2">
+                    <div id="sidebar-translate-container"></div>
+                  </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton 
+                    <MobileCloseSidebarMenuButton 
                       onClick={() => window.location.href = "/"}
                       className="w-full justify-start text-xs font-medium py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                     >
                       <LogOut className="size-4 rotate-180 shrink-0 mr-2" />
                       <span>Return to Website</span>
-                    </SidebarMenuButton>
+                    </MobileCloseSidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton 
+                    <MobileCloseSidebarMenuButton 
                       onClick={handleLogout}
                       className="w-full justify-start text-xs font-medium py-2.5 px-3 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50"
                     >
                       <LogOut className="size-4 shrink-0 mr-2" />
                       <span>Sign Out Session</span>
-                    </SidebarMenuButton>
+                    </MobileCloseSidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarFooter>
@@ -932,7 +1334,7 @@ export default function MemberClientPage() {
             </Sidebar>
 
             {/* Inset Main Pane */}
-            <SidebarInset className="bg-slate-50 h-screen overflow-y-auto">
+            <SidebarInset className="bg-slate-50 h-screen overflow-y-auto min-h-0">
               {/* Sticky Header bar */}
               <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 px-6 gap-4 bg-white sticky top-0 z-30">
                 <div className="flex items-center gap-2">
@@ -990,7 +1392,8 @@ export default function MemberClientPage() {
                           {/* Card Top */}
                           <div className="flex items-center justify-between border-b border-white/10 pb-3.5 relative z-10">
                             <div className="flex items-center gap-2">
-                              <img src="/assets/images/vishwaleader-logo-globe.png" className="h-5 w-auto brightness-0 invert" alt="Logo" />
+                              <img src="/assets/images/vishwaleader-logo-globe.png" className="h-14 w-auto brightness-0 invert" alt="Logo" />
+                              <Wifi className="size-5 text-slate-300 rotate-90 ml-1" />
                               <span className="text-[8px] font-black uppercase tracking-widest text-slate-300">Vishwa Leader</span>
                             </div>
                             <span className="text-[8px] font-black uppercase tracking-widest text-amber-500 border border-amber-500/20 px-2 py-0.5 rounded bg-amber-500/5">
@@ -1068,12 +1471,7 @@ export default function MemberClientPage() {
                 {/* ═════════════════════ TAB: DELEGATE REGISTRATION FORM ═════════════════════ */}
                 {activeTab === 'registration' && (
                   <div className="space-y-6">
-                    <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-                      <div>
-                        <h2 className="text-2xl font-black font-display text-slate-900 uppercase tracking-tight">Delegate Registration</h2>
-                        <p className="text-xs text-slate-500 mt-0.5 font-medium">Provide detailed contact, passport, and event details to finalize delegation registry.</p>
-                      </div>
-                    </div>
+
 
                     <Card className="border-slate-200 bg-white rounded-2xl shadow-sm">
                       <CardHeader>
@@ -1081,355 +1479,7 @@ export default function MemberClientPage() {
                         <CardDescription className="text-xs text-slate-450">This information will be used for award certificate print and travel logs.</CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <form onSubmit={handleSaveRegistration} className="space-y-6">
-                          
-                          
-                          
-                          {/* Section 1: Personal & Professional Details */}
-                          <div className="space-y-4">
-                            <h3 className="text-xs font-bold text-brandBlue uppercase tracking-wider border-b border-slate-100 pb-1.5 flex items-center gap-1.5">
-                              <UserIcon className="size-4 shrink-0" />
-                              <span>1. Personal & Professional Details</span>
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-550 uppercase tracking-wider">Full Name (For Certificate)</label>
-                                <Input 
-                                  type="text" 
-                                  value={profileName}
-                                  onChange={(e) => setProfileName(e.target.value)}
-                                  className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                  placeholder="Full Name" 
-                                  required 
-                                />
-                              </div>
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Gender</label>
-                                <select 
-                                  value={profileGender}
-                                  onChange={(e) => setProfileGender(e.target.value)}
-                                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brandBlue text-slate-800"
-                                  required
-                                >
-                                  <option value="">Select Gender</option>
-                                  <option value="Male">Male</option>
-                                  <option value="Female">Female</option>
-                                  <option value="Prefer not to say">Prefer not to say</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Age</label>
-                                <Input 
-                                  type="number" 
-                                  value={profileAge}
-                                  onChange={(e) => setProfileAge(e.target.value)}
-                                  className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                  placeholder="Age" 
-                                  required 
-                                />
-                              </div>
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Nationality</label>
-                                <AutocompleteInput 
-                                  value={profileNationality} 
-                                  onChange={(e: any) => setProfileNationality(e.target.value)} 
-                                  className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                  placeholder="Nationality" 
-                                  required={true} 
-                                  options={COUNTRIES_LIST} 
-                                />
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Designation / Profession</label>
-                                <Input 
-                                  type="text" 
-                                  value={profileDesignation}
-                                  onChange={(e) => setProfileDesignation(e.target.value)}
-                                  className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                  placeholder="Profession / Job Title" 
-                                  required 
-                                />
-                              </div>
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Organization / University</label>
-                                <Input 
-                                  type="text" 
-                                  value={profileOrganization}
-                                  onChange={(e) => setProfileOrganization(e.target.value)}
-                                  className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                  placeholder="Institution Name" 
-                                  required 
-                                />
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Sector</label>
-                                <select 
-                                  value={profileSector}
-                                  onChange={(e) => setProfileSector(e.target.value)}
-                                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brandBlue text-slate-800"
-                                >
-                                  <option value="Academic / Research">Academic / Research</option>
-                                  <option value="Business / Industry">Business / Industry</option>
-                                  <option value="NGO / Social Sector">NGO / Social Sector</option>
-                                  <option value="Media / Press">Media / Press</option>
-                                  <option value="Arts & Culture">Arts & Culture</option>
-                                  <option value="Government / Public Sector">Government / Public Sector</option>
-                                  <option value="Student">Student</option>
-                                  <option value="Other">Other:</option>
-                                </select>
-                              </div>
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Biography / Professional Profile</label>
-                                <Input 
-                                  type="text" 
-                                  value={profileBio}
-                                  onChange={(e) => setProfileBio(e.target.value)}
-                                  className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                  placeholder="Brief summary of achievements" 
-                                />
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Section 2: Contact & Travel Info */}
-                          <div className="space-y-4 pt-2">
-                            <h3 className="text-xs font-bold text-brandBlue uppercase tracking-wider border-b border-slate-100 pb-1.5 flex items-center gap-1.5">
-                              <MapPin className="size-4 shrink-0" />
-                              <span>2. Address & Travel Details</span>
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Passport Number (For Visa Support)</label>
-                                <Input 
-                                  type="text" 
-                                  value={profilePassport}
-                                  onChange={(e) => setProfilePassport(e.target.value)}
-                                  className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                  placeholder="Enter Passport Number" 
-                                />
-                              </div>
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Contact Number (WhatsApp Enabled)</label>
-                                <AutocompleteInput 
-                                  value={profilePhone} 
-                                  onChange={(e: any) => setProfilePhone(e.target.value)} 
-                                  className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                  placeholder="e.g. +91 9876543210" 
-                                  required={true} 
-                                  options={PHONE_CODES_LIST} 
-                                />
-                              </div>
-                            </div>
-
-                            <div className="space-y-4">
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Full Residential / Postal Address</label>
-                                <Input 
-                                  type="text" 
-                                  value={profileAddress}
-                                  onChange={(e) => setProfileAddress(e.target.value)}
-                                  className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                  placeholder="Street, Landmark" 
-                                  required 
-                                />
-                              </div>
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div className="space-y-1.5">
-                                  <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">State / Province</label>
-                                  <Input 
-                                    type="text" 
-                                    value={profileState}
-                                    onChange={(e) => setProfileState(e.target.value)}
-                                    className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                    placeholder="State" 
-                                    required 
-                                    autoComplete="address-level1"
-                                  />
-                                </div>
-                                <div className="space-y-1.5">
-                                  <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">City</label>
-                                  <Input 
-                                    type="text" 
-                                    value={profileCity}
-                                    onChange={(e) => setProfileCity(e.target.value)}
-                                    className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                    placeholder="City" 
-                                    required 
-                                    autoComplete="address-level2" 
-                                  />
-                                </div>
-                                <div className="space-y-1.5">
-                                  <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Country of Residence</label>
-                                  <AutocompleteInput 
-                                    value={profileCountry} 
-                                    onChange={(e: any) => setProfileCountry(e.target.value)} 
-                                    className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                    placeholder="Country" 
-                                    required={true} 
-                                    options={COUNTRIES_LIST} 
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Section 3: Event Preferences & Logistics */}
-                          <div className="space-y-4 pt-2">
-                            <h3 className="text-xs font-bold text-brandBlue uppercase tracking-wider border-b border-slate-100 pb-1.5 flex items-center gap-1.5">
-                              <FileText className="size-4 shrink-0" />
-                              <span>3. Delegation, Events & Logistics</span>
-                            </h3>
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Primary Registration Delegate Type (For Billing)</label>
-                                <select 
-                                  value={profileDelegateType}
-                                  onChange={(e) => setProfileDelegateType(e.target.value)}
-                                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brandBlue text-slate-800"
-                                >
-                                  <option value="conference">Conference Delegate (₹5,000 + GST)</option>
-                                  <option value="business">Business Summit Delegate (₹10,000 + GST)</option>
-                                  <option value="awards">Awards & Cultural Ceremony Delegate (₹5,000 + GST)</option>
-                                </select>
-                              </div>
-                              <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Nominated Award Category (Optional)</label>
-                                <select 
-                                  value={profileCategory}
-                                  onChange={(e) => setProfileCategory(e.target.value)}
-                                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brandBlue text-slate-800"
-                                >
-                                  <option value="social-justice-leadership">Social Justice Leadership</option>
-                                  <option value="education-empowerment">Education and Empowerment</option>
-                                  <option value="economic-development">Economic Development and Inclusion</option>
-                                  <option value="human-rights-advocacy">Human Rights Advocacy</option>
-                                  <option value="innovative-community-service">Innovative Community Service</option>
-                                </select>
-                              </div>
-                            </div>
-
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Participation Categories (Check all that apply)</label>
-                              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                                {["Delegate", "Research Paper Presenter", "Business Delegate", "Award Ceremony Delegate", "Volunteer", "Sponsor/Partner", "Media Representative", "VIP/VVIP"].map(cat => (
-                                  <label key={cat} className="flex items-center space-x-2">
-                                    <input 
-                                      type="checkbox" 
-                                      checked={profileParticipationCategories.includes(cat)}
-                                      onChange={(e) => {
-                                        if (e.target.checked) setProfileParticipationCategories([...profileParticipationCategories, cat]);
-                                        else setProfileParticipationCategories(profileParticipationCategories.filter(c => c !== cat));
-                                      }}
-                                      className="rounded text-brandBlue focus:ring-brandBlue"
-                                    />
-                                    <span>{cat}</span>
-                                  </label>
-                                ))}
-                              </div>
-                            </div>
-
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Event Day Selection (Check days attending)</label>
-                              <div className="flex flex-wrap gap-4 text-xs">
-                                {["Day 1 (Academic Conference)", "Day 2 (Business Summit)", "Day 3 (Awards Ceremony)"].map(day => (
-                                  <label key={day} className="flex items-center space-x-2">
-                                    <input 
-                                      type="checkbox" 
-                                      checked={profileEventDays.includes(day)}
-                                      onChange={(e) => {
-                                        if (e.target.checked) setProfileEventDays([...profileEventDays, day]);
-                                        else setProfileEventDays(profileEventDays.filter(d => d !== day));
-                                      }}
-                                      className="rounded text-brandBlue focus:ring-brandBlue"
-                                    />
-                                    <span>{day}</span>
-                                  </label>
-                                ))}
-                              </div>
-                            </div>
-
-                            <div className="space-y-1.5">
-                              <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Purpose & Interest in Event</label>
-                              <textarea 
-                                value={profilePurpose}
-                                onChange={(e) => setProfilePurpose(e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brandBlue text-slate-800 min-h-[60px]"
-                                placeholder="Why are you attending? What are your key interests?"
-                              ></textarea>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-3">
-                              <div className="space-y-2">
-                                <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Logistics & Support Requirements</label>
-                                <div className="space-y-1.5 text-xs text-slate-700">
-                                  <label className="flex items-center space-x-2">
-                                    <input type="checkbox" checked={profileVisaSupport} onChange={(e) => setProfileVisaSupport(e.target.checked)} className="rounded text-brandBlue focus:ring-brandBlue" />
-                                    <span>Require Official Invitation Letter for Visa</span>
-                                  </label>
-                                  <label className="flex items-center space-x-2">
-                                    <input type="checkbox" checked={profileAccommodation} onChange={(e) => setProfileAccommodation(e.target.checked)} className="rounded text-brandBlue focus:ring-brandBlue" />
-                                    <span>Require Assistance with Accommodation/Logistics</span>
-                                  </label>
-                                  <label className="flex items-center space-x-2">
-                                    <input type="checkbox" checked={profileWheelchair} onChange={(e) => setProfileWheelchair(e.target.checked)} className="rounded text-brandBlue focus:ring-brandBlue" />
-                                    <span>Differently abled / Requires Wheelchair Support</span>
-                                  </label>
-                                </div>
-                              </div>
-                              <div className="space-y-3">
-                                <div className="space-y-1.5">
-                                  <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Package Tour Interest</label>
-                                  <select 
-                                    value={profilePackageTour}
-                                    onChange={(e) => setProfilePackageTour(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brandBlue text-slate-800"
-                                  >
-                                    <option value="None">Not Interested / Managing my own</option>
-                                    <option value="From India">From India (8 Days)</option>
-                                    <option value="From Outside India">From Outside India (8 Days)</option>
-                                  </select>
-                                </div>
-                                <div className="space-y-1.5">
-                                  <label className="text-[10px] font-bold text-slate-555 uppercase tracking-wider">Dietary Notes</label>
-                                  <Input 
-                                    type="text" 
-                                    value={profileDietary}
-                                    onChange={(e) => setProfileDietary(e.target.value)}
-                                    className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" 
-                                    placeholder="e.g. Vegetarian, Halal" 
-                                  />
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Legal Consent */}
-                            <div className="mt-6 pt-4 border-t border-slate-200">
-                              <label className="flex items-start space-x-3 p-3 bg-blue-50/50 border border-blue-100 rounded-xl cursor-pointer">
-                                <input 
-                                  type="checkbox" 
-                                  checked={profileLegalConsent} 
-                                  onChange={(e) => setProfileLegalConsent(e.target.checked)} 
-                                  className="mt-1 rounded text-brandBlue focus:ring-brandBlue size-4 shrink-0"
-                                  required
-                                />
-                                <span className="text-xs text-slate-700 leading-snug">
-                                  <strong>Legal Declaration:</strong> I have read and agree to the Terms and Conditions and the Event Legal Note. I confirm that all information provided is accurate and I accept full responsibility for my registration. <a href="/terms" className="font-bold text-brandBlue hover:underline">Read.</a>
-                                </span>
-                              </label>
-                            </div>
-                          </div>
-
-                          <Button type="submit" className="w-full bg-brandBlue hover:bg-brandBlue/90 text-white font-bold h-11 rounded-xl text-xs uppercase tracking-wider shadow-md">
-                            Save Registry Details
-                          </Button>
-                        </form>
+                        {wizardFormContent}
                       </CardContent>
                     </Card>
                   </div>

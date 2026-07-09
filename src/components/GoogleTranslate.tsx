@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { Globe, Search, ChevronDown, X } from "lucide-react";
@@ -144,6 +145,19 @@ export default function GoogleTranslate() {
     }
   }, [pathname]);
 
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const checkTarget = () => {
+      const target = document.getElementById("sidebar-translate-container");
+      if (target !== portalTarget) setPortalTarget(target);
+    };
+    checkTarget();
+    const observer = new MutationObserver(checkTarget);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [portalTarget]);
+
   useEffect(() => {
     window.googleTranslateElementInit = () => {
       if (window.google && window.google.translate) {
@@ -190,22 +204,34 @@ export default function GoogleTranslate() {
     return null;
   }
 
-  return (
-    <>
-      <div className="fixed bottom-4 right-4 z-[9999]" ref={dropdownRef}>
-        {/* Custom Button */}
+  const buttonContent = (
+    <div className={portalTarget ? "relative z-[9999] w-full" : "fixed bottom-24 md:bottom-8 right-4 z-[9999]"} ref={dropdownRef}>
+      {/* Custom Button */}
+      {portalTarget ? (
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 bg-white text-gray-800 px-4 py-3 rounded-full shadow-lg border border-gray-100 hover:bg-gray-50 transition-all font-medium"
+          className="w-full flex items-center justify-between text-xs font-medium py-2 px-3 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all border border-transparent"
+        >
+          <div className="flex items-center gap-2">
+            <Globe className="w-4 h-4 text-brandBlue" />
+            <span>Google Translate</span>
+          </div>
+          <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        </button>
+      ) : (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2 bg-white text-gray-800 rounded-full border border-gray-100 hover:bg-gray-50 transition-all font-medium px-4 py-3 shadow-lg"
         >
           <Globe className="w-5 h-5 text-blue-600" />
           <span>Translate</span>
           <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
         </button>
+      )}
 
-        {/* Dropdown Menu */}
-        {isOpen && (
-          <div className="absolute bottom-full right-0 mb-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden transform origin-bottom-right transition-all">
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div className={`absolute w-64 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden transform transition-all ${portalTarget ? 'bottom-full mb-2 origin-bottom-left left-0' : 'bottom-full mb-2 origin-bottom-right right-0'}`}>
             {!showAll ? (
               <div className="p-2">
                 <div className="text-xs font-semibold text-gray-400 uppercase px-3 py-2">
@@ -266,7 +292,14 @@ export default function GoogleTranslate() {
             )}
           </div>
         )}
-      </div>
+    </div>
+  );
+
+  const isDashboard = pathname?.startsWith('/auth/member') || pathname?.startsWith('/auth/admin');
+
+  return (
+    <>
+      {portalTarget ? createPortal(buttonContent, portalTarget) : (!isDashboard && buttonContent)}
 
       {/* Hidden Google Translate Element */}
       <div className="fixed opacity-0 pointer-events-none -z-50 w-[1px] h-[1px] overflow-hidden">

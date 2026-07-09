@@ -368,6 +368,9 @@ export default function AdminClientPage() {
             </SidebarContent>
             <SidebarFooter>
               <SidebarMenu>
+                <SidebarMenuItem className="mb-2">
+                  <div id="sidebar-translate-container"></div>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton onClick={() => window.location.href = "/"}>
                     <LogOut className="rotate-180" />
