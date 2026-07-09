@@ -1127,52 +1127,44 @@ export default function MemberClientPage() {
         </div>
       </div>
 
-      {/* Persistent Bottom Bar */}
-      <div className="w-full bg-white border-t border-slate-200 p-4 mt-auto shrink-0">
-        <div className="w-full flex items-center justify-between gap-4 px-2 sm:px-8">
-          
-          <div className="flex-grow hidden sm:block">
-            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-slate-900 transition-all duration-500 ease-out" style={{ width: `${progressPercentage}%` }}></div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 shrink-0 ml-auto w-full sm:w-auto justify-between sm:justify-end">
+      {/* Floating Bottom Bar */}
+      <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50">
+        <div className="flex items-center gap-3">
+          {wizardStep > 0 && (
             <Button 
               type="button" 
               variant="outline" 
               onClick={goPrev}
-              disabled={wizardStep === 0}
-              className={`rounded-lg font-semibold h-12 px-6 border-slate-200 transition-all ${wizardStep === 0 ? 'opacity-0 pointer-events-none' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
+              className="rounded-xl font-semibold h-12 px-6 border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all shadow-sm bg-white"
             >
               Back
             </Button>
-            
-            {wizardStep < visibleSlides.length - 1 ? (
-              <Button 
-                type="button" 
-                onClick={goNext}
-                className="bg-slate-900 text-white text-sm font-semibold px-8 h-12 rounded-lg hover:bg-slate-800 transition-colors shadow-sm"
-              >
-                <span>Next Step</span>
-              </Button>
-            ) : (
-              <Button 
-                type="button" 
-                onClick={async () => {
-                  if (!profileLegalConsent) {
-                    showToast("You must accept the Terms & Conditions to proceed.");
-                    return;
-                  }
-                  await handleSaveRegistration();
-                  handlePayment();
-                }}
-                className="bg-slate-900 text-white hover:bg-slate-800 font-semibold h-12 px-8 rounded-lg shadow-sm transition-colors text-sm"
-              >
-                Pay & Finalize
-              </Button>
-            )}
-          </div>
+          )}
+          
+          {wizardStep < visibleSlides.length - 1 ? (
+            <Button 
+              type="button" 
+              onClick={goNext}
+              className="bg-slate-900 text-white text-sm font-semibold px-8 h-12 rounded-xl hover:bg-slate-800 transition-colors shadow-lg"
+            >
+              <span>Next Step</span>
+            </Button>
+          ) : (
+            <Button 
+              type="button" 
+              onClick={async () => {
+                if (!profileLegalConsent) {
+                  showToast("You must accept the Terms & Conditions to proceed.");
+                  return;
+                }
+                await handleSaveRegistration();
+                handlePayment();
+              }}
+              className="bg-slate-900 text-white hover:bg-slate-800 font-semibold h-12 px-8 rounded-xl shadow-lg transition-colors text-sm"
+            >
+              Pay & Finalize
+            </Button>
+          )}
         </div>
       </div>
     </form>
@@ -1262,9 +1254,9 @@ export default function MemberClientPage() {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-64 bg-brandBlue/5 blur-3xl rounded-full pointer-events-none -z-10"></div>
             
             <div className="w-full max-w-3xl mx-auto h-full flex flex-col animate-fade-in-up pb-4">
-              <Card className="border-slate-200/60 bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden ring-1 ring-slate-900/5 flex-grow flex flex-col h-full">
+              <div className="flex-grow flex flex-col h-full w-full">
                 {wizardFormContent}
-              </Card>
+              </div>
             </div>
           </main>
         </div>
