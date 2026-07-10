@@ -87,7 +87,7 @@ export default function RootLayout({
 
         <TooltipProvider>
           <ViewTransition>
-            <div className="animate-global-fade-in flex-grow flex flex-col">
+            <div className="flex-grow flex flex-col animate-in fade-in duration-1000">
               {children}
             </div>
             <GoogleTranslate />

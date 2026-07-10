@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { auth, db, storage } from "@/lib/firebase";
 import { onAuthStateChanged, signOut, User, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, addDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
@@ -26,13 +27,23 @@ import {
 } from "@/components/ui/table";
 import { 
   LayoutDashboard, User as UserIcon, FileText, LogOut, 
-  MapPin, Plus, Trash2, CheckCircle, Clock, Upload, ShieldAlert, CreditCard, Camera, FileCheck, Settings, Wifi, Check
+  MapPin, Plus, Trash2, CheckCircle, Clock, Upload, ShieldAlert, CreditCard, Camera, FileCheck, Settings, Wifi, Check, ChevronDown
 } from "lucide-react";
 
 declare global {
   interface Window {
     Razorpay: any;
   }
+}
+
+export interface GuestProfile {
+  id: string;
+  name: string;
+  relationship: string;
+  passportNumber: string;
+  passportFrontUrl: string;
+  passportBackUrl: string;
+  nationalIdUrl: string;
 }
 
 const MobileCloseSidebarMenuButton = ({ onClick, children, ...props }: any) => {
@@ -75,6 +86,18 @@ const COUNTRIES_LIST = [
   "Zambia", "Zimbabwe"
 ];
 
+const INTENT_OPTIONS = [
+  { id: "Conference Presenter", category: "Conference", label: "I want to present a paper at the International Conference", price: "₹5,000 + GST", keywords: ['present', 'paper', 'research', 'speak', 'academic', 'conference'] },
+  { id: "Conference Delegate", category: "Conference", label: "I want to attend the International Conference as a Delegate", price: "₹5,000 + GST", keywords: ['attend', 'delegate', 'conference', 'listen', 'audience', 'participate'] },
+  { id: "Business Summit Presenter", category: "Business Summit", label: "I want to present a Business proposal at the International Business Summit", price: "₹10,000 + GST", keywords: ['present', 'business', 'proposal', 'pitch', 'summit', 'invest', 'startup'] },
+  { id: "Business Summit Delegate", category: "Business Summit", label: "I want to attend the International Business Summit as a Delegate", price: "₹10,000 + GST", keywords: ['attend', 'business', 'delegate', 'summit', 'network', 'participate'] },
+  { id: "Award Nominee", category: "Award Event", label: "I want to attend the International Award Event as a nominee", price: "₹5,000 + GST", keywords: ['award', 'nominee', 'nomination', 'prize', 'win', 'recognition', 'event'] },
+  { id: "Award Delegate", category: "Award Event", label: "I want to attend the International Award Event as a Delegate", price: "₹5,000 + GST", keywords: ['award', 'delegate', 'attend', 'event', 'gala', 'ceremony'] },
+  { id: "Souvenir Article", category: "Souvenir", label: "I want to give an article in the souvenir", price: "₹5,000 + GST", keywords: ['souvenir', 'article', 'write', 'publish', 'magazine', 'booklet'] },
+  { id: "Souvenir Advertisement", category: "Souvenir", label: "I want to give an advertisement in the Event Souvenir", price: "₹5,000 + GST", keywords: ['souvenir', 'advertisement', 'ad', 'promote', 'marketing', 'sponsor'] },
+  { id: "Donation Patron", category: "High-Level Patronage", label: "I want to support the global vision of Dr. B. R. Ambedkar through Vishwa Leader", price: "₹1,00,000 + GST", keywords: ['ambedkar', 'dr', 'mission', 'vishwa', 'leader', 'donate', 'support', 'give'] }
+];
+
 const PHONE_CODES_LIST = [
   "+91 (India)", "+1 (USA/Canada)", "+44 (UK)", "+61 (Australia)", "+971 (UAE)", "+49 (Germany)", "+33 (France)", "+81 (Japan)",
   "+86 (China)", "+27 (South Africa)", "+65 (Singapore)", "+64 (New Zealand)", "+39 (Italy)", "+34 (Spain)", "+41 (Switzerland)",
@@ -84,7 +107,9 @@ const PHONE_CODES_LIST = [
 
 const AutocompleteInput = ({ value, onChange, options, placeholder, required, className }: any) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
   
   const filteredOptions = options.filter((opt: string) => opt.toLowerCase().includes(value.toLowerCase()));
 
@@ -98,9 +123,22 @@ const AutocompleteInput = ({ value, onChange, options, placeholder, required, cl
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [value, showDropdown]);
+
+  useEffect(() => {
+    if (selectedIndex >= 0 && listRef.current) {
+      const selectedEl = listRef.current.children[selectedIndex] as HTMLElement;
+      if (selectedEl) {
+        selectedEl.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [selectedIndex]);
+
   return (
     <div ref={wrapperRef} className="relative w-full">
-      <Input
+      <input
         type="text"
         value={value}
         onChange={(e: any) => {
@@ -108,17 +146,40 @@ const AutocompleteInput = ({ value, onChange, options, placeholder, required, cl
           setShowDropdown(true);
         }}
         onFocus={() => setShowDropdown(true)}
+        onKeyDown={(e: any) => {
+          if (!showDropdown && filteredOptions.length > 0 && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+            setShowDropdown(true);
+          }
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setSelectedIndex(prev => (prev < filteredOptions.length - 1 ? prev + 1 : prev));
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setSelectedIndex(prev => (prev > 0 ? prev - 1 : -1));
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (showDropdown && selectedIndex >= 0 && selectedIndex < filteredOptions.length) {
+              const opt = filteredOptions[selectedIndex];
+              const finalValue = opt.split(' (')[0];
+              onChange({ target: { value: finalValue + (opt.includes('(') ? ' ' : '') } });
+              setShowDropdown(false);
+            }
+          } else if (e.key === 'Escape') {
+            setShowDropdown(false);
+          }
+        }}
         className={className}
         placeholder={placeholder}
         required={required}
         autoComplete="off"
       />
       {showDropdown && filteredOptions.length > 0 && (
-        <ul className="absolute z-[100] w-full mt-1 max-h-60 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg text-lg md:text-xl text-slate-800">
+        <ul ref={listRef} className="absolute z-[100] w-full mt-1 max-h-60 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg text-lg md:text-xl text-slate-800">
           {filteredOptions.map((opt: string, i: number) => (
             <li 
               key={i} 
-              className="px-3 py-2 hover:bg-slate-100 cursor-pointer transition-colors duration-150"
+              className={`px-3 py-2 cursor-pointer transition-colors duration-150 ${i === selectedIndex ? 'bg-slate-100' : 'hover:bg-slate-100'}`}
+              onMouseEnter={() => setSelectedIndex(i)}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 const finalValue = opt.split(' (')[0];
@@ -137,91 +198,48 @@ const AutocompleteInput = ({ value, onChange, options, placeholder, required, cl
 
 export default function MemberClientPage() {
   const searchParams = useSearchParams();
-  const defaultTab = searchParams.get('tab') as 'dashboard' | 'registration' | 'uploads' | 'payment' | 'submissions' | 'settings' || 'dashboard';
+  const defaultTab = searchParams.get('tab') as 'dashboard' | 'registration' | 'checkout' | 'uploads' | 'submissions' | 'settings' || 'dashboard';
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  // null = not yet fetched from Firestore
+  const [memberData, setMemberData] = useState<any>(null);
+  // true = brand-new account that hasn't seen the wizard yet
+  const [isNewMember, setIsNewMember] = useState(false);
   
-  // Registration and Firestore user document state
-  const [memberData, setMemberData] = useState<any>({
-    name: "",
-    email: "",
-    photoURL: "",
-    gender: "",
-    age: "",
-    nationality: "",
-    city: "",
-    wheelchairSupport: false,
-    designation: "Member Delegate",
-    organization: "Independent Scholar",
-    sector: "Academic/Research",
-    country: "India",
-    phone: "",
-    bio: "Delegate participating in Vishwa Leader research panels.",
-    passportNumber: "",
-    fullAddress: "",
-    nominationCategory: "ambedkar-awards",
-    delegateType: "conference",
-    participationCategories: [],
-    eventDays: [],
-    purpose: "",
-    visaSupport: false,
-    accommodationSupport: false,
-    packageTour: "None",
-    dietaryNotes: "",
-    paymentStatus: "Unpaid",
-    legalConsent: false,
-    headshotUrl: "",
-    passportFrontUrl: "", passportBackUrl: "",
-    evidenceUrl: "",
-    businessDeckUrl: "",
-    wizardIntents: []
-  });
-  
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'registration' | 'uploads' | 'payment' | 'submissions' | 'settings'>('dashboard');
+  const [paymentImageLoaded, setPaymentImageLoaded] = useState(false);
+  const [checkoutVisible, setCheckoutVisible] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
+  const [reRegisterMode, setReRegisterMode] = useState(false);
+  const [showReRegisterModal, setShowReRegisterModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'registration' | 'checkout' | 'uploads' | 'submissions' | 'settings'>('dashboard');
 
-  // Dynamic Payment States
-  const [selectedAlaCarte, setSelectedAlaCarte] = useState<string[]>([]);
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const calculateWizardTotal = () => {
+    let subtotal = 0; 
+    let isTourSelected = (profilePackageTour === 'From India' || profilePackageTour === 'From Outside India');
 
-  const handleAlaCarteToggle = (item: string) => {
-    setSelectedPackage(null); // Mutual exclusivity
-    setSelectedAlaCarte(prev => 
-      prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
-    );
-  };
-
-  const handlePackageSelect = (pkg: string) => {
-    setSelectedAlaCarte([]); // Mutual exclusivity
-    setSelectedPackage(pkg);
-  };
-
-  const calculateDynamicTotal = () => {
-    let total = 0;
-    if (selectedPackage === 'pkg_1') total = 310000;
-    else if (selectedPackage === 'pkg_2') total = 235000;
-    else if (selectedPackage === 'pkg_3') total = 200501;
-    else if (selectedPackage === 'pkg_4') total = 131000;
-    else {
-      if (selectedAlaCarte.includes('day_1')) total += 5900;
-      if (selectedAlaCarte.includes('day_2')) total += 11800;
-      if (selectedAlaCarte.includes('day_3')) total += 5900;
-      
-      if (selectedAlaCarte.includes('ad_front_cover')) total += 500000;
-      if (selectedAlaCarte.includes('ad_back_cover')) total += 200000;
-      if (selectedAlaCarte.includes('ad_inside_cover')) total += 150000;
-      if (selectedAlaCarte.includes('ad_double_spread')) total += 100000;
-      if (selectedAlaCarte.includes('ad_full_page')) total += 50000;
-      if (selectedAlaCarte.includes('ad_half_page')) total += 25000;
-      if (selectedAlaCarte.includes('ad_quarter_page')) total += 15000;
+    if (!isTourSelected) {
+      if (wizardIntents.some(i => i.startsWith('Conference'))) subtotal += 5900;
+      if (wizardIntents.some(i => i.startsWith('Business'))) subtotal += 11800;
+      if (wizardIntents.some(i => i.startsWith('Award'))) subtotal += 5900;
     }
-    return total;
+
+    if (wizardIntents.includes('Souvenir Article')) subtotal += 5900;
+    if (wizardIntents.includes('Souvenir Advertisement')) subtotal += 5900;
+    if (wizardIntents.includes('Donation Patron')) subtotal += 118000;
+    
+    if (profilePackageTour === 'From India') subtotal += 131000;
+    if (profilePackageTour === 'From Outside India') subtotal += 200501;
+    
+    return subtotal * (numDelegates || 1);
   };
 
   // Wizard Intents (What brings you here)
   const [wizardIntents, setWizardIntents] = useState<string[]>([]);
+  const [wizardEventCategories, setWizardEventCategories] = useState<string[]>([]);
   
   // Registration form field states
+  const [profileOrigin, setProfileOrigin] = useState("");
   const [profileName, setProfileName] = useState("");
   const [profileGender, setProfileGender] = useState("");
   const [profileAge, setProfileAge] = useState("");
@@ -239,15 +257,20 @@ export default function MemberClientPage() {
   const [profileCategory, setProfileCategory] = useState("social-justice-leadership");
   const [profileVisaSupport, setProfileVisaSupport] = useState(false);
   const [profileAccommodation, setProfileAccommodation] = useState(false);
-  const [profilePackageTour, setProfilePackageTour] = useState("None");
+  const [profilePackageTour, setProfilePackageTour] = useState<string>('None');
+  const [intentSearchQuery, setIntentSearchQuery] = useState<string>('');
   const [profileDietary, setProfileDietary] = useState("");
   const [profileCountry, setProfileCountry] = useState("India");
   const [profileLegalConsent, setProfileLegalConsent] = useState(false);
+  const [groupType, setGroupType] = useState<'none' | 'family' | 'group'>('none');
+  const [numDelegates, setNumDelegates] = useState<number | ''>(1);
+  const [guestProfiles, setGuestProfiles] = useState<GuestProfile[]>([]);
 
-  // Wizard state
-  const [wizardStep, setWizardStep] = useState(0); // 0 is the Intent selection step
+  const [showFamilyWizard, setShowFamilyWizard] = useState(false);
+  const [familyWizardStep, setFamilyWizardStep] = useState(0);
+  const [wizardStep, setWizardStep] = useState(0);
+  const [showGstDetails, setShowGstDetails] = useState(false);
 
-  // File Upload statuses
   const [headshotUploading, setHeadshotUploading] = useState(false);
   const [headshotProgress, setHeadshotProgress] = useState(0);
 
@@ -265,6 +288,7 @@ export default function MemberClientPage() {
   // Submissions states
   const [subTitle, setSubTitle] = useState("");
   const [subAuthors, setSubAuthors] = useState("");
+  const [guestUploadState, setGuestUploadState] = useState<Record<string, { uploading: boolean, progress: number }>>({});
   const [subTheme, setSubTheme] = useState("primary");
   const [subAbstract, setSubAbstract] = useState("");
   const [businessProposalText, setBusinessProposalText] = useState("");
@@ -292,18 +316,22 @@ export default function MemberClientPage() {
 
   // Auth subscriber hook
   useEffect(() => {
+    // Safety net: never leave the page blank for more than 5 seconds
+    const safetyTimeout = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        setLoading(false);
-
         // Fetch or create user document in firestore with local catch fallbacks
         try {
           const userRef = doc(db, 'users', currentUser.uid);
           const docSnap = await getDoc(userRef);
           if (docSnap.exists()) {
             const data = docSnap.data();
-            setMemberData((prev: any) => ({ ...prev, ...data }));
+            setMemberData((prev: any) => ({ ...(prev || {}), ...data }));
+            setIsNewMember(false); // existing member → skip wizard
           } else {
             const newMember = {
               name: currentUser.displayName || "",
@@ -338,6 +366,10 @@ export default function MemberClientPage() {
             };
             await setDoc(userRef, newMember);
             setMemberData(newMember);
+            setIsNewMember(true); // brand new → show wizard
+            localStorage.removeItem('vishwa_wizard_draft');
+            sessionStorage.removeItem('wizardDraft');
+            setWizardStep(0);
             // Log join activity for admin feed
             try {
               await addDoc(collection(db, 'adminActivity'), {
@@ -358,55 +390,49 @@ export default function MemberClientPage() {
           } catch (_) {}
         } catch (e) {
           console.error("Error fetching firestore document:", e);
-          // Set standard defaults so dashboard is NEVER blank
+          // On Firestore error: use minimal data — old members see dashboard, new see login
+          setIsNewMember(false);
           setMemberData({
             name: currentUser.displayName || "Delegate",
             email: currentUser.email || "",
             photoURL: currentUser.photoURL || "",
-            gender: "",
-            age: "",
-            nationality: "",
-            city: "",
-            wheelchairSupport: false,
-            role: 'member',
-            joinedAt: new Date().toISOString(),
-            designation: "Member Delegate",
-            organization: "Independent Scholar",
-            sector: "Academic/Research",
-            country: "India",
-            phone: "",
-            bio: "",
-            passportNumber: "",
-            fullAddress: "",
-            wizardIntents: [],
-            nominationCategory: "social-justice-leadership",
-            visaSupport: false,
-            accommodationSupport: false,
-            packageTour: "None",
-            dietaryNotes: "",
             paymentStatus: "Unpaid",
             legalConsent: false,
-            headshotUrl: "",
-            passportFrontUrl: "", passportBackUrl: "",
-            evidenceUrl: ""
+            wizardIntents: []
           });
         }
+        setLoading(false);
       } else {
         setMemberData(null);
         setLoading(false);
       }
     });
-    return () => unsubscribe();
+    return () => {
+      clearTimeout(safetyTimeout);
+      unsubscribe();
+    };
   }, []);
 
   // Sync state variables once memberData is loaded
   useEffect(() => {
     if (memberData) {
       const data = memberData;
-      setProfileName(data.name || "");
-      setProfileGender(data.gender || "");
-      setProfileAge(data.age || "");
-      setProfileNationality(data.nationality || "");
+
+      let draft: any = {};
+      try {
+        const saved = localStorage.getItem('vishwa_wizard_draft');
+        if (saved) draft = JSON.parse(saved);
+      } catch (e) {}
+
+      setProfileName(draft.profileName || data.name || "");
+      setProfileGender(draft.profileGender || data.gender || "");
+      setProfileAge(draft.profileAge || data.age || "");
+      setProfileNationality(draft.profileNationality || data.nationality || "");
+      setWizardIntents(draft.wizardIntents || data.wizardIntents || []);
+      setWizardEventCategories(draft.wizardEventCategories || []);
+      setProfilePassport(draft.profilePassport || data.passportNumber || "");
+      setWizardStep(draft.wizardStep !== undefined ? draft.wizardStep : 0);
+
       setProfileCity(data.city || "");
       setProfileState(data.state || "");
       setProfileWheelchair(data.wheelchairSupport || false);
@@ -415,9 +441,7 @@ export default function MemberClientPage() {
       setProfileSector(data.sector || "Academic/Research");
       setProfilePhone(data.phone || "");
       setProfileBio(data.bio || "");
-      setProfilePassport(data.passportNumber || "");
       setProfileAddress(data.fullAddress || "");
-      setWizardIntents(data.wizardIntents || []);
       setProfileCategory(data.nominationCategory || "social-justice-leadership");
       setProfileVisaSupport(data.visaSupport || false);
       setProfileAccommodation(data.accommodationSupport || false);
@@ -433,6 +457,24 @@ export default function MemberClientPage() {
       setSubAbstract(data.subAbstract || "");
     }
   }, [memberData]);
+
+  // Auto-save wizard progress to local storage
+  useEffect(() => {
+    if (!loading && memberData) {
+      localStorage.setItem('vishwa_wizard_draft', JSON.stringify({
+        wizardStep,
+        wizardIntents,
+        wizardEventCategories,
+        profileName,
+        profileGender,
+        profileAge,
+        profileNationality,
+        profilePassport
+      }));
+    }
+  }, [wizardStep, wizardIntents, wizardEventCategories, profileName, profileGender, profileAge, profileNationality, profilePassport, loading, memberData]);
+
+  // Handle slide rendering and navigation
 
   // Load submissions list dynamically from Firestore
   useEffect(() => {
@@ -470,13 +512,24 @@ export default function MemberClientPage() {
     
     // Auto-calculate selections from wizard state
     const selectedItems: string[] = [];
-    if (wizardIntents.includes('Conference Delegate')) selectedItems.push('reg_conference');
-    if (wizardIntents.includes('Business Summit Delegate')) selectedItems.push('reg_business');
-    if (wizardIntents.includes('Award Nominee')) selectedItems.push('reg_award');
-    if (wizardIntents.includes('Research Paper Presenter')) selectedItems.push('reg_presenter');
+    let isTourSelected = (profilePackageTour === 'From India' || profilePackageTour === 'From Outside India');
 
-    if (profilePackageTour === 'From India') selectedItems.push('pkg_india');
-    if (profilePackageTour === 'From Outside India') selectedItems.push('pkg_intl');
+    for (let i = 0; i < (numDelegates || 1); i++) {
+      if (!isTourSelected) {
+        if (wizardIntents.some(i => i.startsWith('Conference'))) selectedItems.push('reg_conference');
+        if (wizardIntents.some(i => i.startsWith('Business'))) selectedItems.push('reg_business');
+        if (wizardIntents.some(i => i.startsWith('Award'))) selectedItems.push('reg_award');
+      }
+
+      if (wizardIntents.includes('Souvenir Article')) selectedItems.push('reg_souvenir');
+      if (wizardIntents.includes('Souvenir Advertisement')) selectedItems.push('reg_souvenir');
+      
+      if (wizardIntents.includes('Donation Patron')) selectedItems.push('donation_patron');
+
+      if (profilePackageTour === 'From India') selectedItems.push('pkg_india');
+      if (profilePackageTour === 'From Outside India') selectedItems.push('pkg_intl');
+    }
+
 
     if (selectedItems.length === 0) {
       showToast("Please select your event intent in the wizard to calculate total.");
@@ -552,10 +605,13 @@ export default function MemberClientPage() {
   };
 
   // Firebase Storage upload helper
-  const uploadFileToStorage = (file: File, type: 'headshot' | 'passportFront' | 'passportBack' | 'evidence' | 'businessDeck') => {
+  const uploadFileToStorage = (file: File, type: 'headshot' | 'passportFront' | 'passportBack' | 'evidence' | 'businessDeck' | 'guestUpload', guestIndex?: number, guestField?: 'passportFrontUrl' | 'passportBackUrl' | 'nationalIdUrl') => {
     if (!user) return;
     
     // Set status
+    if (type === 'guestUpload' && guestIndex !== undefined && guestField) {
+      setGuestUploadState(prev => ({ ...prev, [`${guestIndex}_${guestField}`]: { uploading: true, progress: 0 } }));
+    }
     if (type === 'headshot') { setHeadshotUploading(true); setHeadshotProgress(0); }
     if (type === 'passportFront') { setPassportFrontUploading(true); setPassportFrontProgress(0); }
     if (type === 'passportBack') { setPassportBackUploading(true); setPassportBackProgress(0); }
@@ -569,6 +625,9 @@ export default function MemberClientPage() {
     uploadTask.on('state_changed', 
       (snapshot) => {
         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        if (type === 'guestUpload' && guestIndex !== undefined && guestField) {
+          setGuestUploadState(prev => ({ ...prev, [`${guestIndex}_${guestField}`]: { uploading: true, progress } }));
+        }
         if (type === 'headshot') setHeadshotProgress(progress);
         if (type === 'passportFront') setPassportFrontProgress(progress);
         if (type === 'passportBack') setPassportBackProgress(progress);
@@ -578,6 +637,9 @@ export default function MemberClientPage() {
       (error) => {
         console.error("Storage upload error:", error);
         showToast("File upload failed.");
+        if (type === 'guestUpload' && guestIndex !== undefined && guestField) {
+          setGuestUploadState(prev => ({ ...prev, [`${guestIndex}_${guestField}`]: { uploading: false, progress: 0 } }));
+        }
         if (type === 'headshot') setHeadshotUploading(false);
         if (type === 'passportFront') setPassportFrontUploading(false);
         if (type === 'passportBack') setPassportBackUploading(false);
@@ -590,14 +652,24 @@ export default function MemberClientPage() {
           
           // Save link directly to Firestore delegate profile
           const userRef = doc(db, "users", user.uid);
-          const updateField = type === 'headshot' ? 'headshotUrl' : 
-                          type === 'passportFront' ? 'passportFrontUrl' : 
-                          type === 'passportBack' ? 'passportBackUrl' : 
-                          type === 'evidence' ? 'evidenceUrl' :
-                          'businessDeckUrl';
-          
-          await updateDoc(userRef, { [updateField]: downloadURL });
-          setMemberData((prev: any) => ({ ...prev, [updateField]: downloadURL }));
+          if (type === 'guestUpload' && guestIndex !== undefined && guestField) {
+            const updatedProfiles = [...guestProfiles];
+            if (updatedProfiles[guestIndex]) {
+              updatedProfiles[guestIndex][guestField] = downloadURL;
+              setGuestProfiles(updatedProfiles);
+              await updateDoc(userRef, { guestProfiles: updatedProfiles });
+              setMemberData((prev: any) => ({ ...prev, guestProfiles: updatedProfiles }));
+            }
+          } else {
+            const updateField = type === 'headshot' ? 'headshotUrl' : 
+                            type === 'passportFront' ? 'passportFrontUrl' : 
+                            type === 'passportBack' ? 'passportBackUrl' : 
+                            type === 'evidence' ? 'evidenceUrl' :
+                            'businessDeckUrl';
+            
+            await updateDoc(userRef, { [updateField]: downloadURL });
+            setMemberData((prev: any) => ({ ...prev, [updateField]: downloadURL }));
+          }
           // Log file upload to admin activity feed
           try {
             await addDoc(collection(db, 'adminActivity'), {
@@ -613,6 +685,9 @@ export default function MemberClientPage() {
         } catch (e) {
           console.error("Error setting firestore link:", e);
         } finally {
+          if (type === 'guestUpload' && guestIndex !== undefined && guestField) {
+            setGuestUploadState(prev => ({ ...prev, [`${guestIndex}_${guestField}`]: { uploading: false, progress: 100 } }));
+          }
           if (type === 'headshot') setHeadshotUploading(false);
           if (type === 'passportFront') setPassportFrontUploading(false);
           if (type === 'passportBack') setPassportBackUploading(false);
@@ -661,7 +736,10 @@ export default function MemberClientPage() {
         businessProposalText: businessProposalText,
         subTitle: subTitle,
         subAuthors: subAuthors,
-        subAbstract: subAbstract
+        subAbstract: subAbstract,
+        groupType: groupType,
+        numDelegates: numDelegates,
+        guestProfiles: guestProfiles
       };
 
       await updateDoc(userRef, updatedData);
@@ -676,11 +754,44 @@ export default function MemberClientPage() {
           timestamp: serverTimestamp()
         });
       } catch (_) {}
+      setReRegisterMode(false); // exit wizard back to dashboard
       showToast("Delegate registration updated successfully!");
-      setActiveTab('payment');
     } catch (err) {
       console.error("Error saving delegate form:", err);
       showToast("Failed to save registration.");
+    }
+  };
+
+  const handleSaveFamilyWizard = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!user) return;
+    
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const updatedData = {
+        groupType: groupType,
+        numDelegates: numDelegates,
+        guestProfiles: guestProfiles
+      };
+
+      await updateDoc(userRef, updatedData);
+      setMemberData((prev: any) => ({ ...prev, ...updatedData }));
+      
+      try {
+        await addDoc(collection(db, 'adminActivity'), {
+          type: 'family_registration_updated',
+          userId: user.uid,
+          userName: profileName || user.displayName || user.email,
+          userEmail: user.email,
+          timestamp: serverTimestamp()
+        });
+      } catch (_) {}
+      
+      setShowFamilyWizard(false);
+      showToast("Family/Group registration updated successfully!");
+    } catch (err) {
+      console.error("Error saving family wizard:", err);
+      showToast("Failed to save family/group details.");
     }
   };
 
@@ -804,15 +915,31 @@ export default function MemberClientPage() {
   const gstConverted = (pricing.gst / currency.rate).toFixed(2);
   const totalConverted = (pricing.total / currency.rate).toFixed(2);
 
-  const isRegistrationComplete = memberData?.legalConsent === true;
+  // An existing member who completed the wizard has legalConsent=true → show dashboard.
+  const isRegistrationComplete = memberData !== null && memberData?.legalConsent === true;
+  // Per user request: If a member logs out in the middle of the wizard, resume where they left off.
+  // We use !isRegistrationComplete so any unpaid/uncompleted user gets forced to finish the wizard.
+  const showWizard = (!isRegistrationComplete) || reRegisterMode;
 
-    // Generate dynamic slides array
+  // Generate dynamic slides array
+  const showTourStep = (profileOrigin !== 'I am from London' && profileOrigin !== '');
+  const showEvents = (profilePackageTour === 'None');
+  
   const visibleSlides = [
     { 
-      id: 'intent', 
-      type: 'intent', 
-      title: 'What brings you to Vishwa Leader?', 
-      subtitle: 'Select all that apply to tailor your registration experience.'
+      id: 'origin', 
+      type: 'origin', 
+      title: 'Where are you traveling from?', 
+      subtitle: 'This helps us tailor your experience.'
+    },
+    ...(showTourStep ? [{ id: 'tour_select', type: 'tour_select', title: 'Would you like to book a Full Tour Package?', subtitle: 'This heavily discounts your event fees.' }] : []),
+    ...(showEvents ? [{ id: 'events_general', type: 'events_general', title: 'Which events would you like to attend?', subtitle: 'Select all that apply.' }] : []),
+    ...(showEvents && wizardEventCategories.length > 0 ? [{ id: 'events_roles', type: 'events_roles', title: 'What will be your role at the selected events?', subtitle: 'Please specify your participation type.' }] : []),
+    {
+      id: 'sponsorships',
+      type: 'sponsorships',
+      title: 'Sponsorships & Ads (Optional)',
+      subtitle: 'Support the global vision of Vishwa Leader.'
     },
     { id: 'name', type: 'text', title: "What is your full name?", subtitle: "This will be printed on your official certificate.", state: profileName, setState: setProfileName, required: true },
     { id: 'gender', type: 'select', title: 'What is your gender?', options: ['Male', 'Female', 'Prefer not to say'], state: profileGender, setState: setProfileGender, required: true },
@@ -822,7 +949,7 @@ export default function MemberClientPage() {
     { id: 'designation', type: 'text', title: 'What is your current designation or job title?', state: profileDesignation, setState: setProfileDesignation, required: true },
     { id: 'organization', type: 'text', title: 'Which organization or university are you affiliated with?', state: profileOrganization, setState: setProfileOrganization, required: true },
     { id: 'phone', type: 'autocomplete', title: 'What is your contact number? (WhatsApp enabled)', subtitle: "Include country code e.g., +91 9876543210", options: PHONE_CODES_LIST, state: profilePhone, setState: setProfilePhone, required: true },
-    { id: 'country', type: 'autocomplete', title: 'What is your current country of residence?', options: COUNTRIES_LIST, state: profileCountry, setState: setProfileCountry, required: true },
+
     
     // Documents
     { id: 'headshot', type: 'upload', title: 'Please upload a professional headshot.', subtitle: "This will be used for your Delegate ID Card.", field: 'headshot', url: memberData?.headshotUrl, uploading: headshotUploading, progress: headshotProgress },
@@ -836,20 +963,19 @@ export default function MemberClientPage() {
     ] : []),
     
     // Conditional: Presenter
-    ...(wizardIntents.includes('Research Paper Presenter') ? [
+    ...(wizardIntents.includes('Conference Presenter') ? [
       { id: 'paper_title', type: 'text', title: 'What is the title of your research paper?', state: subTitle, setState: setSubTitle, required: true },
       { id: 'paper_authors', type: 'text', title: 'Who are the co-authors? (If any)', state: subAuthors, setState: setSubAuthors, required: false },
       { id: 'paper_abstract', type: 'textarea', title: 'Please provide a short abstract.', subtitle: "Maximum 300 words.", state: subAbstract, setState: setSubAbstract, required: true }
     ] : []),
 
     // Conditional: Business
-    ...(wizardIntents.includes('Business Summit Delegate') ? [
+    ...(wizardIntents.includes('Business Presenter') ? [
       { id: 'business_proposal', type: 'textarea', title: 'What is your primary business objective or proposal?', state: businessProposalText, setState: setBusinessProposalText, required: true },
       { id: 'businessDeck', type: 'upload', title: 'Please upload your pitch deck or company profile.', subtitle: "Accepted formats: .pdf, .ppt", field: 'businessDeck', url: memberData?.businessDeckUrl, uploading: businessDeckUploading, progress: businessDeckProgress, accept: ".pdf,.ppt,.pptx" }
     ] : []),
 
     // Logistics
-    { id: 'package_tour', type: 'tour_select', title: 'Are you interested in our VIP Package Tours?' },
     { id: 'logistics', type: 'logistics', title: 'Do you require any logistics support?' },
     { id: 'dietary', type: 'text', title: 'Do you have any specific dietary requirements?', subtitle: "e.g. Vegetarian, Halal, Kosher. Leave blank if none.", state: profileDietary, setState: setProfileDietary, required: false },
 
@@ -857,20 +983,92 @@ export default function MemberClientPage() {
     { id: 'review', type: 'review', title: 'Review & Secure Checkout' }
   ];
 
-  const currentSlide = visibleSlides[wizardStep] || visibleSlides[0];
+  const familyVisibleSlides = [
+    {
+      id: 'group_type',
+      type: 'group_type',
+      title: 'Group or Family Setup',
+      subtitle: 'Are you attending with a Family or a Group?'
+    },
+    ...(groupType !== 'none' ? [
+      {
+        id: 'group_details',
+        type: 'group_details',
+        title: groupType === 'family' ? 'Family Details' : 'Group Details',
+        subtitle: 'Please provide the details for your additional members.'
+      }
+    ] : []),
+    ...(guestProfiles.flatMap((guest, index) => [
+      { id: `guest_${index}_passportFront`, type: 'upload_guest', title: `Please upload the front page of passport for ${guest.name || `Guest ${index + 1}`}`, field: 'passportFrontUrl', guestIndex: index, url: guest.passportFrontUrl },
+      { id: `guest_${index}_passportBack`, type: 'upload_guest', title: `Please upload the back page of passport for ${guest.name || `Guest ${index + 1}`}`, field: 'passportBackUrl', guestIndex: index, url: guest.passportBackUrl },
+      { id: `guest_${index}_nationalId`, type: 'upload_guest', title: `Please upload a National ID (Aadhar/PAN) for ${guest.name || `Guest ${index + 1}`}`, field: 'nationalIdUrl', guestIndex: index, url: guest.nationalIdUrl }
+    ])),
+    { id: 'review_family', type: 'review_family', title: 'Review & Save Group Details' }
+  ];
+
+
+  const currentSlide: any = visibleSlides[wizardStep] || visibleSlides[0];
   const progressPercentage = ((wizardStep) / (visibleSlides.length - 1)) * 100;
+  
+  const currentFamilySlide: any = familyVisibleSlides[familyWizardStep] || familyVisibleSlides[0];
+  const familyProgressPercentage = ((familyWizardStep) / (familyVisibleSlides.length - 1)) * 100;
+
+  useEffect(() => {
+    // Reset checkout state when leaving payment slide
+    if (wizardStep !== visibleSlides.length - 1) {
+      setPaymentImageLoaded(false);
+      setCheckoutVisible(false);
+    }
+  }, [wizardStep, visibleSlides.length]);
+
+  useEffect(() => {
+    // Reveal the checkout screen precisely when the image loads
+    // Uses `transitioning` overlay (not `loading`) so wizard stays mounted
+    if (wizardStep === visibleSlides.length - 1 && paymentImageLoaded) {
+      const t = setTimeout(() => {
+        if (transitioning) setTransitioning(false);
+        requestAnimationFrame(() => setCheckoutVisible(true));
+      }, 50);
+      return () => clearTimeout(t);
+    }
+  }, [wizardStep, paymentImageLoaded, transitioning, visibleSlides.length]);
 
   const goNext = () => {
     if (currentSlide.type === 'intent' && wizardIntents.length === 0) {
       showToast("Please select at least one intent to proceed.");
       return;
     }
-    if (currentSlide.required && !currentSlide.state) {
+    if (currentSlide.type === 'events_roles') {
+      const missingRoles = wizardEventCategories.filter(cat => !wizardIntents.some(i => i.startsWith(cat)));
+      if (missingRoles.length > 0) {
+        showToast("Please select a role for all selected events.");
+        return;
+      }
+    }
+    if (currentSlide.type === 'group_type') {
+      if (groupType !== 'none' && (typeof numDelegates !== 'number' || numDelegates < 2)) {
+        showToast("Please enter a valid group size (minimum 2).");
+        return;
+      }
+    }
+    if (currentSlide.type === 'group_details') {
+      if (guestProfiles.some(g => !g.name?.trim() || !g.relationship?.trim() || !g.passportNumber?.trim())) {
+        showToast("Please fill all details (Name, Relationship, Passport) for your guests.");
+        return;
+      }
+    }
+    if ((currentSlide as any).required && !(currentSlide as any).state) {
       showToast("This field is required.");
       return;
     }
     if (wizardStep < visibleSlides.length - 1) {
-      setWizardStep(prev => prev + 1);
+      // If transitioning to the final 'review' (payment) page, show overlay
+      if (wizardStep === visibleSlides.length - 2) {
+        setTransitioning(true);
+        setWizardStep(prev => prev + 1);
+      } else {
+        setWizardStep(prev => prev + 1);
+      }
     }
   };
 
@@ -895,27 +1093,272 @@ export default function MemberClientPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [wizardStep, currentSlide, wizardIntents, activeTab, isRegistrationComplete]);
 
+  const goFamilyNext = () => {
+    if (currentFamilySlide.type === 'group_type' && groupType === 'none') {
+      setTimeout(() => setFamilyWizardStep(prev => prev + 1), 300);
+      return;
+    }
+    if (familyWizardStep < familyVisibleSlides.length - 1) {
+      setFamilyWizardStep(prev => prev + 1);
+    }
+  };
+
+  const goFamilyPrev = () => {
+    if (familyWizardStep > 0) {
+      setFamilyWizardStep(prev => prev - 1);
+    }
+  };
+
+  const familyWizardFormContent = (
+    <form onSubmit={(e) => e.preventDefault()} className="flex flex-col h-full relative">
+      
+      {/* Dynamic Slide Content */}
+      <div 
+        key={currentFamilySlide.id} 
+        className={`flex-grow flex flex-col justify-center py-8 px-2 w-full overflow-visible ${
+          currentFamilySlide.type === 'review_family' 
+            ? 'animate-in fade-in duration-700' 
+            : 'max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500'
+        }`}
+      >
+        <div className={`space-y-6 md:space-y-8 ${currentFamilySlide.type === 'review_family' ? 'hidden' : ''}`}>
+        <h2 className="text-2xl md:text-4xl font-semibold text-slate-900 tracking-tight mb-2 font-display text-center">
+          {currentFamilySlide.title}
+        </h2>
+        {(currentFamilySlide as any).subtitle && (
+          <p className="text-slate-500 text-base mb-6 text-center">{(currentFamilySlide as any).subtitle}</p>
+        )}
+        </div>
+
+        {/* Input Renders */}
+        <div className={currentFamilySlide.type === 'review_family' ? 'h-full w-full flex items-center justify-center text-center flex-col' : 'mt-8'}>
+          {currentFamilySlide.type === 'group_type' ? (
+            <div className="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">
+              {[
+                { val: 'none', label: 'Just Me' },
+                { val: 'family', label: 'Family' },
+                { val: 'group', label: 'Group' }
+              ].map(opt => (
+                <label key={opt.val} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                  <div className="flex-1 text-left">
+                    <h4 className="font-semibold text-sm text-slate-800 mb-0.5">{opt.label}</h4>
+                  </div>
+                  <div>
+                    <input 
+                      type="radio" 
+                      name="group_type"
+                      checked={groupType === opt.val}
+                      onChange={() => {
+                        setGroupType(opt.val as any);
+                        if (opt.val === 'none') {
+                          setNumDelegates(1);
+                          setGuestProfiles([]);
+                          setTimeout(goFamilyNext, 300);
+                        }
+                      }}
+                      className="w-5 h-5 text-brandBlue focus:ring-brandBlue border-slate-300"
+                    />
+                  </div>
+                </label>
+              ))}
+              {groupType !== 'none' && (
+                <div className="animate-in fade-in slide-in-from-top-4 pt-4 text-center">
+                  <p className="text-sm text-slate-500 font-semibold mb-4">Total Adult Delegates (18+)</p>
+                  <input 
+                    type="number" 
+                    min="1" 
+                    value={numDelegates} 
+                    onChange={(e) => {
+                      const rawVal = e.target.value;
+                      if (rawVal === '') {
+                        setNumDelegates('');
+                        setGuestProfiles([]);
+                        return;
+                      }
+                      const val = parseInt(rawVal);
+                      if (isNaN(val)) return;
+                      setNumDelegates(val);
+                      
+                      if (val > guestProfiles.length + 1) {
+                        const newGuests = Array.from({ length: val - 1 - guestProfiles.length }).map((_, i) => ({
+                          id: `guest_${Date.now()}_${i}`,
+                          name: '', relationship: '', passportNumber: '', passportFrontUrl: '', passportBackUrl: '', nationalIdUrl: ''
+                        }));
+                        setGuestProfiles([...guestProfiles, ...newGuests]);
+                      } else {
+                        setGuestProfiles(guestProfiles.slice(0, val - 1));
+                      }
+                    }}
+                    className="w-full max-w-[200px] mx-auto text-center text-3xl md:text-4xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300 mb-8"
+                  />
+                </div>
+              )}
+            </div>
+          ) : currentFamilySlide.type === 'group_details' ? (
+            <div className="max-w-2xl mx-auto w-full text-left space-y-8">
+               {guestProfiles.map((guest, idx) => (
+                 <div key={guest.id} className="p-6 border border-slate-200 rounded-2xl bg-white space-y-4">
+                    <h4 className="font-bold text-lg text-slate-800">Guest {idx + 1}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-semibold text-slate-500 uppercase">Full Name</label>
+                        <Input 
+                          value={guest.name}
+                          onChange={(e) => {
+                            const newG = [...guestProfiles];
+                            newG[idx].name = e.target.value;
+                            setGuestProfiles(newG);
+                          }}
+                          className="mt-1"
+                          placeholder="John Doe"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-slate-500 uppercase">Relationship</label>
+                        <select 
+                          value={guest.relationship}
+                          onChange={(e) => {
+                            const newG = [...guestProfiles];
+                            newG[idx].relationship = e.target.value;
+                            setGuestProfiles(newG);
+                          }}
+                          className="w-full mt-1 border-slate-200 rounded-md text-sm"
+                        >
+                          <option value="">Select...</option>
+                          <option value="Spouse">Spouse</option>
+                          <option value="Child (18+)">Child (18+)</option>
+                          <option value="Colleague">Colleague</option>
+                          <option value="Friend">Friend</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="text-xs font-semibold text-slate-500 uppercase">Passport Number</label>
+                        <Input 
+                          value={guest.passportNumber}
+                          onChange={(e) => {
+                            const newG = [...guestProfiles];
+                            newG[idx].passportNumber = e.target.value;
+                            setGuestProfiles(newG);
+                          }}
+                          className="mt-1"
+                          placeholder="A1234567"
+                        />
+                      </div>
+                    </div>
+                 </div>
+               ))}
+            </div>
+          ) : currentFamilySlide.type === 'upload_guest' ? (
+            <div className="border-2 border-dashed border-slate-200 rounded-3xl p-10 flex flex-col items-center justify-center text-center bg-slate-50/50 hover:bg-slate-50 transition-colors">
+              {currentFamilySlide.url ? (
+                <div className="space-y-4">
+                  <div className="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mx-auto text-emerald-600">
+                    <CheckCircle className="size-10" />
+                  </div>
+                  <p className="text-emerald-700 font-bold text-lg">Document Uploaded Successfully</p>
+                  <Button variant="outline" onClick={goFamilyNext} className="mt-2 rounded-full px-8">Continue</Button>
+                </div>
+              ) : (guestUploadState[`${(currentFamilySlide as any).guestIndex}_${currentFamilySlide.field}`]?.uploading) ? (
+                <div className="w-full max-w-xs space-y-4">
+                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                    <div className="bg-brandBlue h-full transition-all" style={{ width: `${guestUploadState[`${(currentFamilySlide as any).guestIndex}_${currentFamilySlide.field}`]?.progress}%` }}></div>
+                  </div>
+                  <p className="text-brandBlue font-bold text-sm">Uploading... {guestUploadState[`${(currentFamilySlide as any).guestIndex}_${currentFamilySlide.field}`]?.progress || 0}%</p>
+                </div>
+              ) : (
+                <div className="relative w-full max-w-sm flex flex-col items-center">
+                  <Upload className="size-12 text-slate-400 mb-4" />
+                  <input type="file" accept="image/*,.pdf" onChange={(e) => { 
+                    if (e.target.files && e.target.files[0]) {
+                      uploadFileToStorage(e.target.files[0], 'guestUpload', (currentFamilySlide as any).guestIndex, currentFamilySlide.field as any);
+                    }
+                  }} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                  <Button type="button" className="bg-brandBlue hover:bg-brandBlue/90 text-white font-bold h-12 px-8 rounded-full shadow-lg pointer-events-none">Choose File to Upload</Button>
+                  <p className="text-xs text-slate-400 mt-4">Max file size: 5MB</p>
+                </div>
+              )}
+            </div>
+          ) : currentFamilySlide.type === 'review_family' ? (
+            <div className="text-center space-y-6 max-w-lg mx-auto">
+              <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600">
+                <CheckCircle className="size-12" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900">Ready to Save</h3>
+              <p className="text-slate-600">You are about to save details for {groupType === 'none' ? '0' : (numDelegates || 1) - 1} guests.</p>
+              <Button onClick={handleSaveFamilyWizard} className="bg-brandBlue text-white hover:bg-brandBlue/90 h-12 px-8 rounded-xl font-bold w-full shadow-lg">Save & Return to Dashboard</Button>
+            </div>
+          ) : null}
+        </div>
+      </div>
+      
+      {/* Fixed Bottom Bar */}
+      {currentFamilySlide.type !== 'review_family' && (
+        <div className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-slate-200 p-4 z-50">
+          <div className="w-full flex items-center justify-between gap-4 px-2 sm:px-8">
+            <div className="flex-grow hidden sm:block">
+              <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-slate-900 transition-all duration-500 ease-out" style={{ width: `${familyProgressPercentage}%` }}></div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3 shrink-0 ml-auto w-full sm:w-auto justify-between sm:justify-end">
+              {familyWizardStep > 0 && (
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={goFamilyPrev}
+                  className="rounded-xl font-semibold h-12 px-6 border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all shadow-sm bg-white"
+                >
+                  Back
+                </Button>
+              )}
+              
+              {familyWizardStep < familyVisibleSlides.length - 1 ? (
+                <Button 
+                  type="button" 
+                  onClick={goFamilyNext}
+                  className="bg-slate-900 text-white text-sm font-semibold px-8 h-12 rounded-xl hover:bg-slate-800 transition-colors shadow-lg"
+                >
+                  <span>Next Step</span>
+                </Button>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      )}
+    </form>
+  );
+
   const wizardFormContent = (
     <form onSubmit={(e) => e.preventDefault()} className="flex flex-col h-full relative">
       
       {/* Dynamic Slide Content */}
-      <div key={currentSlide.id} className="flex-grow flex flex-col justify-center py-4 px-2 max-w-3xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-visible pb-32">
-        <div className="space-y-6 md:space-y-8">
-        <h2 className="text-2xl md:text-4xl font-semibold text-slate-900 tracking-tight mb-2 font-display">
+      <div 
+        key={currentSlide.id} 
+        className={`flex-grow flex flex-col justify-center py-8 px-2 w-full overflow-visible ${
+          currentSlide.type === 'review' 
+            ? 'animate-in fade-in duration-700' 
+            : 'max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500'
+        }`}
+      >
+        <div className={`space-y-6 md:space-y-8 ${currentSlide.type === 'review' ? 'hidden' : ''}`}>
+        <h2 className="text-2xl md:text-4xl font-semibold text-slate-900 tracking-tight mb-2 font-display text-center">
           {currentSlide.title}
         </h2>
-        {currentSlide.subtitle && (
-          <p className="text-slate-500 text-base mb-6">{currentSlide.subtitle}</p>
+        {(currentSlide as any).subtitle && (
+          <p className="text-slate-500 text-base mb-6 text-center">{(currentSlide as any).subtitle}</p>
         )}
+        </div>
 
         {/* Input Renders */}
-        <div className="mt-8">
+        <div className={currentSlide.type === 'review' ? 'h-full w-full' : 'mt-8'}>
           {currentSlide.type === 'text' || currentSlide.type === 'number' ? (
             <input 
               type={currentSlide.type} 
               value={currentSlide.state}
               onChange={(e) => currentSlide.setState?.(e.target.value)}
-              className="w-full text-3xl md:text-4xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300"
+              className="w-full text-center text-3xl md:text-4xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300"
               placeholder="Type your answer here..."
               autoFocus
             />
@@ -923,7 +1366,7 @@ export default function MemberClientPage() {
             <textarea 
               value={currentSlide.state}
               onChange={(e) => currentSlide.setState?.(e.target.value)}
-              className="w-full text-xl md:text-2xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300 min-h-[150px] resize-none"
+              className="w-full text-center text-xl md:text-2xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300 min-h-[150px] resize-none"
               placeholder="Type your answer here..."
               autoFocus
             ></textarea>
@@ -933,14 +1376,14 @@ export default function MemberClientPage() {
               onChange={(e: any) => currentSlide.setState?.(e.target.value)}
               options={currentSlide.options || []}
               placeholder="Type or select..."
-              className="w-full text-2xl md:text-3xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300"
+              className="w-full text-center text-3xl md:text-4xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300"
             />
           ) : currentSlide.type === 'select' ? (
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">
               {(currentSlide.options || []).map((opt: string, idx: number) => (
-                <label key={opt} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-sm md:text-base text-slate-800 mb-0.5">{opt}</h4>
+                <label key={opt} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                  <div className="flex-1 text-left">
+                    <h4 className="font-semibold text-sm text-slate-800 mb-0.5">{opt}</h4>
                   </div>
                   <div>
                     <input 
@@ -950,77 +1393,52 @@ export default function MemberClientPage() {
                       checked={currentSlide.state === opt}
                       onChange={() => {
                         currentSlide.setState?.(opt);
-                        setTimeout(goNext, 300);
+                        setTimeout(() => setWizardStep(prev => prev + 1), 300);
                       }}
                     />
                   </div>
                 </label>
               ))}
             </div>
-          ) : currentSlide.type === 'intent' ? (
-            <div className="grid grid-cols-1 gap-4">
+          ) : currentSlide.type === 'origin' ? (
+            <div className="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">
               {[
-                { id: "Conference Delegate", label: "I want to attend the conference", price: "₹5,000 + GST" },
-                { id: "Business Summit Delegate", label: "I want to join the business summit", price: "₹10,000 + GST" },
-                { id: "Award Nominee", label: "I want to add my name for the nomination", price: "₹5,000 + GST" },
-                { id: "Research Paper Presenter", label: "I want to submit abstract papers", price: "₹5,000 + GST" }
-              ].map(item => (
-                <label key={item.id} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-sm text-slate-800 mb-0.5">{item.label}</h4>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{item.price}</p>
+                'I am from India',
+                'I am not from India',
+                'I am from London',
+                'I am not from London'
+              ].map(opt => (
+                <label key={opt} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                  <div className="flex-1 text-left">
+                    <h4 className="font-semibold text-sm text-slate-800 mb-0.5">{opt}</h4>
                   </div>
                   <div>
                     <input 
-                      type="checkbox" 
-                      className="w-5 h-5 text-brandBlue focus:ring-brandBlue border-slate-300 rounded"
-                      checked={wizardIntents.includes(item.id)}
-                      onChange={(e) => {
-                        if (e.target.checked) setWizardIntents([...wizardIntents, item.id]);
-                        else setWizardIntents(wizardIntents.filter(i => i !== item.id));
+                      type="radio" 
+                      name="origin"
+                      checked={profileOrigin === opt}
+                      onChange={() => {
+                        setProfileOrigin(opt);
+                        if (opt === 'I am from India') setProfilePackageTour('From India');
+                        else if (opt === 'I am from London') setProfilePackageTour('None');
+                        else setProfilePackageTour('From Outside India');
+                        setTimeout(goNext, 300);
                       }}
+                      className="w-5 h-5 text-brandBlue focus:ring-brandBlue border-slate-300"
                     />
                   </div>
                 </label>
               ))}
             </div>
-          ) : currentSlide.type === 'upload' ? (
-            <div className="border-2 border-dashed border-slate-200 rounded-3xl p-10 flex flex-col items-center justify-center text-center bg-slate-50/50 hover:bg-slate-50 transition-colors">
-              {currentSlide.url ? (
-                <div className="space-y-4">
-                  <div className="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mx-auto text-emerald-600">
-                    <CheckCircle className="size-10" />
-                  </div>
-                  <p className="text-emerald-700 font-bold text-lg">Document Uploaded Successfully</p>
-                  <Button variant="outline" onClick={goNext} className="mt-2 rounded-full px-8">Continue</Button>
-                </div>
-              ) : currentSlide.uploading ? (
-                <div className="w-full max-w-xs space-y-4">
-                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-                    <div className="bg-brandBlue h-full transition-all" style={{ width: `${currentSlide.progress}%` }}></div>
-                  </div>
-                  <p className="text-brandBlue font-bold text-sm">Uploading... {currentSlide.progress}%</p>
-                </div>
-              ) : (
-                <div className="relative w-full max-w-sm flex flex-col items-center">
-                  <Upload className="size-12 text-slate-400 mb-4" />
-                  <input type="file" accept={currentSlide.accept || "image/*"} onChange={(e) => { if (e.target.files && e.target.files[0]) uploadFileToStorage(e.target.files[0], currentSlide.field as any); }} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
-                  <Button type="button" className="bg-brandBlue hover:bg-brandBlue/90 text-white font-bold h-12 px-8 rounded-full shadow-lg pointer-events-none">Choose File to Upload</Button>
-                  <p className="text-xs text-slate-400 mt-4">Max file size: 5MB</p>
-                </div>
-              )}
-            </div>
           ) : currentSlide.type === 'tour_select' ? (
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">
               {[
-                { val: 'None', label: 'Not Interested', price: 'I will manage my own' },
-                { val: 'From India', label: 'From India', price: '₹1,31,000' },
-                { val: 'From Outside India', label: 'From Outside India', price: '₹2,00,501' }
+                { val: profileOrigin === 'I am from India' ? 'From India' : 'From Outside India', label: profileOrigin === 'I am from India' ? 'Yes, I want the Full Tour Package' : 'Yes, I want the Landing Package' },
+                { val: 'None', label: 'No, I will manage my own travel & logistics' }
               ].map(opt => (
-                <label key={opt.val} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-sm md:text-base text-slate-800 mb-0.5">{opt.label}</h4>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{opt.price}</p>
+                <label key={opt.val} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                  <div className="flex-1 text-left">
+                    <h4 className="font-semibold text-sm text-slate-800 mb-0.5">{opt.label}</h4>
                   </div>
                   <div>
                     <input 
@@ -1038,27 +1456,305 @@ export default function MemberClientPage() {
                 </label>
               ))}
             </div>
+          ) : currentSlide.type === 'events_general' ? (
+            <div className="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">
+              {[
+                { id: 'Conference', label: 'Academic Conference' },
+                { id: 'Business', label: 'Business Summit' },
+                { id: 'Award', label: 'Awards & Cultural Ceremony' }
+              ].map(item => (
+                <label key={item.id} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                  <div className="flex-1 text-left">
+                    <h4 className="font-semibold text-sm text-slate-800 mb-0.5">{item.label}</h4>
+                  </div>
+                  <div>
+                    <input 
+                      type="checkbox" 
+                      className="w-5 h-5 text-brandBlue focus:ring-brandBlue border-slate-300 rounded"
+                      checked={wizardEventCategories.includes(item.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setWizardEventCategories([...wizardEventCategories, item.id]);
+                        } else {
+                          setWizardEventCategories(wizardEventCategories.filter(i => i !== item.id));
+                          setWizardIntents(wizardIntents.filter(intent => !intent.startsWith(item.id)));
+                        }
+                      }}
+                    />
+                  </div>
+                </label>
+              ))}
+            </div>
+          ) : currentSlide.type === 'events_roles' ? (
+            <div className="grid grid-cols-1 gap-6 max-w-lg mx-auto w-full text-left">
+              {wizardEventCategories.includes('Conference') && (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                  <div className="flex flex-col gap-3">
+                    {[
+                      { id: 'Conference Presenter', label: 'I want to present a paper at the International Conference' },
+                      { id: 'Conference Delegate', label: 'I want to attend the International Conference as a Delegate' }
+                    ].map(opt => (
+                      <label key={opt.id} className="flex items-start gap-3 cursor-pointer">
+                        <input 
+                          type="radio" 
+                          name="role_conference"
+                          checked={wizardIntents.includes(opt.id)}
+                          onChange={() => {
+                            setWizardIntents([...wizardIntents.filter(i => !i.startsWith('Conference')), opt.id]);
+                          }}
+                          className="mt-0.5 w-4 h-4 text-brandBlue focus:ring-brandBlue border-slate-300"
+                        />
+                        <span className="text-sm font-medium text-slate-700 leading-snug">{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {wizardEventCategories.includes('Business') && (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                  <div className="flex flex-col gap-3">
+                    {[
+                      { id: 'Business Presenter', label: 'I want to present a Business proposal at the International Business Summit' },
+                      { id: 'Business Delegate', label: 'I want to attend the International Business Summit as a Delegate' }
+                    ].map(opt => (
+                      <label key={opt.id} className="flex items-start gap-3 cursor-pointer">
+                        <input 
+                          type="radio" 
+                          name="role_business"
+                          checked={wizardIntents.includes(opt.id)}
+                          onChange={() => {
+                            setWizardIntents([...wizardIntents.filter(i => !i.startsWith('Business')), opt.id]);
+                          }}
+                          className="mt-0.5 w-4 h-4 text-brandBlue focus:ring-brandBlue border-slate-300"
+                        />
+                        <span className="text-sm font-medium text-slate-700 leading-snug">{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {wizardEventCategories.includes('Award') && (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                  <div className="flex flex-col gap-3">
+                    {[
+                      { id: 'Award Nominee', label: 'I want to attend the International Award Event as a nominee' },
+                      { id: 'Award Delegate', label: 'I want to attend the International Award Event as a Delegate' }
+                    ].map(opt => (
+                      <label key={opt.id} className="flex items-start gap-3 cursor-pointer">
+                        <input 
+                          type="radio" 
+                          name="role_award"
+                          checked={wizardIntents.includes(opt.id)}
+                          onChange={() => {
+                            setWizardIntents([...wizardIntents.filter(i => !i.startsWith('Award')), opt.id]);
+                          }}
+                          className="mt-0.5 w-4 h-4 text-brandBlue focus:ring-brandBlue border-slate-300"
+                        />
+                        <span className="text-sm font-medium text-slate-700 leading-snug">{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : currentSlide.type === 'sponsorships' ? (
+            <div className="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">
+              {[
+                { id: 'Souvenir Advertisement', label: 'I want to publish an Advertisement in the Souvenir Magazine' },
+                { id: 'Donation Patron', label: 'I want to make a Patron Donation' }
+              ].map(item => (
+                <label key={item.id} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                  <div className="flex-1 text-left">
+                    <h4 className="font-semibold text-sm text-slate-800 mb-0.5">{item.label}</h4>
+                  </div>
+                  <div>
+                    <input 
+                      type="checkbox" 
+                      className="w-5 h-5 text-brandBlue focus:ring-brandBlue border-slate-300 rounded"
+                      checked={wizardIntents.includes(item.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) setWizardIntents([...wizardIntents, item.id]);
+                        else setWizardIntents(wizardIntents.filter(i => i !== item.id));
+                      }}
+                    />
+                  </div>
+                </label>
+              ))}
+            </div>
+          ) : currentSlide.type === 'group_type' ? (
+            <div className="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">
+              {[
+                { val: 'none', label: 'Just Me' },
+                { val: 'family', label: 'Family' },
+                { val: 'group', label: 'Group' }
+              ].map(opt => (
+                <label key={opt.val} className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                  <div className="flex-1 text-left">
+                    <h4 className="font-semibold text-sm text-slate-800 mb-0.5">{opt.label}</h4>
+                  </div>
+                  <div>
+                    <input 
+                      type="radio" 
+                      name="group_type"
+                      checked={groupType === opt.val}
+                      onChange={() => {
+                        setGroupType(opt.val as any);
+                        if (opt.val === 'none') {
+                          setNumDelegates(1);
+                          setGuestProfiles([]);
+                          setTimeout(goNext, 300);
+                        }
+                      }}
+                      className="w-5 h-5 text-brandBlue focus:ring-brandBlue border-slate-300"
+                    />
+                  </div>
+                </label>
+              ))}
+              {groupType !== 'none' && (
+                <div className="animate-in fade-in slide-in-from-top-4 pt-4 text-center">
+                  <p className="text-sm text-slate-500 font-semibold mb-4">Total Adult Delegates (18+)</p>
+                  <input 
+                    type="number" 
+                    min="1" 
+                    value={numDelegates} 
+                    onChange={(e) => {
+                      const rawVal = e.target.value;
+                      if (rawVal === '') {
+                        setNumDelegates('');
+                        setGuestProfiles([]);
+                        return;
+                      }
+                      const val = parseInt(rawVal);
+                      if (isNaN(val)) return;
+                      setNumDelegates(val);
+                      
+                      if (val > guestProfiles.length + 1) {
+                        const newGuests = Array.from({ length: val - 1 - guestProfiles.length }).map((_, i) => ({
+                          id: `guest_${Date.now()}_${i}`,
+                          name: '', relationship: '', passportNumber: '', passportFrontUrl: '', passportBackUrl: '', nationalIdUrl: ''
+                        }));
+                        setGuestProfiles([...guestProfiles, ...newGuests]);
+                      } else {
+                        setGuestProfiles(guestProfiles.slice(0, val - 1));
+                      }
+                    }}
+                    className="w-full max-w-[200px] mx-auto text-center text-3xl md:text-4xl text-brandBlue bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-brandBlue focus:outline-none py-4 transition-colors placeholder:text-slate-300 mb-8"
+                  />
+                </div>
+              )}
+            </div>
+          ) : currentSlide.type === 'group_details' ? (
+            <div className="max-w-2xl mx-auto w-full text-left space-y-8">
+               {guestProfiles.map((guest, idx) => (
+                 <div key={guest.id} className="p-6 border border-slate-200 rounded-2xl bg-white space-y-4">
+                    <h4 className="font-bold text-lg text-slate-800">Guest {idx + 1}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-semibold text-slate-500 uppercase">Full Name</label>
+                        <Input 
+                          value={guest.name}
+                          onChange={(e) => {
+                            const newG = [...guestProfiles];
+                            newG[idx].name = e.target.value;
+                            setGuestProfiles(newG);
+                          }}
+                          className="mt-1"
+                          placeholder="John Doe"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-slate-500 uppercase">Relationship</label>
+                        <select 
+                          value={guest.relationship}
+                          onChange={(e) => {
+                            const newG = [...guestProfiles];
+                            newG[idx].relationship = e.target.value;
+                            setGuestProfiles(newG);
+                          }}
+                          className="w-full mt-1 border-slate-200 rounded-md text-sm"
+                        >
+                          <option value="">Select...</option>
+                          <option value="Spouse">Spouse</option>
+                          <option value="Child (18+)">Child (18+)</option>
+                          <option value="Colleague">Colleague</option>
+                          <option value="Friend">Friend</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="text-xs font-semibold text-slate-500 uppercase">Passport Number</label>
+                        <Input 
+                          value={guest.passportNumber}
+                          onChange={(e) => {
+                            const newG = [...guestProfiles];
+                            newG[idx].passportNumber = e.target.value;
+                            setGuestProfiles(newG);
+                          }}
+                          className="mt-1"
+                          placeholder="A1234567"
+                        />
+                      </div>
+                    </div>
+                 </div>
+               ))}
+            </div>
+          ) : currentSlide.type === 'upload' || currentSlide.type === 'upload_guest' ? (
+            <div className="border-2 border-dashed border-slate-200 rounded-3xl p-10 flex flex-col items-center justify-center text-center bg-slate-50/50 hover:bg-slate-50 transition-colors">
+              {currentSlide.url ? (
+                <div className="space-y-4">
+                  <div className="w-24 h-24 rounded-full bg-emerald-100 flex items-center justify-center mx-auto text-emerald-600">
+                    <CheckCircle className="size-10" />
+                  </div>
+                  <p className="text-emerald-700 font-bold text-lg">Document Uploaded Successfully</p>
+                  <Button variant="outline" onClick={goNext} className="mt-2 rounded-full px-8">Continue</Button>
+                </div>
+              ) : (currentSlide.type === 'upload' ? currentSlide.uploading : guestUploadState[`${(currentSlide as any).guestIndex}_${currentSlide.field}`]?.uploading) ? (
+                <div className="w-full max-w-xs space-y-4">
+                  <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                    <div className="bg-brandBlue h-full transition-all" style={{ width: `${currentSlide.type === 'upload' ? currentSlide.progress : guestUploadState[`${(currentSlide as any).guestIndex}_${currentSlide.field}`]?.progress}%` }}></div>
+                  </div>
+                  <p className="text-brandBlue font-bold text-sm">Uploading... {currentSlide.type === 'upload' ? currentSlide.progress : guestUploadState[`${(currentSlide as any).guestIndex}_${currentSlide.field}`]?.progress || 0}%</p>
+                </div>
+              ) : (
+                <div className="relative w-full max-w-sm flex flex-col items-center">
+                  <Upload className="size-12 text-slate-400 mb-4" />
+                  <input type="file" accept={currentSlide.accept || "image/*"} onChange={(e) => { 
+                    if (e.target.files && e.target.files[0]) {
+                      if (currentSlide.type === 'upload_guest') {
+                        uploadFileToStorage(e.target.files[0], 'guestUpload', (currentSlide as any).guestIndex, currentSlide.field as any);
+                      } else {
+                        uploadFileToStorage(e.target.files[0], currentSlide.field as any);
+                      }
+                    }
+                  }} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                  <Button type="button" className="bg-brandBlue hover:bg-brandBlue/90 text-white font-bold h-12 px-8 rounded-full shadow-lg pointer-events-none">Choose File to Upload</Button>
+                  <p className="text-xs text-slate-400 mt-4">Max file size: 5MB</p>
+                </div>
+              )}
+            </div>
           ) : currentSlide.type === 'logistics' ? (
-            <div className="grid grid-cols-1 gap-4">
-              <label className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all">
-                <div className="flex-1">
-                  <h4 className="font-semibold text-sm md:text-base text-slate-800 mb-0.5">Official Invitation Letter for Visa</h4>
+            <div className="grid grid-cols-1 gap-4 max-w-md mx-auto w-full">
+              <label className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                <div className="flex-1 text-left">
+                  <h4 className="font-semibold text-sm text-slate-800 mb-0.5">Official Invitation Letter for Visa</h4>
                 </div>
                 <div>
                   <input type="checkbox" checked={profileVisaSupport} onChange={(e) => setProfileVisaSupport(e.target.checked)} className="w-5 h-5 rounded text-brandBlue focus:ring-brandBlue border-slate-300" />
                 </div>
               </label>
-              <label className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all">
-                <div className="flex-1">
-                  <h4 className="font-semibold text-sm md:text-base text-slate-800 mb-0.5">Accommodation Assistance</h4>
+              <label className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                <div className="flex-1 text-left">
+                  <h4 className="font-semibold text-sm text-slate-800 mb-0.5">Accommodation Assistance</h4>
                 </div>
                 <div>
                   <input type="checkbox" checked={profileAccommodation} onChange={(e) => setProfileAccommodation(e.target.checked)} className="w-5 h-5 rounded text-brandBlue focus:ring-brandBlue border-slate-300" />
                 </div>
               </label>
-              <label className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all">
-                <div className="flex-1">
-                  <h4 className="font-semibold text-sm md:text-base text-slate-800 mb-0.5">Wheelchair Support Needed</h4>
+              <label className="flex items-center justify-between gap-3 py-3 cursor-pointer transition-all border-b border-slate-100 last:border-0 hover:bg-slate-50 rounded-xl px-2">
+                <div className="flex-1 text-left">
+                  <h4 className="font-semibold text-sm text-slate-800 mb-0.5">Wheelchair Support Needed</h4>
                 </div>
                 <div>
                   <input type="checkbox" checked={profileWheelchair} onChange={(e) => setProfileWheelchair(e.target.checked)} className="w-5 h-5 rounded text-brandBlue focus:ring-brandBlue border-slate-300" />
@@ -1066,24 +1762,86 @@ export default function MemberClientPage() {
               </label>
             </div>
           ) : currentSlide.type === 'review' ? (
-            <div className="bg-white border border-slate-200 rounded-xl p-8 flex flex-col shadow-sm hover:border-slate-300 transition-colors max-w-2xl mx-auto w-full relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-slate-900"></div>
+            <div className={`fixed top-16 left-0 w-full h-[calc(100vh-64px)] z-40 grid grid-cols-1 lg:grid-cols-[1fr_550px] gap-0 bg-white overflow-hidden transition-opacity duration-700 ease-out ${checkoutVisible ? 'opacity-100' : 'opacity-0'}`}>
               
-              <div className="mb-6 pb-6 border-b border-slate-100">
-                <h3 className="text-xl font-semibold text-slate-900 leading-tight">Registration Summary</h3>
-                <p className="text-sm text-slate-500 mt-1">Review your selected packages before proceeding to payment.</p>
+              {/* Left Column: Image Wallpaper */}
+              <div className="hidden lg:flex flex-col justify-between p-10 relative text-white">
+                <Image src="/assets/images/payment-bg.jpg" alt="Payment Background" fill sizes="(max-width: 1024px) 100vw, 50vw" priority className="object-cover object-left" onLoad={() => setPaymentImageLoaded(true)} />
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-transparent"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-4 mb-6">
+                    <ShieldAlert className="size-12 text-brandBlue opacity-100 drop-shadow-md shrink-0" />
+                    <h2 className="text-3xl lg:text-4xl font-bold tracking-tight drop-shadow-sm">Secure Checkout</h2>
+                  </div>
+                  <p className="text-slate-200 text-base opacity-90 leading-relaxed max-w-sm drop-shadow-sm">
+                    Your payment is secured with industry-standard 256-bit encryption. 
+                    Completing your registration guarantees your seat at the Vishwa Leader summit.
+                  </p>
+                </div>
+                
+                <div className="relative z-10 flex items-end justify-between w-full mt-auto">
+                  <div className="flex items-center gap-6 text-sm font-medium opacity-80">
+                    <span className="flex items-center gap-2"><CheckCircle className="size-5 text-emerald-400" /> SSL Secured</span>
+                    <span className="flex items-center gap-2"><CheckCircle className="size-5 text-emerald-400" /> Authorized Gateway</span>
+                  </div>
+                  <div className="opacity-90 grayscale contrast-200 invert brightness-200 mix-blend-screen pb-1 pr-2">
+                    <img src="/assets/images/razorpay.svg" alt="Razorpay" className="h-6 object-contain" />
+                  </div>
+                </div>
               </div>
 
+              {/* Right Column: Receipt UI */}
+              <div className="p-8 md:p-12 flex flex-col h-full bg-white relative overflow-y-auto">
+                <div className="absolute top-0 left-0 w-full h-1 bg-brandBlue"></div>
+                
+                <div className="mb-6 pb-6 border-b border-slate-100">
+                  <h3 className="text-xl font-semibold text-slate-900 leading-tight">Registration Summary</h3>
+                  <p className="text-sm text-slate-500 mt-1">Review your selected packages before proceeding to payment.</p>
+                </div>
+
               <div className="space-y-4 flex-grow mb-6">
-                {wizardIntents.map(intent => {
-                  const base = intent === 'Business Summit Delegate' ? 10000 : 5000;
-                  return (
-                    <div key={intent} className="flex justify-between items-start text-sm text-slate-600 pb-2">
-                      <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>{intent} Registration</span></span>
-                      <span className="font-semibold text-slate-900">₹{base.toLocaleString('en-IN')}</span>
-                    </div>
-                  );
-                })}
+                
+                {wizardIntents.some(i => i.startsWith('Conference')) && (
+                  <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                    <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>International Conference</span></span>
+                    <span className="font-semibold text-slate-900">₹5,000</span>
+                  </div>
+                )}
+
+                {wizardIntents.some(i => i.startsWith('Business')) && (
+                  <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                    <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>International Business Summit</span></span>
+                    <span className="font-semibold text-slate-900">₹10,000</span>
+                  </div>
+                )}
+                
+                {wizardIntents.some(i => i.startsWith('Award')) && (
+                  <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                    <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>International Awards & Cultural Ceremony</span></span>
+                    <span className="font-semibold text-slate-900">₹5,000</span>
+                  </div>
+                )}
+
+                {wizardIntents.includes('Souvenir Article') && (
+                  <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                    <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>Official Souvenir Article</span></span>
+                    <span className="font-semibold text-slate-900">₹5,000</span>
+                  </div>
+                )}
+
+                {wizardIntents.includes('Souvenir Advertisement') && (
+                  <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                    <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>Official Souvenir Advertisement</span></span>
+                    <span className="font-semibold text-slate-900">₹5,000</span>
+                  </div>
+                )}
+
+                {wizardIntents.includes('Donation Patron') && (
+                  <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                    <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-emerald-600 mt-0.5" /> <span>High-Level Patronage Donation</span></span>
+                    <span className="font-semibold text-emerald-700">₹1,00,000</span>
+                  </div>
+                )}
                 {profilePackageTour !== 'None' && (
                   <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
                     <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>Tour Package: {profilePackageTour}</span></span>
@@ -1094,24 +1852,44 @@ export default function MemberClientPage() {
                 )}
               </div>
               
-              <div className="pt-6 pb-6 flex justify-between items-center border-t border-b border-slate-100 mb-6">
-                <span className="text-sm font-semibold text-slate-900">GST (18%)</span>
-                <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full uppercase tracking-wider">Calculated Automatically</span>
+
+              
+              <div className="pt-4 pb-4 border-t border-b border-slate-100 mb-6 flex flex-col gap-3 transition-all">
+                <div 
+                  className="flex justify-between items-center cursor-pointer group" 
+                  onClick={() => setShowGstDetails(!showGstDetails)}
+                >
+                  <span className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                    GST (18%)
+                    <ChevronDown className={`size-4 text-slate-400 transition-transform duration-300 ${showGstDetails ? 'rotate-180' : ''}`} />
+                  </span>
+                  <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full uppercase tracking-wider group-hover:bg-amber-200 transition-colors">
+                    Calculated Automatically
+                  </span>
+                </div>
+
+                {showGstDetails && (
+                  <div className="bg-slate-50 p-4 rounded-lg text-xs text-slate-600 space-y-3 animate-in slide-in-from-top-2 border border-slate-100">
+                    <div className="flex justify-between items-center">
+                      <span>Total Base Registration Amount</span>
+                      <span className="font-medium text-slate-900">₹{Math.round(calculateWizardTotal() / 1.18).toLocaleString('en-IN')}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-amber-700">
+                      <span>+ 18% IGST/CGST</span>
+                      <span className="font-semibold">₹{Math.round(calculateWizardTotal() - (calculateWizardTotal() / 1.18)).toLocaleString('en-IN')}</span>
+                    </div>
+                    <div className="pt-2 mt-1 border-t border-slate-200 flex justify-between items-center font-bold text-slate-900 text-sm">
+                      <span>Gross Total</span>
+                      <span>₹{calculateWizardTotal().toLocaleString('en-IN')}</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="bg-slate-900 p-6 rounded-xl flex items-center justify-between mb-8 shadow-md">
                 <span className="text-sm font-bold uppercase tracking-wider text-slate-400">Total Due Today</span>
                 <span className="text-3xl font-semibold text-white">
-                  {(() => {
-                    let total = 0;
-                    if (wizardIntents.includes('Conference Delegate')) total += 5900;
-                    if (wizardIntents.includes('Business Summit Delegate')) total += 11800;
-                    if (wizardIntents.includes('Award Nominee')) total += 5900;
-                    if (wizardIntents.includes('Research Paper Presenter')) total += 5900;
-                    if (profilePackageTour === 'From India') total += 131000;
-                    if (profilePackageTour === 'From Outside India') total += 200501;
-                    return `₹${total.toLocaleString('en-IN')}`;
-                  })()}
+                  ₹{calculateWizardTotal().toLocaleString('en-IN')}
                 </span>
               </div>
 
@@ -1123,58 +1901,97 @@ export default function MemberClientPage() {
                   </span>
                 </label>
               </div>
+              
+              <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-end gap-3 mt-auto">
+                {!isRegistrationComplete && (
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={goPrev}
+                    className="rounded-xl font-semibold h-12 px-6 border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all shadow-sm bg-white"
+                  >
+                    Back
+                  </Button>
+                )}
+                <Button 
+                  type="button" 
+                  onClick={async () => {
+                    if (!profileLegalConsent) {
+                      showToast("You must accept the Terms & Conditions to proceed.");
+                      return;
+                    }
+                    await handleSaveRegistration();
+                    handlePayment();
+                  }}
+                  className="bg-slate-900 text-white hover:bg-slate-800 font-semibold h-12 px-8 rounded-xl shadow-lg transition-colors text-sm"
+                >
+                  Pay & Finalize
+                </Button>
+              </div>
             </div>
+          </div>
           ) : null}
         </div>
       </div>
-      </div>
-
-      {/* Floating Bottom Bar */}
-      <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50">
-        <div className="flex items-center gap-3">
-          {wizardStep > 0 && (
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={goPrev}
-              className="rounded-xl font-semibold h-12 px-6 border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all shadow-sm bg-white"
-            >
-              Back
-            </Button>
-          )}
-          
-          {wizardStep < visibleSlides.length - 1 ? (
-            <Button 
-              type="button" 
-              onClick={goNext}
-              className="bg-slate-900 text-white text-sm font-semibold px-8 h-12 rounded-xl hover:bg-slate-800 transition-colors shadow-lg"
-            >
-              <span>Next Step</span>
-            </Button>
-          ) : (
-            <Button 
-              type="button" 
-              onClick={async () => {
-                if (!profileLegalConsent) {
-                  showToast("You must accept the Terms & Conditions to proceed.");
-                  return;
-                }
-                await handleSaveRegistration();
-                handlePayment();
-              }}
-              className="bg-slate-900 text-white hover:bg-slate-800 font-semibold h-12 px-8 rounded-xl shadow-lg transition-colors text-sm"
-            >
-              Pay & Finalize
-            </Button>
-          )}
+      {/* Fixed Bottom Bar */}
+      {currentSlide.type !== 'review' && (
+        <div className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-slate-200 p-4 z-50">
+          <div className="w-full flex items-center justify-between gap-4 px-2 sm:px-8">
+            <div className="flex-grow hidden sm:block">
+              <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-slate-900 transition-all duration-500 ease-out" style={{ width: `${progressPercentage}%` }}></div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3 shrink-0 ml-auto w-full sm:w-auto justify-between sm:justify-end">
+              {wizardStep > 0 && (
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={goPrev}
+                  className="rounded-xl font-semibold h-12 px-6 border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all shadow-sm bg-white"
+                >
+                  Back
+                </Button>
+              )}
+              
+              {wizardStep < visibleSlides.length - 1 ? (
+                <Button 
+                  type="button" 
+                  onClick={goNext}
+                  className="bg-slate-900 text-white text-sm font-semibold px-8 h-12 rounded-xl hover:bg-slate-800 transition-colors shadow-lg"
+                >
+                  <span>Next Step</span>
+                </Button>
+              ) : null}
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </form>
   );
 
   return (
     <>
       <Preloader loading={loading} />
+
+      {/* Transition overlay for wizard → payment page (keeps wizard mounted so Image onLoad fires) */}
+      {transitioning && (
+        <div className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center">
+          <div className="vl-logo-container">
+            <svg className="vl-preloader-wifi" viewBox="0 -22 90 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="45" cy="42" r="5" fill="#D4AF37" />
+              <path className="vl-arc vl-arc-1" d="M30 32 Q45 18 60 32" stroke="#D4AF37" strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+              <path className="vl-arc vl-arc-2" d="M16 20 Q45 0 74 20" stroke="#D4AF37" strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+              <path className="vl-arc vl-arc-3" d="M2 8 Q45 -18 88 8" stroke="#D4AF37" strokeWidth="5.5" strokeLinecap="round" fill="none"/>
+            </svg>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="vl-globe-img" src="/assets/images/vishwaleader-logo-globe.png" alt="Vishwa Leader" />
+          </div>
+          <p translate="no" className="notranslate" style={{ marginTop: "18px", fontFamily: "'Outfit', sans-serif", fontWeight: 900, fontSize: "15px", letterSpacing: "0.04em", color: "#0056CA" }}>VISHWA LEADER</p>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 700, letterSpacing: "0.18em", color: "#1e3a8a", textTransform: "uppercase", marginTop: "2px" }}>TECHMEDIA</p>
+        </div>
+      )}
 
       {/* Unauthenticated View: Sign In */}
       {!loading && !user && (
@@ -1226,7 +2043,7 @@ export default function MemberClientPage() {
       )}
 
       {/* Authenticated View: Onboarding Wizard (Fullscreen) */}
-      {!loading && user && !isRegistrationComplete && (
+      {!loading && user && memberData !== null && showWizard && (
         <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
           {/* Standalone Wizard Header */}
           <header className="h-16 flex items-center justify-between px-4 sm:px-8 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 relative">
@@ -1251,11 +2068,11 @@ export default function MemberClientPage() {
           </header>
 
           {/* Wizard Content */}
-          <main className="flex-1 overflow-hidden p-4 sm:p-8 flex flex-col justify-center relative">
+          <main className="flex-1 overflow-y-auto p-4 sm:p-8 flex flex-col justify-center relative">
             {/* Minimal ambient background */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-64 bg-brandBlue/5 blur-3xl rounded-full pointer-events-none -z-10"></div>
             
-            <div className="w-full max-w-3xl mx-auto h-full flex flex-col animate-fade-in-up pb-4">
+            <div className="w-full max-w-3xl mx-auto h-full flex flex-col pb-4">
               <div className="flex-grow flex flex-col h-full w-full">
                 {wizardFormContent}
               </div>
@@ -1264,8 +2081,41 @@ export default function MemberClientPage() {
         </div>
       )}
 
+      {/* Authenticated View: Family/Group Wizard Overlay */}
+      {!loading && user && memberData !== null && !showWizard && showFamilyWizard && (
+        <div className="fixed inset-0 z-50 bg-slate-50 flex flex-col font-sans h-screen w-screen overflow-hidden">
+          {/* Standalone Wizard Header */}
+          <header className="h-16 flex items-center justify-between px-4 sm:px-8 bg-white border-b border-slate-200 shrink-0 shadow-sm z-10 relative">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center">
+                <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" className="h-8 w-auto object-contain" />
+              </div>
+              <div className="hidden sm:block h-6 w-[1px] bg-slate-200"></div>
+              <h1 className="text-sm sm:text-base font-black font-display text-slate-900 uppercase tracking-tight">Family/Group Setup</h1>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm" onClick={() => setShowFamilyWizard(false)} className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl h-9">
+                <span className="text-xs font-bold uppercase">Close</span>
+              </Button>
+            </div>
+          </header>
+
+          {/* Wizard Content */}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-8 flex flex-col justify-center relative">
+            {/* Minimal ambient background */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-64 bg-brandBlue/5 blur-3xl rounded-full pointer-events-none -z-10"></div>
+            
+            <div className="w-full max-w-3xl mx-auto h-full flex flex-col pb-4">
+              <div className="flex-grow flex flex-col h-full w-full">
+                {familyWizardFormContent}
+              </div>
+            </div>
+          </main>
+        </div>
+      )}
+
       {/* Authenticated View: Collapsible Sidebar Dashboard */}
-      {!loading && user && isRegistrationComplete && (
+      {!loading && user && memberData !== null && !showWizard && (
         <div className="w-full flex h-screen overflow-hidden bg-slate-50 text-slate-900 font-sans">
           <SidebarProvider>
             
@@ -1311,6 +2161,25 @@ export default function MemberClientPage() {
                           <span>User Profile</span>
                         </MobileCloseSidebarMenuButton>
                       </SidebarMenuItem>
+                      {memberData?.paymentStatus !== 'Paid' && (
+                        <SidebarMenuItem>
+                          <MobileCloseSidebarMenuButton 
+                            isActive={activeTab === 'checkout'} 
+                            onClick={() => {
+                              setActiveTab('checkout');
+                              setWizardStep(visibleSlides.length - 1);
+                            }}
+                            className={`w-full justify-start text-xs font-medium py-2 px-3 rounded-lg transition-all ${
+                              activeTab === 'checkout' 
+                                ? 'bg-amber-100 text-amber-900 font-semibold' 
+                                : 'text-amber-600 hover:text-amber-900 hover:bg-amber-50'
+                            }`}
+                          >
+                            <CreditCard className="size-4 shrink-0 mr-2 text-amber-600" />
+                            <span>Pending Checkout</span>
+                          </MobileCloseSidebarMenuButton>
+                        </SidebarMenuItem>
+                      )}
                       <SidebarMenuItem>
                         <MobileCloseSidebarMenuButton 
                           isActive={activeTab === 'settings'} 
@@ -1375,7 +2244,6 @@ export default function MemberClientPage() {
                           {activeTab === 'dashboard' && 'Dashboard Overview'}
                           {activeTab === 'registration' && 'Delegate Registration'}
                           {activeTab === 'uploads' && 'Document Upload Center'}
-                          {activeTab === 'payment' && 'Fee Payment Gate'}
                           {activeTab === 'submissions' && 'Abstract Submissions'}
                         </BreadcrumbPage>
                       </BreadcrumbItem>
@@ -1488,26 +2356,372 @@ export default function MemberClientPage() {
                             <p className="text-xs text-slate-600 leading-relaxed italic">{memberData?.bio || "No bio summary configured. Click 'Delegate Registration' tab in the sidebar menu to update your registration fields."}</p>
                           </div>
                         </Card>
+                        
+                        <Card className="border-brandBlue/20 bg-brandBlue/5 p-6 rounded-2xl shadow-sm cursor-pointer hover:bg-brandBlue/10 transition-colors" onClick={() => setShowFamilyWizard(true)}>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h3 className="text-lg font-bold text-brandBlue">Upgrade to Family/Group</h3>
+                              <p className="text-sm text-slate-600 mt-1">Want to bring your family or a group? Setup their details here.</p>
+                            </div>
+                            <Button className="bg-brandBlue hover:bg-brandBlue/90 text-white rounded-full">Add Group</Button>
+                          </div>
+                        </Card>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* ═════════════════════ TAB: DELEGATE REGISTRATION FORM ═════════════════════ */}
+                {/* ═════════════════════ TAB: PROFILE SETTINGS ═════════════════════ */}
                 {activeTab === 'registration' && (
-                  <div className="space-y-6 flex flex-col h-[calc(100vh-8rem)]">
+                  <div className="space-y-6">
                     <div className="flex items-center justify-between border-b border-slate-200 pb-4 shrink-0">
                       <div>
-                        <h2 className="text-2xl font-black font-display text-slate-900 uppercase tracking-tight">Detailed Registration Document</h2>
-                        <p className="text-xs text-slate-550 mt-0.5 font-medium">This information will be used for award certificate print and travel logs.</p>
+                        <h2 className="text-2xl font-black font-display text-slate-900 uppercase tracking-tight">User Profile</h2>
+                        <p className="text-xs text-slate-550 mt-0.5 font-medium">All your registration details — update and save any changes.</p>
                       </div>
                     </div>
-                    
-                    <div className="flex-grow flex flex-col w-full overflow-visible pb-32">
-                      {wizardFormContent}
+
+                    <form className="space-y-6 max-w-4xl" onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSaveRegistration();
+                      showToast("Profile updated successfully!");
+                    }}>
+
+                      {/* Personal Information */}
+                      <Card className="border-slate-200 bg-white rounded-2xl shadow-sm">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500">Personal Information</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Full Name</label>
+                              <Input type="text" value={profileName} onChange={(e) => setProfileName(e.target.value)} className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" required />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Gender</label>
+                              <select value={profileGender} onChange={(e) => setProfileGender(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:border-brandBlue focus:ring-1 focus:ring-brandBlue outline-none">
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Non-binary">Non-binary</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                              </select>
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Age</label>
+                              <Input type="text" value={profileAge} onChange={(e) => setProfileAge(e.target.value)} className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Nationality</label>
+                              <Input type="text" value={profileNationality} onChange={(e) => setProfileNationality(e.target.value)} className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">City</label>
+                              <Input type="text" value={profileCity} onChange={(e) => setProfileCity(e.target.value)} className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Country</label>
+                              <Input type="text" value={profileCountry} onChange={(e) => setProfileCountry(e.target.value)} className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Phone</label>
+                              <Input type="text" value={profilePhone} onChange={(e) => setProfilePhone(e.target.value)} className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Passport Number</label>
+                              <Input type="text" value={profilePassport} onChange={(e) => setProfilePassport(e.target.value)} className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" />
+                            </div>
+                          </div>
+                          <div className="space-y-1.5 mt-4">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Full Address</label>
+                            <textarea value={profileAddress} onChange={(e) => setProfileAddress(e.target.value)} rows={2} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:border-brandBlue focus:ring-1 focus:ring-brandBlue outline-none" />
+                          </div>
+                          <div className="space-y-1.5 mt-4">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Short Bio</label>
+                            <textarea value={profileBio} onChange={(e) => setProfileBio(e.target.value)} rows={3} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:border-brandBlue focus:ring-1 focus:ring-brandBlue outline-none" />
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Professional Details */}
+                      <Card className="border-slate-200 bg-white rounded-2xl shadow-sm">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500">Professional Details</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Designation</label>
+                              <Input type="text" value={profileDesignation} onChange={(e) => setProfileDesignation(e.target.value)} className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Organization</label>
+                              <Input type="text" value={profileOrganization} onChange={(e) => setProfileOrganization(e.target.value)} className="bg-slate-50 border-slate-200 text-xs rounded-xl focus:border-brandBlue text-slate-800" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Sector</label>
+                              <select value={profileSector} onChange={(e) => setProfileSector(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:border-brandBlue focus:ring-1 focus:ring-brandBlue outline-none">
+                                <option value="Academic/Research">Academic / Research</option>
+                                <option value="Government">Government</option>
+                                <option value="Corporate">Corporate</option>
+                                <option value="NGO/Non-Profit">NGO / Non-Profit</option>
+                                <option value="Media">Media</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Legal">Legal</option>
+                                <option value="Other">Other</option>
+                              </select>
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Delegate Type</label>
+                              <select value={profileDelegateType} onChange={(e) => setProfileDelegateType(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:border-brandBlue focus:ring-1 focus:ring-brandBlue outline-none">
+                                <option value="conference">Conference Delegate</option>
+                                <option value="business">Business Summit Delegate</option>
+                                <option value="award">Award Nominee</option>
+                                <option value="observer">Observer</option>
+                                <option value="speaker">Speaker / Panelist</option>
+                              </select>
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Nomination Category</label>
+                              <select value={profileCategory} onChange={(e) => setProfileCategory(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:border-brandBlue focus:ring-1 focus:ring-brandBlue outline-none">
+                                <option value="ambedkar-awards">Dr. B. R. Ambedkar Awards</option>
+                                <option value="social-justice-leadership">Social Justice Leadership</option>
+                                <option value="education-innovation">Education Innovation</option>
+                                <option value="women-empowerment">Women Empowerment</option>
+                                <option value="human-rights">Human Rights</option>
+                                <option value="environmental-justice">Environmental Justice</option>
+                                <option value="youth-leadership">Youth Leadership</option>
+                                <option value="global-peace">Global Peace</option>
+                              </select>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Event Preferences */}
+                      <Card className="border-slate-200 bg-white rounded-2xl shadow-sm">
+                        <CardHeader className="pb-3">
+                          <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-500">Event Preferences &amp; Support</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Package Tour</label>
+                              <select value={profilePackageTour} onChange={(e) => setProfilePackageTour(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:border-brandBlue focus:ring-1 focus:ring-brandBlue outline-none">
+                                <option value="None">No Package Tour</option>
+                                <option value="From India">From India (₹1,31,000)</option>
+                                <option value="From Outside India">From Outside India (₹2,00,501)</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div className="space-y-1.5 mb-4">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Dietary / Special Notes</label>
+                            <textarea value={profileDietary} onChange={(e) => setProfileDietary(e.target.value)} rows={2} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:border-brandBlue focus:ring-1 focus:ring-brandBlue outline-none" />
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <label className="flex items-center gap-3 cursor-pointer bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 hover:bg-slate-100 transition-colors">
+                              <input type="checkbox" checked={profileVisaSupport} onChange={(e) => setProfileVisaSupport(e.target.checked)} className="w-4 h-4 rounded accent-brandBlue" />
+                              <span className="text-xs font-semibold text-slate-700">Visa Support Needed</span>
+                            </label>
+                            <label className="flex items-center gap-3 cursor-pointer bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 hover:bg-slate-100 transition-colors">
+                              <input type="checkbox" checked={profileAccommodation} onChange={(e) => setProfileAccommodation(e.target.checked)} className="w-4 h-4 rounded accent-brandBlue" />
+                              <span className="text-xs font-semibold text-slate-700">Accommodation Assistance</span>
+                            </label>
+                            <label className="flex items-center gap-3 cursor-pointer bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 hover:bg-slate-100 transition-colors">
+                              <input type="checkbox" checked={profileWheelchair} onChange={(e) => setProfileWheelchair(e.target.checked)} className="w-4 h-4 rounded accent-brandBlue" />
+                              <span className="text-xs font-semibold text-slate-700">Wheelchair Support</span>
+                            </label>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <div className="pb-6">
+                        <Button type="submit" className="w-full md:w-auto bg-brandBlue hover:bg-brandBlue/90 text-white font-bold px-10 py-2.5 rounded-xl transition-all shadow text-xs uppercase tracking-wider">
+                          Save All Changes
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {/* ═════════════════════ TAB: CHECKOUT ═════════════════════ */}
+                {activeTab === 'checkout' && memberData?.paymentStatus !== 'Paid' && (
+                  <div className="space-y-4">
+                    {/* Header with Re-register button */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4 shrink-0">
+                      <div>
+                        <h2 className="text-2xl font-black font-display text-slate-900 uppercase tracking-tight">Pending Checkout</h2>
+                        <p className="text-xs text-slate-500 mt-0.5 font-medium">Review your selections and complete your registration payment.</p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          if (!user) return;
+                          setShowReRegisterModal(true);
+                        }}
+                        className="shrink-0 rounded-xl border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 font-bold text-xs px-5 h-10 gap-2 transition-all"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                          <path d="M3 3v5h5"/>
+                        </svg>
+                        Re-register / Edit Selections
+                      </Button>
+                    </div>
+
+                    {/* Full-screen payment page design */}
+                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_550px] gap-0 bg-white overflow-hidden rounded-2xl border border-slate-200 shadow-sm min-h-[80vh]">
+
+                      {/* Left Column: Image Wallpaper */}
+                      <div className="hidden lg:flex flex-col justify-between p-10 relative text-white">
+                        <Image src="/assets/images/payment-bg.jpg" alt="Payment Background" fill sizes="(max-width: 1024px) 100vw, 50vw" priority className="object-cover object-left" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-transparent"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-center gap-4 mb-6">
+                            <ShieldAlert className="size-12 text-brandBlue opacity-100 drop-shadow-md shrink-0" />
+                            <h2 className="text-3xl lg:text-4xl font-bold tracking-tight drop-shadow-sm">Secure Checkout</h2>
+                          </div>
+                          <p className="text-slate-200 text-base opacity-90 leading-relaxed max-w-sm drop-shadow-sm">
+                            Your payment is secured with industry-standard 256-bit encryption.
+                            Completing your registration guarantees your seat at the Vishwa Leader summit.
+                          </p>
+                        </div>
+                        <div className="relative z-10 flex items-end justify-between w-full mt-auto">
+                          <div className="flex items-center gap-6 text-sm font-medium opacity-80">
+                            <span className="flex items-center gap-2"><CheckCircle className="size-5 text-emerald-400" /> SSL Secured</span>
+                            <span className="flex items-center gap-2"><CheckCircle className="size-5 text-emerald-400" /> Authorized Gateway</span>
+                          </div>
+                          <div className="opacity-90 grayscale contrast-200 invert brightness-200 mix-blend-screen pb-1 pr-2">
+                            <img src="/assets/images/razorpay.svg" alt="Razorpay" className="h-6 object-contain" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right Column: Receipt UI */}
+                      <div className="p-8 md:p-12 flex flex-col bg-white relative overflow-y-auto">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-brandBlue"></div>
+
+                        <div className="mb-6 pb-6 border-b border-slate-100">
+                          <h3 className="text-xl font-semibold text-slate-900 leading-tight">Registration Summary</h3>
+                          <p className="text-sm text-slate-500 mt-1">Review your selected packages before proceeding to payment.</p>
+                        </div>
+
+                        <div className="space-y-4 flex-grow mb-6">
+                          
+                          {(memberData?.wizardIntents || wizardIntents).some((i: string) => i.startsWith('Conference')) && (
+                            <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                              <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>International Conference</span></span>
+                              <span className="font-semibold text-slate-900">₹5,000</span>
+                            </div>
+                          )}
+                          {(memberData?.wizardIntents || wizardIntents).some((i: string) => i.startsWith('Business')) && (
+                            <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                              <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>International Business Summit</span></span>
+                              <span className="font-semibold text-slate-900">₹10,000</span>
+                            </div>
+                          )}
+                          {(memberData?.wizardIntents || wizardIntents).some((i: string) => i.startsWith('Award')) && (
+                            <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                              <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>International Awards &amp; Cultural Ceremony</span></span>
+                              <span className="font-semibold text-slate-900">₹5,000</span>
+                            </div>
+                          )}
+                          {(memberData?.wizardIntents || wizardIntents).includes('Souvenir Article') && (
+                            <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                              <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>Official Souvenir Article</span></span>
+                              <span className="font-semibold text-slate-900">₹5,000</span>
+                            </div>
+                          )}
+                          {(memberData?.wizardIntents || wizardIntents).includes('Souvenir Advertisement') && (
+                            <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                              <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>Official Souvenir Advertisement</span></span>
+                              <span className="font-semibold text-slate-900">₹5,000</span>
+                            </div>
+                          )}
+                          {(memberData?.wizardIntents || wizardIntents).includes('Donation Patron') && (
+                            <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                              <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-emerald-600 mt-0.5" /> <span>High-Level Patronage Donation</span></span>
+                              <span className="font-semibold text-emerald-700">₹1,00,000</span>
+                            </div>
+                          )}
+                          {(memberData?.packageTour || profilePackageTour) !== 'None' && (memberData?.packageTour || profilePackageTour) && (
+                            <div className="flex justify-between items-start text-sm text-slate-600 pb-2">
+                              <span className="flex items-start gap-2"><Check className="size-4 shrink-0 text-slate-900 mt-0.5" /> <span>Tour Package: {memberData?.packageTour || profilePackageTour}</span></span>
+                              <span className="font-semibold text-slate-900">
+                                ₹{(memberData?.packageTour || profilePackageTour) === 'From India' ? (131000).toLocaleString('en-IN') : (200501).toLocaleString('en-IN')}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+
+                        {/* GST breakdown */}
+                        <div className="pt-4 pb-4 border-t border-b border-slate-100 mb-6 flex flex-col gap-3">
+                          <div className="flex justify-between items-center cursor-pointer group" onClick={() => setShowGstDetails(!showGstDetails)}>
+                            <span className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                              GST (18%)
+                              <ChevronDown className={`size-4 text-slate-400 transition-transform duration-300 ${showGstDetails ? 'rotate-180' : ''}`} />
+                            </span>
+                            <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full uppercase tracking-wider">Calculated Automatically</span>
+                          </div>
+                          {showGstDetails && (
+                            <div className="bg-slate-50 p-4 rounded-lg text-xs text-slate-600 space-y-3 border border-slate-100">
+                              <div className="flex justify-between items-center">
+                                <span>Total Base Registration Amount</span>
+                                <span className="font-medium text-slate-900">₹{Math.round(calculateWizardTotal() / 1.18).toLocaleString('en-IN')}</span>
+                              </div>
+                              <div className="flex justify-between items-center text-amber-700">
+                                <span>+ 18% IGST/CGST</span>
+                                <span className="font-semibold">₹{Math.round(calculateWizardTotal() - (calculateWizardTotal() / 1.18)).toLocaleString('en-IN')}</span>
+                              </div>
+                              <div className="pt-2 mt-1 border-t border-slate-200 flex justify-between items-center font-bold text-slate-900 text-sm">
+                                <span>Gross Total</span>
+                                <span>₹{calculateWizardTotal().toLocaleString('en-IN')}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Total */}
+                        <div className="bg-slate-900 p-6 rounded-xl flex items-center justify-between mb-8 shadow-md">
+                          <span className="text-sm font-bold uppercase tracking-wider text-slate-400">Total Due Today</span>
+                          <span className="text-3xl font-semibold text-white">₹{calculateWizardTotal().toLocaleString('en-IN')}</span>
+                        </div>
+
+                        {/* Legal consent */}
+                        <div>
+                          <label className="flex items-start space-x-3 p-4 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer hover:border-slate-300 transition-colors">
+                            <input type="checkbox" checked={profileLegalConsent} onChange={(e) => setProfileLegalConsent(e.target.checked)} className="mt-0.5 size-4 rounded text-slate-900 focus:ring-slate-900 shrink-0" />
+                            <span className="text-sm text-slate-600 leading-tight">
+                              I confirm that all information provided is accurate and I agree to the <a href="/terms" className="font-semibold text-slate-900 hover:underline">Terms and Conditions</a> to finalize this transaction.
+                            </span>
+                          </label>
+                        </div>
+
+                        {/* Pay button */}
+                        <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-end gap-3">
+                          <Button
+                            type="button"
+                            onClick={async () => {
+                              if (!profileLegalConsent) {
+                                showToast("You must accept the Terms & Conditions to proceed.");
+                                return;
+                              }
+                              await handleSaveRegistration();
+                              handlePayment();
+                            }}
+                            className="bg-slate-900 text-white hover:bg-slate-800 font-semibold h-12 px-8 rounded-xl shadow-lg transition-colors text-sm"
+                          >
+                            Pay &amp; Finalize
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
+
 
                 {/* ═════════════════════ TAB: DOCUMENT UPLOADS ═════════════════════ */}
                 {activeTab === 'uploads' && (
@@ -1700,150 +2914,7 @@ export default function MemberClientPage() {
                 )}
 
                 {/* ═════════════════════ TAB: REGISTRATION PAYMENT PORTAL ═════════════════════ */}
-                {activeTab === 'payment' && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-                      <div>
-                        <h2 className="text-2xl font-black font-display text-slate-900 uppercase tracking-tight">Registration Payment</h2>
-                        <p className="text-xs text-slate-500 mt-0.5 font-medium">Verify registration fees and trigger payments securely using Razorpay gateway.</p>
-                      </div>
-                    </div>
 
-                    <div className="max-w-5xl mx-auto">
-                      {memberData?.paymentStatus === 'Paid' ? (
-                        <Card className="border-emerald-200 bg-emerald-50/20 p-6 rounded-2xl shadow-sm text-center space-y-4">
-                          <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mx-auto text-emerald-600">
-                            <CheckCircle className="size-6" />
-                          </div>
-                          <div className="space-y-1">
-                            <h3 className="text-lg font-black font-display text-emerald-800 uppercase tracking-tight">Payment Verified</h3>
-                            <p className="text-xs text-emerald-600">Your registration fee has been successfully verified on the server.</p>
-                          </div>
-                          <div className="border-t border-emerald-100/50 pt-4 text-left grid grid-cols-2 gap-y-2 text-[10px] font-mono text-slate-600">
-                            <span className="font-bold text-slate-550 uppercase">Transaction ID:</span>
-                            <span className="text-right text-slate-800">{memberData.paymentId || "N/A"}</span>
-                            <span className="font-bold text-slate-550 uppercase">Order ID:</span>
-                            <span className="text-right text-slate-800">{memberData.paymentOrderId || "N/A"}</span>
-                            <span className="font-bold text-slate-550 uppercase">Status:</span>
-                            <span className="text-right text-emerald-600 font-bold uppercase">PAID & VERIFIED</span>
-                          </div>
-                        </Card>
-                      ) : (
-                        <Card className="border-slate-200 bg-white p-6 rounded-2xl shadow-sm space-y-6">
-                          <div className="text-center space-y-2">
-                            <div className="w-12 h-12 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center mx-auto text-brandBlue shadow-sm">
-                              <CreditCard className="size-5" />
-                            </div>
-                            <h3 className="text-base font-bold uppercase tracking-wider text-slate-800 pt-1">Ambedkar Awards Delegation Fee</h3>
-                            <p className="text-xs text-slate-400">Secure delegation fee payment process for nominees.</p>
-                          </div>
-
-                          <div className="border border-slate-200 rounded-2xl p-5 space-y-6 bg-slate-50/50 shadow-inner">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                              {/* Left Side: A La Carte Options */}
-                              <div className="space-y-3">
-                                <div className="space-y-1 border-b border-slate-200 pb-2">
-                                  <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider">A La Carte Options</h4>
-                                  <p className="text-[10px] text-slate-500">Build a custom itinerary. These are mutually exclusive with packages.</p>
-                                </div>
-                                <div className="space-y-2 max-h-[28rem] overflow-y-auto pr-2 custom-scrollbar">
-                                  {[
-                                    { id: 'day_1', label: 'Day 1: International Conference', price: 5900 },
-                                    { id: 'day_2', label: 'Day 2: International Business Summit', price: 11800 },
-                                    { id: 'day_3', label: 'Day 3: International Awards', price: 5900 },
-                                    { id: 'ad_front_cover', label: 'Souvenir: Front Cover (Premium)', price: 500000 },
-                                    { id: 'ad_back_cover', label: 'Souvenir: Back Cover (Premium)', price: 200000 },
-                                    { id: 'ad_inside_cover', label: 'Souvenir: Inside Front/Back Cover', price: 150000 },
-                                    { id: 'ad_double_spread', label: 'Souvenir: Double Spread', price: 100000 },
-                                    { id: 'ad_full_page', label: 'Souvenir: Full Page', price: 50000 },
-                                    { id: 'ad_half_page', label: 'Souvenir: Half Page', price: 25000 },
-                                    { id: 'ad_quarter_page', label: 'Souvenir: Quarter Page', price: 15000 }
-                                  ].map(item => (
-                                    <label key={item.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white cursor-pointer hover:border-brandBlue transition-colors">
-                                      <div className="flex items-center gap-3 w-2/3">
-                                        <input 
-                                          type="checkbox" 
-                                          className="w-4 h-4 rounded text-brandBlue focus:ring-brandBlue border-slate-300"
-                                          checked={selectedAlaCarte.includes(item.id)}
-                                          onChange={() => handleAlaCarteToggle(item.id)}
-                                        />
-                                        <span className="text-xs font-semibold text-slate-700 leading-tight">{item.label}</span>
-                                      </div>
-                                      <span className="text-xs font-bold text-slate-900 w-1/3 text-right">₹{item.price.toLocaleString('en-IN')}</span>
-                                    </label>
-                                  ))}
-                                </div>
-                              </div>
-
-                              {/* Right Side: Tour Packages */}
-                              <div className="space-y-3">
-                                <div className="space-y-1 border-b border-slate-200 pb-2">
-                                  <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider">All-Inclusive Tour Packages</h4>
-                                  <p className="text-[10px] text-slate-500">Includes all event days registration fee (₹23,600). Select one package.</p>
-                                </div>
-                                <div className="space-y-2 max-h-[28rem] overflow-y-auto pr-2 custom-scrollbar">
-                                  {[
-                                    { id: 'pkg_1', label: 'Package 1 (Land + Visa + Medical Ins + Air + Reg)', price: 310000 },
-                                    { id: 'pkg_2', label: 'Package 2 (Land + Visa + Medical Ins + Air + Reg)', price: 235000 },
-                                    { id: 'pkg_3', label: 'Package 3 (Land Only + Reg)', price: 200501 },
-                                    { id: 'pkg_4', label: 'Package 4 (Land Only + Reg)', price: 131000 }
-                                  ].map(pkg => (
-                                    <label key={pkg.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white cursor-pointer hover:border-brandBlue transition-colors">
-                                      <div className="flex items-center gap-3">
-                                        <input 
-                                          type="radio" 
-                                          name="tour_package"
-                                          className="w-4 h-4 text-brandBlue focus:ring-brandBlue border-slate-300"
-                                          checked={selectedPackage === pkg.id}
-                                          onChange={() => handlePackageSelect(pkg.id)}
-                                        />
-                                        <span className="text-xs font-semibold text-slate-700">{pkg.label}</span>
-                                      </div>
-                                      <span className="text-xs font-bold text-brandBlue text-right">₹{pkg.price.toLocaleString('en-IN')}</span>
-                                    </label>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {/* Total Calculator */}
-                            <div className="space-y-2.5 border-t border-slate-300 pt-4 mt-6">
-                              <div className="flex justify-between items-center text-sm font-bold text-slate-900">
-                                <span className="flex flex-col">
-                                  <span>Total Amount Payable (+ 18% GST):</span>
-                                  <span className="text-[9px] font-normal text-slate-400 italic">Settled in INR base currency</span>
-                                </span>
-                                <span className="text-brandBlue text-xl font-black font-mono flex flex-col items-end">
-                                  <span>₹{calculateDynamicTotal().toLocaleString('en-IN')}</span>
-                                  {currency.code !== 'INR' && calculateDynamicTotal() > 0 && (
-                                    <span className="text-[10px] text-amber-600 font-semibold mt-0.5">
-                                      ~{currency.symbol}{(calculateDynamicTotal() / currency.rate).toFixed(2)} {currency.code}
-                                    </span>
-                                  )}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="space-y-4">
-                            <Button 
-                              onClick={handlePayment}
-                              disabled={calculateDynamicTotal() === 0}
-                              className={`w-full font-bold h-12 rounded-xl text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 ${calculateDynamicTotal() > 0 ? 'bg-brandBlue hover:bg-brandBlue/90 text-white' : 'bg-slate-300 text-slate-500 cursor-not-allowed'}`}
-                            >
-                              <CreditCard className="size-4" />
-                              <span>{calculateDynamicTotal() > 0 ? `Pay ₹${calculateDynamicTotal().toLocaleString('en-IN')} via Razorpay` : 'Select items to pay'}</span>
-                            </Button>
-                            
-                            <p className="text-[9px] text-slate-400 leading-relaxed text-center">
-                              * Payments are encrypted and securely verified using digital signature handlers on the server side before updating active user flags.
-                            </p>
-                          </div>
-                        </Card>
-                      )}
-                    </div>
-                  </div>
-                )}
 
                 {/* ═════════════════════ TAB: ABSTRACT SUBMISSIONS ═════════════════════ */}
                 {activeTab === 'submissions' && (
@@ -2035,9 +3106,62 @@ export default function MemberClientPage() {
 
       {/* Floating status alert toast */}
       {toastVisible && (
-        <div className="fixed bottom-6 right-6 z-50 bg-emerald-600 border border-emerald-500 text-white text-xs font-bold px-6 py-3 rounded-xl shadow-2xl transition-all duration-300 animate-slide-up flex items-center gap-2">
-          <CheckCircle className="size-4 shrink-0" />
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] bg-slate-900 border border-slate-800 text-white text-sm font-semibold px-8 py-4 rounded-2xl shadow-2xl transition-all duration-300 animate-in fade-in zoom-in-95 flex items-center gap-3">
+          <CheckCircle className="size-5 shrink-0 text-amber-400" />
           <span>{toastMsg}</span>
+        </div>
+      )}
+
+      {/* Re-register Custom Confirmation Modal */}
+      {showReRegisterModal && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-200">
+            <div className="p-6 md:p-8">
+              <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" className="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-2 font-display">Edit Your Selections?</h3>
+              <p className="text-slate-500 text-sm leading-relaxed mb-8">
+                This will take you back through the registration wizard so you can change your selected packages. 
+                <br /><br />
+                <strong className="text-slate-700">Don't worry:</strong> Your existing profile details and document uploads will be safely kept.
+              </p>
+              
+              <div className="flex items-center justify-end gap-3">
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  onClick={() => setShowReRegisterModal(false)}
+                  className="rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-semibold px-5"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="button" 
+                  onClick={async () => {
+                    try {
+                      if (!user) return;
+                      await updateDoc(doc(db, 'users', user.uid), { legalConsent: false, wizardIntents: [] });
+                      setMemberData((prev: any) => ({ ...prev, legalConsent: false, wizardIntents: [] }));
+                      setWizardIntents([]);
+                      setWizardEventCategories([]);
+                      localStorage.removeItem('vishwa_wizard_draft');
+                      sessionStorage.removeItem('wizardDraft');
+                      setWizardStep(0);
+                      
+                      setShowReRegisterModal(false);
+                      setReRegisterMode(true);
+                    } catch (e) {
+                      showToast("Could not reset registration. Please try again.");
+                    }
+                  }}
+                  className="rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold shadow-md shadow-rose-600/20 px-6 transition-all"
+                >
+                  Yes, Re-register
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </>

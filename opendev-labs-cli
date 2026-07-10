@@ -1,0 +1,104 @@
+#!/bin/bash
+
+# OpenDev Labs CLI Tool
+# Comprehensive automation for Vishwa Leader development
+
+PROJECT_DIR="/home/cube/Desktop/syncstack/Vishwa Leader"
+PORT=3000
+
+# Print formatting
+function print_bold() { echo -e "\033[1m$1\033[0m"; }
+function print_success() { echo -e "\033[1;32m$1\033[0m"; }
+function print_warning() { echo -e "\033[1;33m$1\033[0m"; }
+function print_error() { echo -e "\033[1;31m$1\033[0m"; }
+
+print_help() {
+    print_bold "================================================="
+    print_bold "       opendev-labs cli (Vishwa Leader)"
+    print_bold "================================================="
+    echo "Usage: opendev-labs [command]"
+    echo ""
+    print_bold "Commands:"
+    echo "  dev      Starts a clean Next.js dev server (fixes port lock issues)"
+    echo "  build    Builds the Next.js project for production"
+    echo "  start            Starts the production server"
+    echo "  kill             Force-kills any process stuck on port $PORT"
+    echo "  openkill [port]  Force-kills any process stuck on the given port (default: $PORT)"
+    echo "  clean            Removes the .next cache folder completely"
+    echo "  --help           Shows this help menu"
+    print_bold "================================================="
+}
+
+openkill_port() {
+    local target_port=${1:-$PORT}
+    echo "Hunting down processes on port $target_port..."
+    PIDS=$(lsof -t -i:$target_port 2>/dev/null)
+    if [ -n "$PIDS" ]; then
+        print_warning "Killing processes on port $target_port: $PIDS"
+        kill -9 $PIDS 2>/dev/null
+        print_success "Port $target_port is now free!"
+    else
+        echo "Port $target_port is already free."
+    fi
+}
+
+start_dev() {
+    print_bold "Starting development environment..."
+    openkill_port "$PORT"
+    echo "Killing any background next servers..."
+    pkill -f "next dev" 2>/dev/null
+    
+    echo "Clearing Next.js dev locks..."
+    rm -rf .next/dev
+
+    print_success "Starting fresh Next.js server on port $PORT..."
+    cd "$PROJECT_DIR" || exit
+    npm run dev
+}
+
+build_project() {
+    print_bold "Building project for production..."
+    cd "$PROJECT_DIR" || exit
+    npm run build
+}
+
+start_prod() {
+    print_bold "Starting production server..."
+    cd "$PROJECT_DIR" || exit
+    npm run start
+}
+
+clean_cache() {
+    print_warning "Cleaning Next.js cache and lockfiles..."
+    cd "$PROJECT_DIR" || exit
+    rm -rf .next
+    print_success "Cache completely wiped."
+}
+
+cd "$PROJECT_DIR" || exit
+
+case "$1" in
+    dev)
+        start_dev
+        ;;
+    kill|openkill)
+        openkill_port "$2"
+        ;;
+    build)
+        build_project
+        ;;
+    start)
+        start_prod
+        ;;
+    clean)
+        clean_cache
+        ;;
+    help|--help|-h|"")
+        print_help
+        ;;
+    *)
+        print_error "Unknown command: $1"
+        print_help
+        exit 1
+        ;;
+esac

@@ -12,6 +12,7 @@ const PRICE_DICTIONARY: Record<string, number> = {
     "reg_business": 11800,
     "reg_award": 5900,
     "reg_presenter": 5900,
+    "reg_souvenir": 5900,
     
     // A La Carte Options
     "day_1": 5900,
@@ -34,6 +35,9 @@ const PRICE_DICTIONARY: Record<string, number> = {
     "pkg_2": 235000,
     "pkg_3": 200501,
     "pkg_4": 131000,
+
+    // High-Level Support & Patronage
+    "donation_patron": 118000, // 100000 + GST
 };
 
 export async function createDynamicOrder(selectedItems: string[]) {

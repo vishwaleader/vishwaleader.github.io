@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { motion } from "framer-motion";
 
 const magazineCoversList = [
   { src: '1001702539.jpg', title: '1001702539', date: '1001702539' },
@@ -442,7 +443,13 @@ export default function HomeClientPage() {
 
         <div className="max-w-7xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Content */}
-            <div className="lg:col-span-7 space-y-6">
+            <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="lg:col-span-7 space-y-6"
+            >
                 <div className="inline-flex items-center gap-2 border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide text-amber-400">
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
                     <span data-field="hero.location">London, UK</span> • SEPTEMBER 18-20, 2026
@@ -456,20 +463,26 @@ export default function HomeClientPage() {
                 
                 {/* CTA buttons for the three main calls */}
                 <div className="flex flex-col sm:flex-row flex-wrap gap-4 pt-4 w-full">
-                    <a id="btn-abstract" data-field="announcements.abstractLink" href="#conference-details" onClick={(e) => handleSmoothScroll(e, 'conference-details')} className="w-full sm:w-auto bg-brandBlue text-white font-bold px-6 py-4 rounded hover:bg-brandBlue/90 active:scale-[0.98] text-xs tracking-wider uppercase text-center transition-all shadow-md flex items-center justify-center gap-2">
+                    <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} id="btn-abstract" data-field="announcements.abstractLink" href="#conference-details" onClick={(e: any) => handleSmoothScroll(e, 'conference-details')} className="w-full sm:w-auto bg-brandBlue text-white font-bold px-6 py-4 rounded hover:bg-brandBlue/90 active:scale-[0.98] text-xs tracking-wider uppercase text-center transition-all shadow-md flex items-center justify-center gap-2">
                         <i className="fa-solid fa-graduation-cap"></i> Submit Abstract
-                    </a>
-                    <a id="btn-business" data-field="announcements.businessLink" href="#business-summit" onClick={(e) => handleSmoothScroll(e, 'business-summit')} className="w-full sm:w-auto bg-amber-500 text-brandDark font-bold px-6 py-4 rounded hover:bg-amber-400 active:scale-[0.98] text-xs tracking-wider uppercase text-center transition-all shadow-md flex items-center justify-center gap-2">
+                    </motion.a>
+                    <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} id="btn-business" data-field="announcements.businessLink" href="#business-summit" onClick={(e: any) => handleSmoothScroll(e, 'business-summit')} className="w-full sm:w-auto bg-amber-500 text-brandDark font-bold px-6 py-4 rounded hover:bg-amber-400 active:scale-[0.98] text-xs tracking-wider uppercase text-center transition-all shadow-md flex items-center justify-center gap-2">
                         <i className="fa-solid fa-briefcase"></i> Business Participation
-                    </a>
-                    <a id="btn-nomination" data-field="announcements.awardLink" href="#awards" onClick={(e) => handleSmoothScroll(e, 'awards')} className="w-full sm:w-auto border border-slate-500 text-white bg-slate-900/60 font-bold px-6 py-4 rounded hover:bg-slate-800 active:scale-[0.98] text-xs tracking-wider uppercase text-center transition-all shadow-sm flex items-center justify-center gap-2">
+                    </motion.a>
+                    <motion.a whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} id="btn-nomination" data-field="announcements.awardLink" href="#awards" onClick={(e: any) => handleSmoothScroll(e, 'awards')} className="w-full sm:w-auto border border-slate-500 text-white bg-slate-900/60 font-bold px-6 py-4 rounded hover:bg-slate-800 active:scale-[0.98] text-xs tracking-wider uppercase text-center transition-all shadow-sm flex items-center justify-center gap-2">
                         <i className="fa-solid fa-trophy"></i> Nominate for Award
-                    </a>
+                    </motion.a>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Right Card: Interactive Event Box */}
-            <div className="lg:col-span-5 relative">
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                className="lg:col-span-5 relative"
+            >
                 <div className="relative bg-slate-900/90 border border-slate-800 rounded-2xl p-8 shadow-2xl overflow-hidden group">
                     <div className="absolute -inset-[1px] bg-gradient-to-r from-brandBlue to-amber-500 rounded-2xl opacity-40 blur-[2px] -z-10"></div>
                     <div className="absolute inset-0 bg-slate-950 rounded-2xl -z-10"></div>
@@ -518,7 +531,7 @@ export default function HomeClientPage() {
                         <a href="#events" className="text-amber-400 font-bold hover:underline">Timeline &rarr;</a>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     </section>
 

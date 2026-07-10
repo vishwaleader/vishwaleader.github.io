@@ -6,6 +6,7 @@ import {
   X, ChevronLeft, ChevronRight, Maximize, Play, Pause 
 } from "lucide-react";
 import galleryDataRaw from "./gallery_data.json";
+import { motion } from "framer-motion";
 
 interface GalleryItem {
   src: string;
@@ -24,6 +25,13 @@ export default function GalleryPage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [slideshowActive, setSlideshowActive] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500); // Quick animation simulation
+  }, []);
 
   // Slideshow timer logic
   useEffect(() => {
@@ -82,81 +90,92 @@ export default function GalleryPage() {
     return list;
   };
 
+  if (loading) return <Preloader />;
+
   return (
     <>
-      <Preloader loading={false} />
-      <div className="min-h-screen bg-black text-slate-100 font-sans antialiased flex flex-col justify-between selection:bg-brandBlue selection:text-white">
+      <div className="min-h-screen bg-white text-slate-900 font-sans antialiased flex flex-col justify-between">
         
-        {/* Minimal nextjsconf-pics Style Header */}
-        <header className="border-b border-slate-900 bg-black/60 backdrop-blur sticky top-0 z-40">
-          <div className="max-w-[1960px] mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="/" className="flex items-center gap-3">
-              <img src="/assets/images/vishwaleader-logo-globe.png" alt="Vishwa Leader" className="h-8 w-auto object-contain" />
-              <span translate="no" className="notranslate text-white font-bold tracking-tight text-md uppercase font-display">VISHWA LEADER</span>
-              <span className="hidden sm:inline-block text-[9px] font-black tracking-widest text-brandBlue uppercase border border-brandBlue/30 px-2 py-0.5 rounded bg-brandBlue/10">
-                Media Library
-              </span>
+        {/* Navbar overlay header */}
+        <header className="fixed w-full top-0 z-40 bg-white border-b border-slate-100">
+          <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="/" className="flex items-center gap-2">
+              <img src="/assets/images/vishwaleader-logo-hd.png" alt="Vishwa Leader" className="h-7 w-auto object-contain" />
+              <span translate="no" className="notranslate font-sans font-bold tracking-tight text-sm text-slate-900">Vishwa Leader</span>
             </a>
-            <a href="/" className="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-wider transition-colors flex items-center gap-2">
+            <div className="flex gap-6 text-sm font-medium text-slate-500 hidden md:flex">
+              <a href="/" className="hover:text-slate-900 transition-colors">Home</a>
+            </div>
+            <a href="/" className="bg-slate-900 text-white text-xs font-semibold px-5 py-2.5 rounded-full hover:bg-slate-800 transition-all flex items-center gap-2">
               &larr; Back to Home
             </a>
           </div>
         </header>
 
-        {/* Gallery Image Grid (aspect-video landscape, no portrait) */}
-        <main className="flex-grow max-w-[1960px] w-full mx-auto px-6 py-10 space-y-6">
-          <div className="flex flex-col gap-1 border-b border-slate-900 pb-4">
-            <h1 className="text-2xl font-bold tracking-tight text-white uppercase font-display">Media Catalog</h1>
-            <p className="text-xs text-slate-500 font-medium">
+        {/* Gallery Image Grid */}
+        <main className="flex-grow w-full pb-32 pt-32 md:pt-40">
+          {/* Header Section */}
+          <section className="text-center px-6 mb-16">
+            <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mb-4">
+              Media Catalog
+            </h1>
+            <p className="text-slate-500 text-base md:text-lg max-w-xl mx-auto">
               A responsive, high-performance visual catalog displaying all {galleryItems.length} archival items.
             </p>
-          </div>
+          </section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {galleryItems.map((item, idx) => (
-              <div 
-                key={item.src}
-                onClick={() => {
-                  setLightboxIndex(idx);
-                  setSlideshowActive(false);
-                }}
-                className="group relative aspect-video bg-slate-950 overflow-hidden rounded-xl border border-slate-900/60 shadow hover:border-brandBlue/35 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 cursor-pointer"
-              >
-                <img 
-                  src={item.src} 
-                  alt={item.title} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
-                
-                {/* Overlay hover details */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-0 group-hover:opacity-85 transition-opacity duration-300 flex flex-col justify-end p-4">
-                  <span className="text-[8px] font-extrabold uppercase tracking-widest text-brandBlue mb-0.5">{item.category}</span>
-                  <h4 className="text-white text-xs font-bold line-clamp-1">{item.title}</h4>
-                  <p className="text-[9px] text-slate-400 line-clamp-1 mt-0.5 font-light">{item.desc}</p>
-                </div>
-
-                <div className="absolute top-3 right-3 bg-black/60 border border-slate-800 text-[8px] font-mono text-slate-500 px-2 py-0.5 rounded-full opacity-60 group-hover:opacity-100 transition-opacity">
-                  {item.date.split('-')[0]}
-                </div>
-              </div>
-            ))}
-          </div>
+          <section className="max-w-7xl mx-auto px-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {galleryItems.map((item, idx) => (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: idx % 10 * 0.05 }}
+                  key={item.src}
+                  onClick={() => {
+                    setLightboxIndex(idx);
+                    setSlideshowActive(false);
+                  }}
+                  className="group flex flex-col bg-white border border-slate-200 rounded-xl hover:border-slate-300 hover:shadow-md transition-all cursor-pointer overflow-hidden"
+                >
+                  <div className="relative aspect-video bg-slate-100 overflow-hidden shrink-0">
+                    <img 
+                      src={encodeURI(item.src)} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm border border-slate-200 text-[10px] font-mono font-medium text-slate-600 px-2 py-0.5 rounded-md shadow-sm">
+                      {item.date.split('-')[0]}
+                    </div>
+                  </div>
+                  
+                  {/* Clean Bottom Info */}
+                  <div className="p-4 flex flex-col flex-grow">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-brandBlue mb-1">{item.category}</span>
+                    <h4 className="text-slate-900 text-sm font-semibold line-clamp-1 mb-1">{item.title}</h4>
+                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{item.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </section>
         </main>
 
-        {/* Clean Minimalist Footer */}
-        <footer className="border-t border-slate-900 py-6 text-center text-[10px] text-slate-600 bg-black mt-10">
+        {/* Minimal Footer */}
+        <footer className="border-t border-slate-100 py-8 text-center text-xs text-slate-500 bg-white">
           <p>© 2026 <span translate="no" className="notranslate">Vishwa Leader</span> Techmedia Private Limited. All Rights Reserved.</p>
         </footer>
       </div>
 
-      {/* Immersive Lightbox Modal (nextjsconf-pics Clone layout) */}
+      {/* Immersive Lightbox Modal (Kept dark for optimal image viewing) */}
       {lightboxIndex !== null && galleryItems[lightboxIndex] && (
-        <div id="lightbox" className="fixed inset-0 z-50 bg-black/98 flex flex-col justify-between items-center transition-all duration-300 py-6">
+        <div id="lightbox" className="fixed inset-0 z-[100] bg-black/98 flex flex-col justify-between items-center transition-all duration-300 py-6">
           
           {/* Top Panel: Counter and close button */}
-          <div className="w-full max-w-[1960px] px-8 flex justify-between items-center shrink-0">
-            <span className="text-[11px] font-mono text-slate-400">
+          <div className="w-full max-w-7xl px-6 md:px-8 flex justify-between items-center shrink-0">
+            <span className="text-xs font-medium text-slate-400">
               {lightboxIndex + 1} / {galleryItems.length}
             </span>
             <button 
@@ -167,12 +186,12 @@ export default function GalleryPage() {
               className="text-slate-400 hover:text-white text-xl focus:outline-none bg-slate-900/60 p-2.5 rounded-full border border-slate-800 hover:bg-slate-900 transition-colors" 
               aria-label="Close Lightbox"
             >
-              <X className="size-4" />
+              <X className="size-5" />
             </button>
           </div>
 
           {/* Middle Panel: Main active image with side arrows */}
-          <div className="flex-grow w-full flex items-center justify-center relative px-2 md:px-10 max-h-[60vh] md:max-h-[70vh]">
+          <div className="flex-grow w-full flex items-center justify-center relative px-2 md:px-10 max-h-[65vh] md:max-h-[70vh]">
             
             {/* Previous trigger */}
             <button 
@@ -180,32 +199,32 @@ export default function GalleryPage() {
                 setLightboxIndex((prev) => (prev !== null ? (prev - 1 + galleryItems.length) % galleryItems.length : null));
                 setSlideshowActive(false);
               }}
-              className="absolute left-1 md:left-10 z-10 text-slate-400 hover:text-white p-2 md:p-3.5 rounded-full bg-slate-950/60 md:bg-slate-950/40 border border-slate-900 hover:bg-slate-900 transition-colors shrink-0" 
+              className="absolute left-2 md:left-10 z-10 text-slate-400 hover:text-white p-3 rounded-full bg-slate-950/60 md:bg-slate-950/40 border border-slate-900 hover:bg-slate-900 transition-colors shrink-0" 
               aria-label="Previous Image"
             >
               <ChevronLeft className="size-6" />
             </button>
 
-            {/* Main Landscape Fitted Widescreen Image */}
-            <div className="flex flex-col items-center justify-center w-full max-w-4xl max-h-full px-6 md:px-16 min-h-0">
-              <div className="relative w-full aspect-video max-w-2xl overflow-hidden rounded-2xl border border-slate-900 shadow-2xl bg-black shrink-0 flex items-center justify-center">
+            {/* Main Image Container */}
+            <div className="flex flex-col items-center justify-center w-full max-w-5xl max-h-full px-12 min-h-0">
+              <div className="relative w-full aspect-video overflow-hidden rounded-xl border border-slate-900 shadow-2xl bg-black shrink-0 flex items-center justify-center">
                 <img 
                   id="lightbox-img" 
-                  src={galleryItems[lightboxIndex].src} 
+                  src={encodeURI(galleryItems[lightboxIndex].src)} 
                   alt={galleryItems[lightboxIndex].title} 
                   className="absolute inset-0 w-full h-full object-contain" 
                 />
               </div>
               
-              <div className="mt-4 max-w-xl text-center px-2 md:px-4 shrink-0">
-                <h4 className="font-bold text-white text-sm md:text-base leading-snug">{galleryItems[lightboxIndex].title}</h4>
-                <p className="text-[11px] text-slate-400 font-light mt-1 leading-relaxed">{galleryItems[lightboxIndex].desc}</p>
-                <div className="flex gap-1.5 justify-center mt-2.5">
-                  <span className="text-[8px] font-extrabold uppercase tracking-widest text-brandBlue border border-brandBlue/30 px-2 py-0.5 rounded bg-brandBlue/10">
+              <div className="mt-6 max-w-2xl text-center px-4 shrink-0">
+                <h4 className="font-semibold text-white text-base md:text-lg">{galleryItems[lightboxIndex].title}</h4>
+                <p className="text-sm text-slate-400 mt-2 leading-relaxed">{galleryItems[lightboxIndex].desc}</p>
+                <div className="flex flex-wrap gap-2 justify-center mt-4">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-brandBlue border border-brandBlue/30 px-2 py-0.5 rounded-md bg-brandBlue/10">
                     {galleryItems[lightboxIndex].category}
                   </span>
                   {galleryItems[lightboxIndex].tags.map((tag) => (
-                    <span key={tag} className="text-[9px] font-mono text-slate-500">
+                    <span key={tag} className="text-[10px] font-medium text-slate-500 bg-slate-900 px-2 py-0.5 rounded-md border border-slate-800">
                       {tag}
                     </span>
                   ))}
@@ -219,7 +238,7 @@ export default function GalleryPage() {
                 setLightboxIndex((prev) => (prev !== null ? (prev + 1) % galleryItems.length : null));
                 setSlideshowActive(false);
               }}
-              className="absolute right-1 md:right-10 z-10 text-slate-400 hover:text-white p-2 md:p-3.5 rounded-full bg-slate-950/60 md:bg-slate-950/40 border border-slate-900 hover:bg-slate-900 transition-colors shrink-0" 
+              className="absolute right-2 md:right-10 z-10 text-slate-400 hover:text-white p-3 rounded-full bg-slate-950/60 md:bg-slate-950/40 border border-slate-900 hover:bg-slate-900 transition-colors shrink-0" 
               aria-label="Next Image"
             >
               <ChevronRight className="size-6" />
@@ -227,15 +246,14 @@ export default function GalleryPage() {
 
           </div>
 
-          {/* Bottom Panel: Signature nextjsconf-pics thumbnail navigation slider */}
-          <div className="w-full max-w-4xl flex flex-col items-center gap-4 shrink-0 px-6">
+          {/* Bottom Panel: Thumbnails */}
+          <div className="w-full max-w-5xl flex flex-col items-center gap-4 shrink-0 px-6 mt-4">
             
             {/* Control buttons */}
-            <div className="flex items-center gap-4 bg-slate-950/80 backdrop-blur-md px-5 py-2 rounded-full border border-slate-900 text-slate-400 select-none text-xs">
+            <div className="flex items-center gap-4 bg-slate-950/80 backdrop-blur-md px-5 py-2.5 rounded-full border border-slate-900 text-slate-400 select-none text-xs font-medium">
               <button 
                 onClick={() => setSlideshowActive(!slideshowActive)}
-                className={`hover:text-white transition-colors focus:outline-none flex items-center gap-1.5 ${slideshowActive ? 'text-amber-400 hover:text-amber-300' : ''}`} 
-                title={slideshowActive ? "Pause Autoplay" : "Start Autoplay"}
+                className={`hover:text-white transition-colors focus:outline-none flex items-center gap-2 ${slideshowActive ? 'text-amber-400 hover:text-amber-300' : ''}`} 
               >
                 {slideshowActive ? <Pause className="size-4" /> : <Play className="size-4" />}
                 <span>Autoplay</span>
@@ -243,8 +261,7 @@ export default function GalleryPage() {
               <span className="w-[1px] h-4 bg-slate-800"></span>
               <button 
                 onClick={toggleFullscreen}
-                className={`hover:text-white transition-colors focus:outline-none flex items-center gap-1.5 ${isFullscreen ? 'text-amber-400 hover:text-amber-300' : ''}`}
-                title="Toggle Fullscreen"
+                className={`hover:text-white transition-colors focus:outline-none flex items-center gap-2 ${isFullscreen ? 'text-amber-400 hover:text-amber-300' : ''}`}
               >
                 <Maximize className="size-4" />
                 <span>Fullscreen</span>
@@ -260,13 +277,13 @@ export default function GalleryPage() {
                     setLightboxIndex(index);
                     setSlideshowActive(false);
                   }}
-                  className={`relative aspect-video w-16 md:w-20 rounded-lg overflow-hidden shrink-0 cursor-pointer border transition-all ${
+                  className={`relative aspect-video w-20 md:w-24 rounded-lg overflow-hidden shrink-0 cursor-pointer border transition-all ${
                     index === lightboxIndex 
-                      ? 'border-brandBlue scale-105 opacity-100 ring-2 ring-brandBlue/30' 
-                      : 'border-slate-900 opacity-40 hover:opacity-80'
+                      ? 'border-brandBlue scale-[1.05] opacity-100 shadow-[0_0_15px_rgba(37,99,235,0.3)]' 
+                      : 'border-slate-800 opacity-50 hover:opacity-100 hover:border-slate-600'
                   }`}
                 >
-                  <img src={item.src} alt="" className="w-full h-full object-cover" />
+                  <img src={encodeURI(item.src)} alt="" className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
