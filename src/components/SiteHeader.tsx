@@ -68,7 +68,7 @@ export default function SiteHeader() {
     };
 
     // Guard placed AFTER all hooks — safe to return null here
-    if (pathname?.startsWith("/auth")) {
+    if (pathname?.startsWith("/auth") || pathname?.startsWith("/checkout")) {
         return null;
     }
 

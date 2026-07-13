@@ -1,44 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Calendar, MapPin, Mail, Trophy, Info, Users, Check } from 'lucide-react';
-import Preloader from '@/components/Preloader';
+import EventRegistrationCTA from '@/components/EventRegistrationCTA';
 
 export default function AwardsPage() {
   const [user, setUser] = useState<User | null>(null);
-  const [loadingAuth, setLoadingAuth] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setLoadingAuth(false);
     });
     return () => unsubscribe();
   }, []);
-
-  const handleActionClick = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (user) {
-      router.push("/auth/member");
-    } else {
-      const provider = new GoogleAuthProvider();
-      try {
-        setLoadingAuth(true);
-        await signInWithPopup(auth, provider);
-        router.push("/auth/member");
-      } catch (err) {
-        console.error("Login failed:", err);
-      } finally {
-        setLoadingAuth(false);
-      }
-    }
-  };
-
-  if (loadingAuth) return <Preloader />;
 
   return (
     <div className="min-h-screen bg-white font-sans pb-32">
@@ -165,12 +141,15 @@ export default function AwardsPage() {
             </div>
 
             <div className="bg-[#111111] border border-[#222222] rounded-xl p-8 shadow-xl">
-              <h3 className="text-lg font-semibold text-white mb-2">Registration Portal</h3>
-              <p className="text-slate-400 text-sm mb-6 pb-6 border-b border-[#333333]">
+              <div className="mb-2">
+                <span className="text-[10px] font-black tracking-widest text-amber-400 uppercase bg-amber-400/10 px-2 py-1 rounded">Online Registration</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mt-3 mb-2">Registration Portal</h3>
+              <p className="text-slate-400 text-xs mb-6 pb-6 border-b border-[#333333]">
                 Deadline: <strong className="text-white">31st May 2026</strong>
               </p>
 
-              <div className="space-y-3 mb-8 text-sm text-slate-300">
+              <div className="space-y-3 mb-6 text-sm text-slate-300">
                 <p className="flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Detailed description of achievements
                 </p>
@@ -181,12 +160,21 @@ export default function AwardsPage() {
                   <span className="w-1.5 h-1.5 rounded-full bg-slate-500"></span> References or testimonials
                 </p>
               </div>
-              
-              <button onClick={handleActionClick} className="w-full bg-white text-slate-900 hover:bg-slate-100 font-semibold py-3 rounded-lg text-sm transition-colors mb-6">
-                Register & Nominate
-              </button>
-              
-              <div className="text-center text-xs text-slate-500">
+
+              <EventRegistrationCTA
+                itemId="reg_award"
+                price="₹5,900"
+                label="Register & Nominate"
+                paidLabel="✅ Awards Registration Active"
+                dark
+              />
+
+              <div className="mt-4 text-center">
+                <p className="text-[10px] text-slate-600">Secured by</p>
+                <img src="/assets/images/razorpay.svg" alt="Razorpay" className="h-4 object-contain mx-auto mt-1 opacity-40 invert" />
+              </div>
+
+              <div className="mt-6 pt-5 border-t border-[#333333] text-center text-xs text-slate-500">
                 <p>Or email nomination to:</p>
                 <a href="mailto:vishwaleaderawards@gmail.com" className="text-slate-300 hover:text-white font-medium flex items-center justify-center gap-1.5 mt-2">
                   <Mail className="w-3.5 h-3.5" /> vishwaleaderawards@gmail.com

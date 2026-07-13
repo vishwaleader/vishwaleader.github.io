@@ -295,7 +295,7 @@ export default function GoogleTranslate() {
     </div>
   );
 
-  const isDashboard = pathname?.startsWith('/auth/member') || pathname?.startsWith('/auth/admin');
+  const isDashboard = pathname?.startsWith('/auth/member') || pathname?.startsWith('/auth/admin') || pathname?.startsWith('/checkout');
 
   return (
     <>
