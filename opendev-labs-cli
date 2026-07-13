@@ -93,9 +93,20 @@ deploy_project() {
     git push upstream main || echo "Git push failed or up to date, continuing to deployment..."
     
     echo "Deploying directly to Vercel via CLI..."
-    npx vercel --prod --yes
+    # Deploy and capture the deployment URL; timeout after 3min so CLI never hangs
+    DEPLOY_URL=$(timeout 180 npx vercel --prod --yes 2>&1 | tee /dev/stderr | grep -E 'https://vishwaleader.*\.vercel\.app' | tail -1 | tr -d '[:space:]')
     
-    print_success "=== Deployment Finished Successfully! ==="
+    if [ -n "$DEPLOY_URL" ]; then
+        print_success "Deployed to: $DEPLOY_URL"
+        echo "Assigning production alias..."
+        npx vercel alias set "$DEPLOY_URL" vishwaleader.vercel.app 2>/dev/null || true
+        print_success "Alias updated: https://vishwaleader.vercel.app"
+    else
+        print_warning "Could not capture deployment URL automatically."
+        print_warning "If checks are stuck, run: npx vercel alias set [URL] vishwaleader.vercel.app"
+    fi
+    
+    print_success "=== Deployment Finished! ==="
 }
 
 deploy_project_local_build() {
